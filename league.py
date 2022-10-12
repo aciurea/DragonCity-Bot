@@ -29,7 +29,7 @@ def getAttacks():
         if (attack[0] != -1):
             return attack
         continue
-    return -1
+    return [-1, -1]
 
 
 def fight():

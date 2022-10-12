@@ -1,15 +1,16 @@
-from python_imagesearch.imagesearch import imagesearch
+from python_imagesearch.imagesearch import imagesearch, imagesearcharea
 import time
 import mouse
 
-def getImagePosition(path, tries = 20):
-    image = imagesearch(path)
+
+def getImagePosition(path, tries=10, precision=0.85):
+    image = imagesearch(path, precision)
     if(image[0] != -1): return image
 
-    time.sleep(1)
+    time.sleep(0.2)
     if(tries > 0): return getImagePosition(path, tries - 1)
       
-    return -1
+    return [-1, -1]
 
 def moveAndClick(pos):
     mouse.move(pos[0], pos[1])
