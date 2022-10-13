@@ -14,7 +14,7 @@ def regrowFood():
         regrow = getImagePosition(path)
         if (regrow[0] != -1):
             moveAndClick(regrow)
-            return
+            return print('Regrow successful!')
 
     return print('Regrow not found')
 
@@ -34,11 +34,9 @@ def collectFood():
 
     if (image[0] == -1):
         print('Food not ready yet')
-        regrowFood()
-        return
+        return regrowFood()
+        
 
     moveAndClick(image)
     collectFood()
 
-
-# Schedule food Collection

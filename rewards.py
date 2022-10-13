@@ -1,16 +1,13 @@
 
 
 import time
-from utils import closePopup, closeVideo, getImagePosition, moveAndClick
-
-
-def playVideo():
-    time.sleep(60)
-    closeVideo()
-
+from utils import checkIfCanClaim, closePopup, closeVideo, getImagePosition, moveAndClick
 
 def claim():
     image = getImagePosition('./img/video/claim.png')
+
+    # TODO fix it this is wrong fix it once the tv is available
+    return
 
     if (image[0] != -1):
         moveAndClick(image)
@@ -18,7 +15,7 @@ def claim():
         if (rewardsBtn[0] == -1):
             moveAndClick([960, 450])
             time.sleep(5)
-            closePopup()
+            closeVideo()
 
     else:
         print('Nothing to claim')
@@ -29,10 +26,10 @@ def openTv():
 
     if (rewardsBtn[0] == -1):
         print('No videos available')
-        closePopup()
+        return closePopup()
     else:
         moveAndClick(rewardsBtn)
-        playVideo()
+        checkIfCanClaim()
         claim()
         closePopup()
 
@@ -40,9 +37,9 @@ def openTv():
 def collectRewards():
     tv = getImagePosition('./img/video/tv.png')
 
-    if (tv[0] != -1):
-        moveAndClick(tv)
-        openTv()
-    else:
-        print('Tv not available')
-        closePopup()
+    if(tv[0] == -1):
+        return print('No TV available')
+
+    moveAndClick(tv)
+    openTv()
+

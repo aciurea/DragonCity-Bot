@@ -66,3 +66,5 @@ def startBreeding():
 
 
 startBreeding()
+# TODO
+# remove the start breeding recursive call in order to start the global script

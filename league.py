@@ -44,7 +44,7 @@ def goToFight():
 
     selectDragonBtn = getImagePosition('./img/battle/select_new_dragon.png')
     if (selectDragonBtn[0] != -1):
-        moveAndClick()
+        moveAndClick(selectDragonBtn)
         return goToFight()
 
 

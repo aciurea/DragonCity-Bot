@@ -18,6 +18,7 @@ def start():
     # startBattle()
     print('Finishe battles')
     # startBreeding()
+    checkAndCloseIfFails()
 
 def run():
     while (True):
