@@ -27,7 +27,7 @@ def moveAndClick(pos):
     while(mouse.get_position()[0] != pos[0]):
         time.sleep(0.5)
 
-    time.sleep(1)
+    time.sleep(0.2)
     mouse.click()
 
 def closePopup(): 

@@ -1,5 +1,6 @@
 import time
 from battle import startBattle
+from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
 from drag import dragMap, getMovePositions
@@ -12,10 +13,11 @@ def start():
     print('Finished collecting the gold...')
     collectFood()
     print('Finished collecting the food...')
-    collectRewards()
+    #collectRewards()
     print('Finished watching videos...')
-    startBattle()
+    # startBattle()
     print('Finishe battles')
+    # startBreeding()
 
 def run():
     while (True):
