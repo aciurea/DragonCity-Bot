@@ -1,3 +1,4 @@
+from quest import openQuestPanel
 from utils import getImagePosition, moveAndClick
 from league import openLeaguePanel
 
@@ -9,15 +10,16 @@ def chooseBattle():
         return print('Battle Button not found')
 
     moveAndClick(battleBtn)
-    openLeaguePanel()
 
 
 def startBattle():
     print('Start to battle...')
-    centerIsland = getImagePosition('./img/utils/center_island.png')
 
-    print('Center island ', centerIsland)
-    if (centerIsland[0] == -1):
-        return print('Center not found. Cannot continue')
-    moveAndClick(centerIsland)
-    chooseBattle()
+    for action in [openLeaguePanel, openQuestPanel]:
+        centerIsland = getImagePosition('./img/utils/center_island.png')
+
+        if (centerIsland[0] == -1):
+            return print('Center not found. Cannot continue')
+        moveAndClick(centerIsland)
+        chooseBattle()
+        action()

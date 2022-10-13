@@ -16,21 +16,6 @@ def start():
     print('Finished watching videos...')
     startBattle()
     print('Finishe battles')
-    checkAndCloseIfFails()
-
-
-def getNextPos(position):
-    if (position[0] == 'down'):
-        if (position[1] == 'left'):
-            return ['down', 'right']
-        else:
-            return ['top', 'left']
-
-    if (position[1] == 'left'):
-        return ['top', 'right']
-    else:
-        return ['down', 'left']
-
 
 def run():
     while (True):

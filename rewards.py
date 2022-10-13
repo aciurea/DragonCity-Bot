@@ -38,7 +38,7 @@ def openTv():
 
 
 def collectRewards():
-    tv = getImagePosition('./img/video/tv.png', 10, 0.5)
+    tv = getImagePosition('./img/video/tv.png')
 
     if (tv[0] != -1):
         moveAndClick(tv)

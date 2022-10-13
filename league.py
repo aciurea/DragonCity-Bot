@@ -1,20 +1,21 @@
 import time
-from utils import getImagePosition, moveAndClick, closePopup, closeVideo
+from utils import checkIfCanClaim, getImagePosition, moveAndClick, closePopup, closeVideo
 
 
-def getReward():
-    timeToEndTheVideo = 55
+def getRewards():
     video = getImagePosition('./img/battle/play_video.png')
 
     if (video[0] == -1):
         return print('Video not found ', video)
 
     moveAndClick(video)
-    time.sleep(timeToEndTheVideo)
+    checkIfCanClaim()
     closeVideo()
+    closePopup()
 
 
 def getAttacks():
+    # TODO improve attacks
     # Attacks should also be considered after the critical attack
     # Avoid no damage attacks or low damage attacks
     paths = [
@@ -28,50 +29,41 @@ def getAttacks():
         attack = getImagePosition(path)
         if (attack[0] != -1):
             return attack
-        continue
+
     return [-1, -1]
 
 
-def fight():
-    # Need to check the attacks
-    oponentHitTime = 10
+def goToFight():
+    oponentHitTime = 5
     attack = getAttacks()
 
-    # search for multiple attacks
-    if (attack[0] == -1):
-        selectDragonBtn = getImagePosition(
-            './img/battle/select_new_dragon.png')
-        if (selectDragonBtn[0] == -1):
-            print('Battle finished since I have no attacks')
-            return getReward()
-        else:
-            moveAndClick(selectDragonBtn)
-            return fight()
+    if (attack[0] != -1):
+        moveAndClick(attack)
+        time.sleep(oponentHitTime)  # wait for the oponent to hit
+        return goToFight()
 
-    moveAndClick(attack)
-    time.sleep(oponentHitTime)  # wait for the oponent to hit
-    fight()
+    selectDragonBtn = getImagePosition('./img/battle/select_new_dragon.png')
+    if (selectDragonBtn[0] != -1):
+        moveAndClick()
+        return goToFight()
 
 
-def openLeague(battles=0):
-    maxNumberOfBattles = 5
-    if (battles == maxNumberOfBattles):
-        return
-
+def goToLeague():
     noMoreBattles = getImagePosition('./img/battle/no_new_combats.png')
 
     if (noMoreBattles[0] != -1):
         print('No More battle available. Close the popup')
         return closePopup()  # close the no More Battle
 
-    league = getImagePosition('./img/battle/league_oponent.png')
+    oponent = getImagePosition('./img/battle/league_oponent.png')
 
-    if (league[0] == -1):
+    if (oponent[0] == -1):
         return print('League Openent not found')
 
-    moveAndClick(league)
-    fight()
-    openLeague(battles + 1)  # battle again
+    moveAndClick(oponent)
+    goToFight()
+    print('Battle finished since I have no attacks, go and take the rewards')
+    getRewards()
 
 
 def openLeaguePanel():
@@ -81,4 +73,4 @@ def openLeaguePanel():
         return print('League button not found!')
 
     moveAndClick(league)
-    openLeague()
+    goToLeague()
