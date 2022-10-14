@@ -23,7 +23,7 @@ def getFoodPosition():
     paths = ['./img/food/food.png']
 
     for path in paths:
-        image = getImagePosition(path)
+        image = getImagePosition(path, 5)
         if (image[0] != -1):
            return image
     return [-1, -1]
@@ -32,11 +32,9 @@ def getFoodPosition():
 def collectFood():
     image = getFoodPosition()
 
-    if (image[0] == -1):
-        print('Food not ready yet')
-        return regrowFood()
-        
+    if (image[0] != -1):
+        moveAndClick(image)
+        return collectFood()
 
-    moveAndClick(image)
-    collectFood()
-
+    print('Food not ready yet')
+    return regrowFood()

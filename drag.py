@@ -16,12 +16,12 @@ def drag(center):
 
 
 def dragMap(position):
-    center = [800, 450]
+    center = [800, 400]
 
-    if (position == 'down'):
-        center = [800, 350]
-    if (position == 'up'):
-        center = [800, 550]
+    # if (position == 'down'):
+    #     center = [800, 400]
+    # if (position == 'up'):
+    #     center = [800, 500]
     drag(center)
 
 

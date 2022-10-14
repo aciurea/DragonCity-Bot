@@ -1,45 +1,50 @@
 
 
-import time
-from utils import checkIfCanClaim, closePopup, closeVideo, getImagePosition, moveAndClick
+from utils import checkIfCanClaim, closePopup, closeVideo, delay, exists, getImagePosition, moveAndClick
+
 
 def claim():
-    image = getImagePosition('./img/video/claim.png')
+    claimBtn = getImagePosition('./img/tv/claim.png')
 
-    # TODO fix it this is wrong fix it once the tv is available
-    return
+    if exists(claimBtn) == False:
+        greenClaim = getImagePosition('./img/tv/green_claim.png')
+        moveAndClick(greenClaim)
+        tap = getImagePosition('./img/tv/tap.png')
+        moveAndClick(tap)
+        claim = getImagePosition('./img/fails/claim_yellow.png')
+        moveAndClick(claim)
+        claim()
+        return print('Nothing to claim')
 
-    if (image[0] != -1):
-        moveAndClick(image)
-        rewardsBtn = getImagePosition('./img/video/get_rewards_btn.png')
-        if (rewardsBtn[0] == -1):
-            moveAndClick([960, 450])
-            time.sleep(5)
-            closeVideo()
-
-    else:
-        print('Nothing to claim')
+    moveAndClick(claimBtn)
 
 
-def openTv():
-    rewardsBtn = getImagePosition('./img/video/get_rewards_btn.png')
+def openTv(tv):
+    moveAndClick(tv)
+    delay(1)
+    paths = ['./img/tv/get_rewards_btn.png']
+    rewardsBtn = [-1]
 
-    if (rewardsBtn[0] == -1):
+    for path in paths:
+        rewardsBtn = getImagePosition(path)
+        if exists(rewardsBtn):
+            break
+
+    if exists(rewardsBtn) == False:
         print('No videos available')
         return closePopup()
     else:
         moveAndClick(rewardsBtn)
         checkIfCanClaim()
+        closeVideo()
         claim()
         closePopup()
 
 
 def collectRewards():
-    tv = getImagePosition('./img/video/tv.png')
+    tv = getImagePosition('./img/tv/tv.png')
 
-    if(tv[0] == -1):
-        return print('No TV available')
-
-    moveAndClick(tv)
-    openTv()
-
+    if exists(tv):
+        openTv(tv)
+    else:
+        print('No TV available')

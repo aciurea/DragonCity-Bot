@@ -7,7 +7,7 @@ def getGoldPosition():
     ]
 
     for path in paths:
-        image = getImagePosition(path, 5)
+        image = getImagePosition(path, 5, 0.85)
 
         if (image[0] != -1):
             return image

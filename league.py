@@ -1,17 +1,18 @@
 import time
-from utils import checkIfCanClaim, getImagePosition, moveAndClick, closePopup, closeVideo
+from utils import checkIfCanClaim, getImagePosition, exists, moveAndClick, closePopup, closeVideo
 
 
 def getRewards():
+    print('Go to take the rewards')
     video = getImagePosition('./img/battle/play_video.png')
 
     if (video[0] == -1):
-        return print('Video not found ', video)
+        return print('Video not found ')
 
     moveAndClick(video)
     checkIfCanClaim()
     closeVideo()
-    closePopup()
+    return closePopup()
 
 
 def getAttacks():
@@ -21,13 +22,11 @@ def getAttacks():
     paths = [
         './img/battle/attacks/legend.png',
         './img/battle/attacks/pure_energy.png',
-        './img/battle/attacks/leech_plants.png',
-        './img/battle/attacks/out_of_time.png',
     ]
 
     for path in paths:
         attack = getImagePosition(path)
-        if (attack[0] != -1):
+        if exists(attack):
             return attack
 
     return [-1, -1]
@@ -37,21 +36,25 @@ def goToFight():
     oponentHitTime = 5
     attack = getAttacks()
 
-    if (attack[0] != -1):
+    if exists(attack):
+        print('Attacked with', attack)
         moveAndClick(attack)
         time.sleep(oponentHitTime)  # wait for the oponent to hit
         return goToFight()
 
     selectDragonBtn = getImagePosition('./img/battle/select_new_dragon.png')
-    if (selectDragonBtn[0] != -1):
+    if exists(selectDragonBtn):
+        print('New Dragon Selected')
         moveAndClick(selectDragonBtn)
+        time.sleep(oponentHitTime)  # wait for the new dragon to load
         return goToFight()
+    return -1
 
 
 def goToLeague():
     noMoreBattles = getImagePosition('./img/battle/no_new_combats.png')
 
-    if (noMoreBattles[0] != -1):
+    if exists(noMoreBattles):
         print('No More battle available. Close the popup')
         return closePopup()  # close the no More Battle
 
@@ -63,7 +66,7 @@ def goToLeague():
     moveAndClick(oponent)
     goToFight()
     print('Battle finished since I have no attacks, go and take the rewards')
-    getRewards()
+    return getRewards()
 
 
 def openLeaguePanel():
@@ -72,5 +75,6 @@ def openLeaguePanel():
     if (league[0] == -1):
         return print('League button not found!')
 
+    print('Start league battle...')
     moveAndClick(league)
-    goToLeague()
+    return goToLeague()
