@@ -1,22 +1,16 @@
 
 
-from utils import checkIfCanClaim, closePopup, closeVideo, delay, exists, getImagePosition, moveAndClick
+from utils import checkIfCanClaim, closePopup, closeVideo, commonClaim, delay, exists, getImagePosition, moveAndClick
 
-
+#TODO when tv video storage, close that and close again
 def claim():
+    print('Go to claim')
     claimBtn = getImagePosition('./img/tv/claim.png')
 
-    if exists(claimBtn) == False:
-        greenClaim = getImagePosition('./img/tv/green_claim.png')
-        moveAndClick(greenClaim)
-        tap = getImagePosition('./img/tv/tap.png')
-        moveAndClick(tap)
-        claim = getImagePosition('./img/fails/claim_yellow.png')
-        moveAndClick(claim)
-        claim()
-        return print('Nothing to claim')
-
-    moveAndClick(claimBtn)
+    if not exists(claimBtn):
+        commonClaim()
+    else:
+        moveAndClick(claimBtn)
 
 
 def openTv(tv):
@@ -34,6 +28,7 @@ def openTv(tv):
         print('No videos available')
         return closePopup()
     else:
+        print('Watching videos')
         moveAndClick(rewardsBtn)
         checkIfCanClaim()
         closeVideo()

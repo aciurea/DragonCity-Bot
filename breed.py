@@ -1,13 +1,20 @@
 import time
-from utils import closePopup, getImagePosition, moveAndClick
+import mouse
+from utils import closePopup, delay, exists, getImagePosition, moveAndClick, moveTo
 
 
-def removeEgg():
-    egg = getImagePosition('./img/breed/terra_egg.png')
+def feed():
+    feedBtn = getImagePosition('./img/breed/feed.png')
+    arr = [1, 2, 3, 4, 5, 6, 7, 8]
 
-    if (egg[0] == -1):
-        return print('Egg not found')
-    moveAndClick(egg)
+    if exists(feedBtn):
+        for a in arr:
+            moveAndClick(feedBtn)
+            time.sleep(0.5)
+    return
+
+
+def sellEgg():
     sell = getImagePosition('./img/breed/sell.png')
 
     if (sell[0] == -1):
@@ -20,26 +27,57 @@ def removeEgg():
     moveAndClick(confirmSell)
 
 
-def hatch():
-    hatchery = getImagePosition('./img/breed/hatchery.png')
+def placeEgg():
+    place = getImagePosition('./img/breed/place.png')
 
-    if (hatchery[0] == -1):
-        return print('Hatchery not found')
-    moveAndClick(hatchery)
-    time.sleep(3)
-    removeEgg()
+    if (place[0] == -1):
+        return print('Place btn not found')
+    moveAndClick(place)
+    habitat = getImagePosition('./img/breed/location.png', 30)
+
+    if (habitat[0] == -1):
+        return print('Habitat not found')
+    print(habitat)
+    mouse.move(habitat[0], habitat[1])
+    time.sleep(20)
+
+    moveAndClick(habitat)
+    dragon = getImagePosition('./img/breed/dragon.png')
+    if (dragon[0] == -1):
+        return print('Dragon not found')
+    moveAndClick(dragon)
+    # feed()
+    sellEgg()
 
 
-def finishBreed():
+def placeAndFeed():
+    print('TODO')
+
+
+def hatchery(priority):
+    egg = getImagePosition('./img/breed/terra_egg.png')
+
+    if (egg[0] == -1):
+        return print('Egg not found')
+    moveAndClick(egg)
+    if (priority == 'breed' or priority == -1):
+        return sellEgg()
+    if (priority == 'hatch'):
+        placeEgg()
+    if (priority == 'feed'):
+        placeAndFeed()
+
+
+def finishBreed(priority):
     icon = getImagePosition('./img/breed/finish_breed.png')
 
     if (icon == -1):
         return print('Breed not ready yet')
     moveAndClick(icon)
-    removeEgg()
+    hatchery(priority)
 
 
-def startBreeding():
+def startBreeding(priority=-1):
     print('Start breeding')
     tree = getImagePosition('./img/breed/tree.png')
 
@@ -59,12 +97,11 @@ def startBreeding():
         return print('Breed btn not found')
     moveAndClick(breedBtn)
     closePopup()
-    time.sleep(10)
-    finishBreed()
-    print('finish breeding')
-    startBreeding()
+    delay(10)
+    finishBreed(priority)
+    print('Finish breeding, hatching and feeding')
 
 
-startBreeding()
+# startBreeding()
 # TODO
 # remove the start breeding recursive call in order to start the global script

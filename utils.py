@@ -4,6 +4,19 @@ import time
 import mouse
 
 
+def commonClaim():
+    closePopup()
+    greenClaim = getImagePosition('./img/tv/green_claim.png')
+    moveAndClick(greenClaim)
+    delay(1)
+    tap = getImagePosition('./img/tv/tap.png')
+    moveAndClick(tap)
+    delay(1)
+    claim = getImagePosition('./img/fails/claim_yellow.png')
+    moveAndClick(claim)
+    closePopup()
+    return print('Claimed rewards')
+
 def delay(seconds):
     time.sleep(seconds)
 
@@ -14,7 +27,7 @@ def exists(value):
 
 def checkIfCanClaim():
     image = getImagePosition('./img/utils/ready_to_claim.png', 10)
-    if (image[0] != -1):
+    if exists(image):
         return image
     time.sleep(3)
     return checkIfCanClaim()

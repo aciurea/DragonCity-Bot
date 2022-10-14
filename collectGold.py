@@ -18,7 +18,8 @@ def collectGold():
     gold = getGoldPosition()
 
     if (gold[0] == -1):
-       return print('Gold not found')
+        print('Finished collecting the gold...')
+        return print('Gold not found')
 
     print('Gold position', gold)
     moveAndClick(gold)

@@ -21,3 +21,4 @@ def startBattle():
         moveAndClick(centerIsland)
         chooseBattle()
         action()
+    return print('Finishe battles')

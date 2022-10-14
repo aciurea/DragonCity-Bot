@@ -1,17 +1,20 @@
-import time
-from utils import checkIfCanClaim, getImagePosition, exists, moveAndClick, closePopup, closeVideo
+from utils import checkIfCanClaim, delay, getImagePosition, exists, moveAndClick, closePopup, closeVideo
 
 
 def getRewards():
     print('Go to take the rewards')
     video = getImagePosition('./img/battle/play_video.png')
 
-    if (video[0] == -1):
+    if not exists(video):
         return print('Video not found ')
 
     moveAndClick(video)
     checkIfCanClaim()
     closeVideo()
+    greenClaim = getImagePosition('./img/tv/green_claim.png')
+    moveAndClick(greenClaim)
+    yellowClaim = getImagePosition('./img/fails/claim_yellow.png', 5)
+    moveAndClick(yellowClaim)
     return closePopup()
 
 
@@ -39,14 +42,14 @@ def goToFight():
     if exists(attack):
         print('Attacked with', attack)
         moveAndClick(attack)
-        time.sleep(oponentHitTime)  # wait for the oponent to hit
+        delay(oponentHitTime)  # wait for the oponent to hit
         return goToFight()
 
     selectDragonBtn = getImagePosition('./img/battle/select_new_dragon.png')
     if exists(selectDragonBtn):
         print('New Dragon Selected')
         moveAndClick(selectDragonBtn)
-        time.sleep(oponentHitTime)  # wait for the new dragon to load
+        delay(oponentHitTime)  # wait for the new dragon to load
         return goToFight()
     return -1
 

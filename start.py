@@ -5,20 +5,37 @@ from collectFood import collectFood
 from collectGold import collectGold
 from drag import dragMap, getMovePositions
 from fail import checkAndCloseIfFails
+from heroic import heroic
 from rewards import collectRewards
+from utils import delay
 
 
 def start():
+    priorities = {'breed': startBreeding,
+                  'feed': startBreeding,
+                  'hatch': startBreeding,
+                  'food': collectFood
+                  }
+    priority = heroic()
+    print('priority is ', priority)
+    if (priority == -1):
+       print('no priority')
+    else:
+        work = priorities[priority]
+        print(work, priority)
+        times = 10
+        while (times > 0):
+            work(priority)
+            times -= 1
+            delay(0.5)
+
     collectGold()
-    print('Finished collecting the gold...')
     collectFood()
-    print('Finished collecting the food...')
-    #collectRewards()
-    print('Finished watching videos...')
-    # startBattle()
-    print('Finishe battles')
-    # startBreeding()
-    checkAndCloseIfFails()
+    startBattle()
+    collectRewards()
+    startBreeding()
+
+    # checkAndCloseIfFails()
 
 def run():
     while (True):

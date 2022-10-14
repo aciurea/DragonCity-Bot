@@ -1,4 +1,4 @@
-from utils import getImagePosition, moveAndClick
+from utils import delay, exists, getImagePosition, moveAndClick
 
 
 def regrowFood():
@@ -29,12 +29,16 @@ def getFoodPosition():
     return [-1, -1]
 
 
-def collectFood():
-    image = getFoodPosition()
+def collectFood(priority=-1):
+    print('collecting food')
+    food = getFoodPosition()
 
-    if (image[0] != -1):
-        moveAndClick(image)
-        return collectFood()
+    if exists(food):
+        moveAndClick(food)
+        return collectFood(priority)
 
     print('Food not ready yet')
-    return regrowFood()
+    regrowFood()
+    if (priority == -1):
+        return
+    delay(30)
