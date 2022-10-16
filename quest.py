@@ -4,8 +4,10 @@ from utils import getImagePosition, moveAndClick, closePopup
 
 def battle():
     paths = [
-        './img/battle/start_quest1.png',
-        './img/battle/start_quest2.png']
+        './img/battle/michone.png'
+        # './img/battle/start_quest1.png',
+        # './img/battle/start_quest2.png'
+    ]
     next = [-1]
 
     for path in paths:

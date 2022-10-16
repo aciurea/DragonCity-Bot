@@ -41,7 +41,6 @@ def checkIfCanClaim():
     claim = getImagePosition('./img/heroic/claim.png', 3)
 
     moveAndClick(claim)
-    delay(1)
     commonClaim()
 
 
@@ -54,21 +53,22 @@ def heroic():
     moveAndClick(island)
     checkIfCanClaim()
     mission = findMission()
-    noFight = getImagePosition('./img/heroic/not_ready_yet.png', 3)
-
-    if exists(noFight):
-        exitHeroic()
-        return mission
 
     enterFightBtn = getImagePosition('./img/heroic/fight.png', 3)
 
-    if exists(enterFightBtn) == False:
+    if not exists(enterFightBtn):
         print('No fight')
         closePopup()
         return mission
 
     moveAndClick(enterFightBtn)
-    startFight = getImagePosition('./img/heroic/start_fight.png', 3)
+    noFight = getImagePosition('./img/heroic/not_ready_yet.png')
+
+    if exists(noFight):
+        exitHeroic()
+        return mission
+
+    startFight = getImagePosition('./img/heroic/start_fight.png')
 
     if exists(startFight):
         fightHeroic(startFight)

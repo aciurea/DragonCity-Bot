@@ -13,7 +13,7 @@ def chooseBattle():
 
 
 def startBattle():
-    for action in [openLeaguePanel, openQuestPanel]:
+    for action in [openLeaguePanel]:  # openQuestPanel
         centerIsland = getImagePosition('./img/utils/center_island.png')
 
         if (centerIsland[0] == -1):

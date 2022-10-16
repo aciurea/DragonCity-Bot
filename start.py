@@ -19,7 +19,7 @@ def start():
     priority = heroic()
     print('priority is ', priority)
     if (priority == -1):
-       print('no priority')
+        print('no priority')
     else:
         work = priorities[priority]
         print(work, priority)
@@ -30,21 +30,24 @@ def start():
             delay(0.5)
 
     collectGold()
+    dragMap()
     collectFood()
+    dragMap()
     startBattle()
-    collectRewards()
+    dragMap()
+    # collectRewards()
     startBreeding()
-
+    dragMap()
     # checkAndCloseIfFails()
+
 
 def run():
     while (True):
-        positions = getMovePositions()
-        for position in positions:
-            print('Position is ', position)
-            dragMap(position)
-            start()
-
+        # positions = getMovePositions()
+        # for position in positions:
+        #     print('Position is ', position)
+        #     dragMap()
+        start()
         time.sleep(5)
 
 

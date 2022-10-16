@@ -33,25 +33,21 @@ def placeEgg():
     if (place[0] == -1):
         return print('Place btn not found')
     moveAndClick(place)
-    habitat = getImagePosition('./img/breed/location.png', 30)
 
-    if (habitat[0] == -1):
-        return print('Habitat not found')
-    print(habitat)
-    mouse.move(habitat[0], habitat[1])
-    time.sleep(20)
+    delay(1)
+    tree = getImagePosition('./img/breed/tree.png')
+    moveAndClick([tree[0] + 80, tree[1] + 50])
 
-    moveAndClick(habitat)
     dragon = getImagePosition('./img/breed/dragon.png')
     if (dragon[0] == -1):
         return print('Dragon not found')
     moveAndClick(dragon)
-    # feed()
-    sellEgg()
 
 
 def placeAndFeed():
-    print('TODO')
+    placeEgg()
+    feed()
+    sellEgg()
 
 
 def hatchery(priority):
@@ -64,6 +60,7 @@ def hatchery(priority):
         return sellEgg()
     if (priority == 'hatch'):
         placeEgg()
+        sellEgg()
     if (priority == 'feed'):
         placeAndFeed()
 
@@ -102,6 +99,6 @@ def startBreeding(priority=-1):
     print('Finish breeding, hatching and feeding')
 
 
-# startBreeding()
+# startBreeding('feed')
 # TODO
 # remove the start breeding recursive call in order to start the global script

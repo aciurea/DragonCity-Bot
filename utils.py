@@ -1,21 +1,19 @@
-import pyautogui
 from python_imagesearch.imagesearch import imagesearch, imagesearcharea
 import time
 import mouse
 
 
 def commonClaim():
-    closePopup()
-    greenClaim = getImagePosition('./img/tv/green_claim.png')
+    greenClaim = getImagePosition('./img/tv/green_claim.png', 3)
     moveAndClick(greenClaim)
     delay(1)
-    tap = getImagePosition('./img/tv/tap.png')
+    tap = getImagePosition('./img/tv/tap.png', 3)
     moveAndClick(tap)
     delay(1)
-    claim = getImagePosition('./img/fails/claim_yellow.png')
+    claim = getImagePosition('./img/fails/claim_yellow.png', 3)
     moveAndClick(claim)
     closePopup()
-    return print('Claimed rewards')
+    print('Claimed rewards')
 
 def delay(seconds):
     time.sleep(seconds)
@@ -58,10 +56,9 @@ def closePopup():
     closeBtn = getImagePosition('./img/utils/close.png')
    
     if(closeBtn[0] == -1):
-        return print('no close button')
+        print('no close button')
 
     moveAndClick(closeBtn)
-
 def closeVideo():
     closeBtn = getImagePosition('./img/utils/close_video.png')
     if(closeBtn[0] == -1): 

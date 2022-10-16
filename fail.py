@@ -19,10 +19,10 @@ def checkAndCloseIfFails():
     ]
 
     for path in paths:
-        image = getImagePosition(path, 10, 0.6)
+        image = getImagePosition(path, 3, 0.6)
         if (image[0] != -1):
             moveAndClick(image)
-            time.sleep(2)
+            time.sleep(1)
             return checkAndCloseIfFails()
     return
 
