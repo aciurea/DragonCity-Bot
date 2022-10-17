@@ -1,4 +1,5 @@
-from utils import getImagePosition, moveAndClick
+from utils import getImagePosition, moveAndClickOnIsland
+
 
 def getGoldPosition():
     paths = [
@@ -15,6 +16,7 @@ def getGoldPosition():
 
 
 def collectGold():
+
     gold = getGoldPosition()
 
     if (gold[0] == -1):
@@ -22,5 +24,8 @@ def collectGold():
         return print('Gold not found')
 
     print('Gold position', gold)
-    moveAndClick(gold)
+    moveAndClickOnIsland(gold, 'Gold not found', 'gold')
     collectGold()
+
+
+# collectGold()

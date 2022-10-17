@@ -1,8 +1,20 @@
 import time
 
 import mouse
-from python_imagesearch import (imagesearch, imagesearch_loop,
-                                imagesearch_numLoop, imagesearcharea)
+from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
+                                            imagesearcharea, imagesearch_region_loop)
+
+
+def getImagePositionRegion(path, x1, y1, x2, y2, precision=0.8):
+    image = imagesearch_region_loop(path,
+                                    0.5,
+                                    x1,
+                                    y1,
+                                    x2,
+                                    y2,
+                                    precision)
+
+    return [image[0] + x1, image[1] + y1] if exists(image) else [-1]
 
 
 def commonClaim():
@@ -29,10 +41,17 @@ def checkIfCanClaim():
     return image if exists(image) else [-1]
 
 
-def getImagePosition(path, tries=20, precision=0.8, delay=0.5):
-    image = imagesearch_numLoop(path, delay, tries, precision)
+def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
+    image = imagesearch(path, precision)
 
-    return image if exists(image) else [-1]
+    while (not exists(image)):
+        tries -= 1
+        image = imagesearch(path, precision)
+        if (tries == 0):
+            return image
+        delay(seconds)
+
+    return image
 
 def retry(fn, tries = 3):
     if tries == 0: return [-1]
@@ -43,15 +62,43 @@ def retry(fn, tries = 3):
             return retry(fn, tries -1)
         return img
 
-def moveAndClickOnIsland(pos, msg = 'Nothing to click'):
-    # TODO resolution is: 1600x900
-    moveAndClick(pos, msg)
-    delay(.5)
-    backBtn = retry(imagesearcharea('./img/fails/back.png', 0, 0, 500, 200), 2) # start at 0, 0, and end at 500, 200
-    moveAndClick(backBtn)
-    closeBtn = retry(imagesearch( './img/utils/close.png', 500, 0, 1600, 450), 2) # start at 0, 0, and end at 1600, 450. (most right horizonatlly, half the screen vertically)
-    moveAndClick(closeBtn)
-    
+
+def moveAndClickOnIslandWrapper(lastCall='none'):
+    times = {'gold': 0, 'food': 0, 'breed': 0,
+             'hatch': 0, 'none': 0, 'farm': 0, 'regrow': 0}
+    lastCall = ['none']
+
+    def inner(pos, msg='Nothing to click', type='none'):
+        if (times[type] >= 4):
+            # TODO move the map to the center to avoid the problem.
+            # try to add 3 points in case the center is not found
+            return print(type + ' to many calls')
+
+        # TODO resolution is: 1600x900
+        moveAndClick(pos, msg)
+        delay(.5)
+        # start at 0, 0, and end at 1600, 450. (most right horizonatlly, half the screen vertically)
+        def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
+        def closeFn(): return imagesearcharea('./img/utils/close.png', 300, 0, 1600, 450)
+
+        backBtn = retry(backFn, 3)  # start at 0, 0, and end at 500, 200
+        closeBtn = retry(closeFn, 3)
+
+        if exists(backBtn) or exists(closeBtn):
+            times[type] += 1
+        if (lastCall[0] != type):  # reset when it fails for other reason
+            times[type] = 0
+            lastCall[0] = type
+
+        if exists(backBtn):
+            moveAndClick(backBtn, 'Back button')
+        if exists(closeBtn):
+          moveAndClick([closeBtn[0] + 300, closeBtn[1]], 'Close button')
+
+    return inner
+
+
+moveAndClickOnIsland = moveAndClickOnIslandWrapper()
 
 def moveAndClick(pos, msg = 'Nothing to click'):
     if not exists(pos):

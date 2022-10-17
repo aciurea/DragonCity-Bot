@@ -1,19 +1,19 @@
-from utils import delay, exists, getImagePosition, moveAndClick
+from utils import delay, exists, getImagePosition, getImagePositionRegion, moveAndClickOnIsland
 
 
 def regrowFood():
     farm = getImagePosition('./img/food/farm.png')
 
-    if (farm[0] == -1):
+    if not exists(farm):
         return print('Farm not found')
-    moveAndClick(farm)
+    moveAndClickOnIsland(farm, 'Farm not found', 'farm')
 
     paths = ['./img/food/regrow.png', './img/food/regrow2.png']
 
     for path in paths:
-        regrow = getImagePosition(path)
-        if (regrow[0] != -1):
-            moveAndClick(regrow)
+        regrow = getImagePositionRegion(path,  800, 600, 1600, 900)
+        if exists(regrow):
+            moveAndClickOnIsland(regrow, 'Regrow not found', 'regrow')
             return print('Regrow successful!')
 
     return print('Regrow not found')
@@ -24,21 +24,26 @@ def getFoodPosition():
 
     for path in paths:
         image = getImagePosition(path, 5)
-        if (image[0] != -1):
+        if exists(image):
            return image
     return [-1, -1]
 
 
-def collectFood(priority=-1):
-    print('collecting food')
+def collectFood():
     food = getFoodPosition()
 
-    if exists(food):
-        moveAndClick(food)
-        return collectFood(priority)
+    if not exists(food):
+        print('Food not ready yet or not found')
+        return regrowFood()
 
-    print('Food not ready yet')
-    regrowFood()
-    if (priority == -1):
-        return
-    delay(30)
+    moveAndClickOnIsland(food, 'Food not found', 'food')
+    return collectFood()
+
+
+def start():
+    while (True):
+        collectFood()
+        delay(30)
+
+
+# start()
