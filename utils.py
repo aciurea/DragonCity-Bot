@@ -1,5 +1,4 @@
 import time
-
 import mouse
 from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
                                             imagesearcharea, imagesearch_region_loop)
@@ -62,6 +61,8 @@ def retry(fn, tries = 3):
             return retry(fn, tries -1)
         return img
 
+def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
+def closeFn(): return imagesearcharea('./img/utils/close.png', 300, 0, 1600, 450)
 
 def moveAndClickOnIslandWrapper(lastCall='none'):
     times = {'gold': 0, 'food': 0, 'breed': 0,
@@ -78,8 +79,6 @@ def moveAndClickOnIslandWrapper(lastCall='none'):
         moveAndClick(pos, msg)
         delay(.5)
         # start at 0, 0, and end at 1600, 450. (most right horizonatlly, half the screen vertically)
-        def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
-        def closeFn(): return imagesearcharea('./img/utils/close.png', 300, 0, 1600, 450)
 
         backBtn = retry(backFn, 3)  # start at 0, 0, and end at 500, 200
         closeBtn = retry(closeFn, 3)

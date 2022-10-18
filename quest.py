@@ -1,35 +1,38 @@
 from league import goToFight
-from utils import getImagePosition, moveAndClick, closePopup
+from utils import backFn, closePopup, exists, getImagePosition, moveAndClick, retry
 
 
 def battle():
     paths = [
-        './img/battle/michone.png'
-        # './img/battle/start_quest1.png',
-        # './img/battle/start_quest2.png'
-    ]
+            './img/battle/start_quest2.png',
+            './img/battle/start_quest1.png'
+            ]
     next = [-1]
 
     for path in paths:
         next = getImagePosition(path, 5)
-        if (next != -1):
+        if exists(next): 
+            moveAndClick(next)
             break
-
-    if (next[0] == -1):
-        return print('No reward to click')
-
-    moveAndClick(next)
+          
+    if not exists(next):
+        return print('No quest fight available')
+   
     battle = getImagePosition('./img/battle/go_battle.png')
-    if (battle[0] != -1):
+    if exists(battle):
         moveAndClick(battle)
     else:
-        print('No quest Battle')
+       return print('No quest Battle')
+    
     battle = getImagePosition('./img/battle/go_to_battle.png')
-    if (battle[0] != -1):
-        moveAndClick(battle)
-        return goToFight()
-    else:
-        return print('No quest go to battle button')
+
+    # TODO take the question mark and if exists, click on back button
+    dragonIsMissing = True
+    if(dragonIsMissing):
+       return moveAndClick(backFn())
+
+    moveAndClick(battle, 'Battle')
+    return goToFight() if exists(battle) else print('No quest go to battle available')
 
 
 def openQuestPanel():
