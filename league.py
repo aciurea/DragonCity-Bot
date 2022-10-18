@@ -1,3 +1,4 @@
+import threading
 from utils import checkIfCanClaim, delay, getImagePosition, exists, getImagePositionRegion, moveAndClick, closePopup, closeVideo
 
 
@@ -18,19 +19,30 @@ def getRewards():
     moveAndClick(yellowClaim)
     return closePopup()
 
+def getCriticalAttackPosition(image):
+    # TODO upadte this
+    return image
+
 
 def getAttacks():
     # TODO improve attacks, take screenshot with all the attacks and add them in order
-    # Attacks should also be considered after the critical attack
     # Avoid no damage attacks or low damage attacks
-    # TODO try to use multithreading to read fast the attacks and choose the best one
     paths = [
-        './img/battle/attacks/legend.png',
-        './img/battle/attacks/pure_energy.png',
+        { 'path': './img/battle/attacks/legend.png', 'critical': False, 'low': False },
+        {'path': './img/battle/attacks/pure_energy.png', 'critical': False, 'low': False }
     ]
 
+    attacks = []
+    def fn(getPosition, path, x1, y1, x2, y2, critical):
+            image = getPosition(path, x1, y1, x2, y2, 3) # attaks are at the bottom of the page, try only 2 times to find the attack
+            if exists(image):
+                if critical: attacks.insert(0, getCriticalAttackPosition(image))
+                else: attacks.append(image)
+              
     for path in paths:
-        attack = getImagePositionRegion(path, 1000, 0, 1600, 900, 3) # attaks are at the bottom of the page, try only 2 times to find the attack
+        t1 = threading.Thread(target=fn, args=(getImagePositionRegion, path['path'], 1000, 0, 1600, 900, path['critical'])) 
+        t1.start()
+    for attack in attacks:
         if exists(attack):
             return attack
     return [-1]

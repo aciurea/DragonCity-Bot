@@ -1,21 +1,30 @@
+from drag import dragMap
 from league import goToFight
-from utils import backFn, closePopup, exists, getImagePosition, moveAndClick, retry
+from utils import backFn, closePopup, exists, getImagePosition, moveAndClick, moveTo, retry
 
 
-def battle():
+def getQuest(retries = 3, x = 900):
+    if(retries == 0): return [-1]
+    distance = 100
     paths = [
             './img/battle/start_quest2.png',
             './img/battle/start_quest1.png'
             ]
-    next = [-1]
 
     for path in paths:
         next = getImagePosition(path, 5)
         if exists(next): 
-            moveAndClick(next)
-            break
+            return next
+    
+    moveTo([x, 450]) # move to center, drag the map to the left by 100px
+    dragMap([x - distance, 450])
+    getQuest(retries - 1, x -distance)
+    return [-1]
+
+def battle():
+    quest = getQuest()
           
-    if not exists(next):
+    if not exists(quest):
         return print('No quest fight available')
    
     battle = getImagePosition('./img/battle/go_battle.png')
