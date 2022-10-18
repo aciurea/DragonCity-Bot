@@ -15,9 +15,7 @@ def drag(center):
     pyautogui.mouseUp()
 
 
-def dragMap():
-    center = [800, 400]
-
+def dragMap(center = [800, 400]):
     drag(center)
 
 
