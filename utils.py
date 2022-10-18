@@ -1,19 +1,19 @@
+from operator import itruediv
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
                                             imagesearcharea, imagesearch_region_loop)
 
 
-def getImagePositionRegion(path, x1, y1, x2, y2, precision=0.8):
-    image = imagesearch_region_loop(path,
-                                    0.5,
-                                    x1,
-                                    y1,
-                                    x2,
-                                    y2,
-                                    precision)
-
-    return [image[0] + x1, image[1] + y1] if exists(image) else [-1]
+# It retries 10 times which means 5 seconds for the image to appear
+def getImagePositionRegion(path, x1, y1, x2, y2, precision=0.8, retries = 10):
+    image = imagesearcharea(path, x1, y1, x2, y2, precision)
+    while not exists(image):
+        image = imagesearcharea(path, x1, y1, x2, y2, precision)
+        if retries == 0: return [image[0] + x1, image[1] + y1] if exists(image) else [-1]
+        retries -=1
+        delay(0.5)
+    return [image[0] + x1, image[1] + y1]
 
 
 def commonClaim():
@@ -112,14 +112,13 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     mouse.click()
 
 def closePopup(): 
-    closeBtn = getImagePosition('./img/utils/close.png')
+    closeBtn = getImagePositionRegion('./img/utils/close.png', 900, 0, 1600, 450) # close is on the top right corner. I can also be in the middle of the screen
     moveAndClick(closeBtn, 'no close button')
 
 def closeVideo():
-    closeBtn = getImagePosition('./img/utils/close_video.png')
+    closeBtn = getImagePositionRegion('./img/utils/close_video.png', 900, 0, 1600, 350) # close is on the top right corner. I can also be in the middle of the screen
 
     moveAndClick(closeBtn, 'Close video button not found')
-
 
 def moveTo(position):
    mouse.move(position[0], position[1])
