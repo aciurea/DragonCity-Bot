@@ -9,13 +9,17 @@ def drag(center):
         return print('Cannot move the map since there is no point of reference')
 
     pyautogui.moveTo(island)
+    dragMap(center)
+
+
+def dragMap(position):
     pyautogui.mouseDown(button='left')
-    pyautogui.moveTo(center[0], center[1], 1)
-    time.sleep(1)
+    pyautogui.moveTo(position[0], position[1], .5)
+    time.sleep(.5)
     pyautogui.mouseUp()
 
 
-def dragMap(center = [800, 400]):
+def dragMapToCenter(center=[800, 400]):
     drag(center)
 
 
