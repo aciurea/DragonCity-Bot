@@ -1,54 +1,56 @@
-import time
 from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
-from drag import dragMap, getMovePositions
+from drag import dragMapToCenter, getMovePositions
 from fail import checkAndCloseIfFails
 from heroic import heroic
 from rewards import collectRewards
 from utils import delay
 
 
-def start():
-    priorities = {'breed': startBreeding,
-                  'feed': startBreeding,
-                  'hatch': startBreeding,
-                  'food': collectFood
-                  }
-    priority = heroic()
-    print('priority is ', priority)
-    if (priority == -1):
-        print('no priority')
-    else:
-        work = priorities[priority]
-        print(work, priority)
-        times = 10
-        while (times > 0):
-            work(priority)
-            times -= 1
-            delay(0.5)
+def runAction(action):
+    dragMapToCenter()
+    action()
 
-    collectGold()
-    dragMap()
-    collectFood()
-    dragMap()
-    startBattle()
-    dragMap()
-    # collectRewards()
-    startBreeding()
-    dragMap()
+def start():
+    # priorities = {'breed': startBreeding,
+    #               'feed': startBreeding,
+    #               'hatch': startBreeding,
+    #               'food': collectFood
+    #               }
+    # priority = heroic()
+    # print('priority is ', priority)
+    # if (priority == -1):
+    #     print('no priority')
+    # else:
+    #     work = priorities['hatch']
+    #     print(work, priority)
+    #     times = 20
+    #     while (times > 0):
+    #         work('hatch')
+    #         times -= 1
+    #         delay(0.5)
+
+    runAction(collectGold)
+    runAction(collectFood)
+    runAction(startBattle)
+    runAction(collectRewards)
+    runAction(startBreeding)
     # checkAndCloseIfFails()
 
 
+def hatchAndCollect():
+    index = 10
+    collectFood()
+    while (index > 0):
+        startBreeding('hatch')
+        index -= 1
+    delay(5)
+
 def run():
     while (True):
-        # positions = getMovePositions()
-        # for position in positions:
-        #     print('Position is ', position)
-        #     dragMap()
         start()
-        time.sleep(5)
-
+        delay(5)
 
 run()

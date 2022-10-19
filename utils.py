@@ -4,7 +4,6 @@ import mouse
 from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
                                             imagesearcharea, imagesearch_region_loop)
 
-
 # It retries 10 times which means 5 seconds for the image to appear
 def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10):
     image = imagesearcharea(path, x1, y1, x2, y2, precision)
@@ -68,14 +67,13 @@ def moveAndClickOnIslandWrapper(lastCall='none'):
     times = {'gold': 0, 'food': 0, 'breed': 0,
              'hatch': 0, 'none': 0, 'farm': 0, 'regrow': 0}
     lastCall = ['none']
-
+    # TODO try to use the function that is called as the key. 
+    # Clear the object after is success
     def inner(pos, msg='Nothing to click', type='none'):
         if (times[type] >= 4):
-            # TODO move the map to the center to avoid the problem.
-            # try to add 3 points in case the center is not found
+            # TODO try to move the map
             return print(type + ' to many calls')
 
-        # TODO resolution is: 1600x900
         moveAndClick(pos, msg)
         delay(.5)
         # start at 0, 0, and end at 1600, 450. (most right horizonatlly, half the screen vertically)

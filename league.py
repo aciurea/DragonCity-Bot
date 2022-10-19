@@ -52,7 +52,14 @@ def getAttacks():
         {'path': common + 'meteor_fall.png', 'check': 'no'},
         {'path': common + 'out_of_time.png', 'check': 'no'},
         {'path': common + 'purge.png', 'check': 'no'},
-        {'path': common + 'slash.png', 'check': 'no'}
+        {'path': common + 'slash.png', 'check': 'no'},
+        {'path': common + 'ghost.png', 'check': 'no'},
+        {'path': common + 'leaf_beast.png', 'check': 'no'},
+        {'path': common + 'leech.png', 'check': 'no'},
+        {'path': common + 'magneto.png', 'check': 'no'},
+        {'path': common + 'electric_shock.png', 'check': 'no'},
+        {'path': common + 'lava.png', 'check': 'no'},
+
     ]
 
     threads = [None] * len(paths)
@@ -81,6 +88,7 @@ def getAttacks():
                 attacks.append(attack)
 
     newAttacks = getStrongAttacks(avoidAttack[0], attacks)
+    print(newAttacks)
     for attack in newAttacks:
         if exists(attack):
             return attack
@@ -94,9 +102,9 @@ def goToFight():
         print('Attacked with', attack)
         delay(5)  # wait for the victory logo to have a chance to appear
         return goToFight()
-
+    print('No attack, try to select a new dragon')
     selectDragonBtn = getImagePositionRegion(
-        './img/battle/select_new_dragon.png', 400, 400, 1600, 800)
+        './img/battle/select_new_dragon.png', 300, 400, 1600, 800, 0.9)
     if exists(selectDragonBtn):
         moveAndClick(selectDragonBtn)
         print('New Dragon Selected')
@@ -108,7 +116,7 @@ def goToFight():
 def goToLeague():
     # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped
     noMoreBattles = getImagePositionRegion(
-        './img/battle/no_new_combats.png', 900, 0, 1600, 450)
+        './img/battle/no_new_combats.png', 1000, 0, 1600, 450, 0.9, 20)
 
     if exists(noMoreBattles):
         print('No More battle available. Close the popup')
@@ -120,6 +128,7 @@ def goToLeague():
         return print('League Openent not found')
 
     moveAndClick(oponent)
+    delay(5) # wait for the battle to start
     goToFight()
     print('Battle finished since I have no attacks, go and take the rewards')
     return getRewards()
@@ -136,3 +145,9 @@ def openLeaguePanel():
     moveAndClick(league)
     goToLeague()
 
+# def start():
+#     while True:
+#         goToFight()
+#         delay(5)
+
+# start()

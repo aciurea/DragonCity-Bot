@@ -23,7 +23,9 @@ def fightHeroic(fight):
 def findMission():
     # update here with all the missions
     missions = [['./img/heroic/breed.png', 'breed'],
-                ['./img/heroic/food.png', 'food']]
+                ['./img/heroic/food.png', 'food'],
+                ['./img/heroic/hatch.png', 'hatch'],
+                ]
     for mission in missions:
         image = getImagePosition(mission[0], 3, 0.9)
         if exists(image):

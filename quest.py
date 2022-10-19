@@ -1,5 +1,6 @@
 from drag import dragMap
 from league import goToFight
+from rewards import openChest
 from utils import backFn, closePopup, delay, exists, getImagePosition, moveAndClick, moveTo, getImagePositionRegion
 
 
@@ -44,8 +45,11 @@ def battle():
     dragonIsMissing = getImagePosition('./img/battle/missing_dragon.png', 10)
     if exists(dragonIsMissing):
         return moveAndClick(backFn())
-
-    return goToFight() if exists(battle) else print('No quest go to battle available')
+    if exists(battle):
+        goToFight()
+        openChest()
+    else: 
+        print('No quest go to battle available')
 
 
 def openQuestPanel():

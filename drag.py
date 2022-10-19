@@ -1,10 +1,10 @@
 import time
 import pyautogui
-from utils import getImagePosition
+from utils import getImagePositionRegion
 
 
 def drag(center):
-    island = getImagePosition('./img/utils/center_island.png')
+    island = getImagePositionRegion('./img/utils/center_island.png', 0, 0, 1600, 900)
     if (island[0] == -1):
         return print('Cannot move the map since there is no point of reference')
 
@@ -20,6 +20,7 @@ def dragMap(position):
 
 
 def dragMapToCenter(center=[800, 400]):
+    print('Drag map to center')
     drag(center)
 
 
