@@ -11,7 +11,7 @@ def regrowFood():
     paths = ['./img/food/regrow.png', './img/food/regrow2.png']
 
     for path in paths:
-        regrow = getImagePositionRegion(path,  800, 600, 1600, 900)
+        regrow = getImagePositionRegion(path,  800, 600, 1600, 900, 0.8, 3)
         if exists(regrow):
             moveAndClickOnIsland(regrow, 'Regrow not found', 'regrow')
             return print('Regrow successful!')

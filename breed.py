@@ -94,11 +94,18 @@ def startBreeding(priority=-1):
         return print('Breed btn not found')
     moveAndClick(breedBtn)
     closePopup()
-    delay(10)
+    delay(12)
     finishBreed(priority)
     print('Finish breeding, hatching and feeding')
 
 
-# startBreeding('feed')
+def start():
+    while (True):
+        startBreeding('hatch')
+
+
+# start()
+
+
 # TODO
 # remove the start breeding recursive call in order to start the global script

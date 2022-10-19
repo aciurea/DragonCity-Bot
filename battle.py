@@ -4,7 +4,7 @@ from league import openLeaguePanel
 
 
 def chooseBattle():
-    battleBtn = getImagePositionRegion('./img/battle/battle_btn.png', 200, 500, 1000, 900)# battle position is at the bottom
+    battleBtn = getImagePositionRegion('./img/battle/battle_btn.png', 200, 500, 1000, 900) # battle position is at the bottom
 
     if not exists(battleBtn):
         return print('Battle Button not found')
@@ -13,7 +13,7 @@ def chooseBattle():
 
 
 def startBattle():
-    for action in [openLeaguePanel, openQuestPanel]:
+    for action in [openQuestPanel, openLeaguePanel]:
         centerIsland = getImagePosition('./img/utils/center_island.png')
 
         if (centerIsland[0] == -1):

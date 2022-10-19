@@ -1,4 +1,4 @@
-from operator import itruediv
+from threading import Thread
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
@@ -6,7 +6,7 @@ from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
 
 
 # It retries 10 times which means 5 seconds for the image to appear
-def getImagePositionRegion(path, x1, y1, x2, y2, precision=0.8, retries = 10):
+def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10):
     image = imagesearcharea(path, x1, y1, x2, y2, precision)
     while not exists(image):
         image = imagesearcharea(path, x1, y1, x2, y2, precision)
@@ -122,3 +122,20 @@ def closeVideo():
 
 def moveTo(position):
    mouse.move(position[0], position[1])
+
+
+class ThreadWithReturnValue(Thread):
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+
+    def run(self):
+        print(type(self._target))
+        if self._target is not None:
+            self._return = self._target(*self._args,
+                                        **self._kwargs)
+
+    def join(self, *args):
+        Thread.join(self, *args)
+        return self._return
