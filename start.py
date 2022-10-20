@@ -2,11 +2,10 @@ from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
-from drag import dragMapToCenter, getMovePositions
 from fail import checkAndCloseIfFails
 from heroic import heroic
 from rewards import collectRewards
-from utils import delay
+from utils import delay, dragMapToCenter
 
 
 def runAction(action):
