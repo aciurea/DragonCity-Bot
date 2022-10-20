@@ -36,7 +36,7 @@ def start():
     runAction(collectFood)
     runAction(startBattle)
     runAction(collectRewards)
-    runAction(startBreeding)
+    # runAction(startBreeding)
     # checkAndCloseIfFails()
 
 

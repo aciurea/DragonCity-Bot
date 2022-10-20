@@ -104,7 +104,7 @@ def goToFight():
         return goToFight()
     print('No attack, try to select a new dragon')
     selectDragonBtn = getImagePositionRegion(
-        './img/battle/select_new_dragon.png', 300, 400, 1600, 800, 0.9)
+        './img/battle/select_new_dragon.png', 200, 400, 1600, 800)
     if exists(selectDragonBtn):
         moveAndClick(selectDragonBtn)
         print('New Dragon Selected')
