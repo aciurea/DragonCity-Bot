@@ -1,4 +1,5 @@
 from threading import Thread
+import pyautogui
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
@@ -71,7 +72,8 @@ def moveAndClickOnIslandWrapper(lastCall='none'):
     # Clear the object after is success
     def inner(pos, msg='Nothing to click', type='none'):
         if (times[type] >= 4):
-            # TODO try to move the map
+            dragMapToCenter()
+            times[type] = 0
             return print(type + ' to many calls')
 
         moveAndClick(pos, msg)
@@ -90,7 +92,7 @@ def moveAndClickOnIslandWrapper(lastCall='none'):
         if exists(backBtn):
             moveAndClick(backBtn, 'Back button')
         if exists(closeBtn):
-          moveAndClick([closeBtn[0] + 300, closeBtn[1]], 'Close button')
+            moveAndClick([closeBtn[0] + 300, closeBtn[1]], 'Close button')
 
     return inner
 
@@ -106,7 +108,7 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     while(mouse.get_position()[0] != pos[0]):
        delay(0.2)
 
-    time.sleep(0.2)
+    delay(0.2)
     mouse.click()
 
 def closePopup(): 
@@ -137,3 +139,30 @@ class ThreadWithReturnValue(Thread):
     def join(self, *args):
         Thread.join(self, *args)
         return self._return
+
+def drag(center):
+    island = getImagePositionRegion('./img/utils/center_island.png', 0, 0, 1600, 900)
+    if (island[0] == -1):
+        return print('Cannot move the map since there is no point of reference')
+
+    pyautogui.moveTo(island)
+    dragMap(center)
+
+
+def dragMap(position):
+    pyautogui.mouseDown(button='left')
+    pyautogui.moveTo(position[0], position[1], .5)
+    time.sleep(.5)
+    pyautogui.mouseUp()
+
+
+def dragMapToCenter(center=[800, 400]):
+    print('Drag map to center')
+    drag(center)
+
+
+def getMovePositions():
+    return [
+        'down',
+        'up',
+    ]
