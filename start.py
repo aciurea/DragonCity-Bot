@@ -7,30 +7,33 @@ from heroic import heroic
 from rewards import collectRewards
 from utils import delay, dragMapToCenter
 
+halfAnHour = 1800
 
 def runAction(action):
     dragMapToCenter()
     action()
 
-def start():
-    # priorities = {'breed': startBreeding,
-    #               'feed': startBreeding,
-    #               'hatch': startBreeding,
-    #               'food': collectFood
-    #               }
-    # priority = heroic()
-    # print('priority is ', priority)
-    # if (priority == -1):
-    #     print('no priority')
-    # else:
-    #     work = priorities['hatch']
-    #     print(work, priority)
-    #     times = 20
-    #     while (times > 0):
-    #         work('hatch')
-    #         times -= 1
-    #         delay(0.5)
+def doHeroicRace():
+    priorities = {'breed': startBreeding,
+                  'feed': startBreeding,
+                  'hatch': startBreeding,
+                  'food': collectFood
+                  }
+    priority = heroic()
+    print('priority is ', priority)
+    if (priority == -1):
+        print('no priority')
+    else:
+        work = priorities['hatch']
+        print(work, priority)
+        times = 20
+        while (times > 0):
+            work('hatch')
+            times -= 1
+            delay(0.5)
 
+def start():
+    # doHeroicRace()
     runAction(collectGold)
     runAction(collectFood)
     runAction(startBattle)
@@ -50,6 +53,6 @@ def hatchAndCollect():
 def run():
     while (True):
         start()
-        delay(5)
+        delay(halfAnHour)
 
 run()
