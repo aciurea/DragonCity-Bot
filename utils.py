@@ -3,7 +3,20 @@ import pyautogui
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
-                                            imagesearcharea, imagesearch_region_loop)
+                                            imagesearcharea)
+
+def video_error():
+    error = getImagePosition('./img/tv/video_error.png')
+
+    if not exists(error): return [-1]
+    close = getImagePositionRegion('./img/utils/close.png', error[0], error[1], 1600, 600)
+
+    if not exists(close):
+        print('Error exists but couldnt find the close button')
+        return [-1]
+    moveAndClick(close)
+    return [1]
+    
 
 # It retries 10 times which means 5 seconds for the image to appear
 def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10):
@@ -111,9 +124,14 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     delay(0.2)
     mouse.click()
 
-def closePopup(): 
-    closeBtn = getImagePositionRegion('./img/utils/close.png', 900, 0, 1600, 450) # close is on the top right corner. I can also be in the middle of the screen
-    moveAndClick(closeBtn, 'no close button')
+def get_close_btn(x1 = 900, y1= 0, x2 = 1600, y2 = 450):
+    return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2)
+
+def closePopup(btn = [-1]):
+    if exists(btn): 
+        delay(1)
+        moveAndClick(btn) 
+    else: moveAndClick(get_close_btn(), 'no close button')
 
 def closeVideo():
     closeBtn = getImagePositionRegion('./img/utils/close_video.png', 900, 0, 1600, 350) # close is on the top right corner. I can also be in the middle of the screen

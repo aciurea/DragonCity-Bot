@@ -1,23 +1,30 @@
-from utils import ThreadWithReturnValue, checkIfCanClaim, delay, getImagePosition, exists, getImagePositionRegion, moveAndClick, closePopup, closeVideo, moveTo
-
+from utils import ThreadWithReturnValue, checkIfCanClaim, delay, getImagePosition, exists, getImagePositionRegion, moveAndClick, closePopup, closeVideo, moveTo, video_error
 
 def getRewards():
     print('Go to take the rewards')
-    video = getImagePositionRegion(
-        './img/battle/play_video.png', 800, 300, 1400, 800)
-
+    thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800))
+    thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 200, 1200, 700, 0.9, 20))
+    thread1.start()
+    thread2.start()
+    video = thread1.join()
     if not exists(video):
         return print('Video not found ')
 
     moveAndClick(video)
-    checkIfCanClaim()
-    closeVideo()
-    greenClaim = getImagePositionRegion('./img/battle/claim.png', 300, 200, 1200, 700)
-    moveAndClick(greenClaim)
-    # yellowClaim = getImagePosition('./img/fails/claim_yellow.png', 5)
-    # moveAndClick(yellowClaim)
-    return closePopup()
+    delay(5)
+    if not exists(video_error()): 
+        checkIfCanClaim()
+        closeVideo()
+        closePopup()
+    else: 
+        greenClaim = thread2.join()
+        moveAndClick(greenClaim, 'Claim button for rewards after battle not found')
+    
+    # TODO when the use claims the gems
+   # yellowClaim = getImagePosition('./img/fails/claim_yellow.png', 5)
+   # moveAndClick(yellowClaim)
 
+    
 def sortFirst(val): return val[0]
 
 def getStrongAttacks(avoid, attacks):
@@ -97,14 +104,15 @@ def getAttacks():
 
 def goToFight():
     attack = getAttacks()
+    select_dragon_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=( './img/battle/select_new_dragon.png', 100, 200, 1600, 800))
+    select_dragon_thread.start()
     if exists(attack):
         moveAndClick(attack)
         print('Attacked with', attack)
         delay(5)  # wait for the victory logo to have a chance to appear
         return goToFight()
     print('No attack, try to select a new dragon')
-    selectDragonBtn = getImagePositionRegion(
-        './img/battle/select_new_dragon.png', 200, 400, 1600, 800)
+    selectDragonBtn = select_dragon_thread.join()
     if exists(selectDragonBtn):
         moveAndClick(selectDragonBtn)
         print('New Dragon Selected')
@@ -115,14 +123,19 @@ def goToFight():
 
 def goToLeague():
     # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped
-    noMoreBattles = getImagePositionRegion(
-        './img/battle/no_new_combats.png', 1000, 0, 1600, 450, 0.9, 20)
+    thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=(
+   './img/battle/no_new_combats.png', 1000, 0, 1600, 450, 0.9, 20
+    ))
+    thread2 = ThreadWithReturnValue(target=getImagePosition, args=('./img/battle/league_oponent.png', 20, 0.8, 0.5))
+    thread1.start()
+    thread2.start()
+    noMoreBattles = thread1.join()
 
     if exists(noMoreBattles):
         print('No More battle available. Close the popup')
         return closePopup()
 
-    oponent = getImagePosition('./img/battle/league_oponent.png')
+    oponent = thread2.join()
 
     if not exists(oponent):
         return print('League Openent not found')
@@ -145,9 +158,9 @@ def openLeaguePanel():
     moveAndClick(league)
     goToLeague()
 
-# def start():
-#     while True:
-#         goToFight()
-#         delay(5)
+def start():
+    while True:
+        goToFight()
+        delay(5)
 
 # start()

@@ -1,25 +1,21 @@
-from utils import getImagePosition, moveAndClickOnIsland
+from utils import ThreadWithReturnValue, exists, getImagePosition, moveAndClickOnIsland
 
 
 def getGoldPosition():
-    paths = [
-        './img/gold/gold.png',
-        './img/gold/gold3.png'
-    ]
+    thread1 = ThreadWithReturnValue(target=getImagePosition, args=('./img/gold/gold.png', 5, 0.85))
+    thread1.start()
+    thread2 = ThreadWithReturnValue(target=getImagePosition, args=('./img/gold/gold3.png', 5, 0.85))
+    thread2.start()
 
-    for path in paths:
-        image = getImagePosition(path, 5, 0.85)
-
-        if (image[0] != -1):
-            return image
-    return [-1, -1]
-
+    image1 = thread1.join()
+    image2 = thread2.join()
+   
+    return image1 if exists(image1) else image2
 
 def collectGold():
-
     gold = getGoldPosition()
 
-    if (gold[0] == -1):
+    if not exists(gold):
         print('Finished collecting the gold...')
         return print('Gold not found')
 
