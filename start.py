@@ -36,9 +36,9 @@ def start():
     # doHeroicRace()
     runAction(collectGold)
     runAction(collectFood)
-    runAction(startBattle)
     runAction(collectRewards)
-    # runAction(startBreeding)
+    runAction(startBattle)
+    runAction(startBreeding)
     # checkAndCloseIfFails()
 
 
@@ -53,6 +53,6 @@ def hatchAndCollect():
 def run():
     while (True):
         start()
-        delay(halfAnHour)
+        delay(60)
 
 run()

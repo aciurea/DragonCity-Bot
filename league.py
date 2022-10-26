@@ -103,16 +103,19 @@ def getAttacks():
 
 
 def goToFight():
-    attack = getAttacks()
-    select_dragon_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=( './img/battle/select_new_dragon.png', 100, 200, 1600, 800))
+    select_dragon_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/select_new_dragon.png', 0, 600, 1600, 900))
     select_dragon_thread.start()
+    attack = getAttacks()
+
     if exists(attack):
         moveAndClick(attack)
         print('Attacked with', attack)
         delay(5)  # wait for the victory logo to have a chance to appear
         return goToFight()
+    
     print('No attack, try to select a new dragon')
     selectDragonBtn = select_dragon_thread.join()
+    print('Select Dragon is', selectDragonBtn)
     if exists(selectDragonBtn):
         moveAndClick(selectDragonBtn)
         print('New Dragon Selected')

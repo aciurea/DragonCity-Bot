@@ -48,9 +48,15 @@ def exists(value):
     return value[0] != -1;
 
 def checkIfCanClaim():
-    image = imagesearch_loop('./img/utils/ready_to_claim.png', 3)
-
-    return image if exists(image) else [-1]
+    ## stop after 90s, try 30 times * 3 = 90 seconds
+    times = 30
+    while(times > 0):
+        image = getImagePosition('./img/utils/ready_to_claim.png', 5)
+        if exists(image):
+            return image
+        delay(3)
+   
+    return [-1]
 
 
 def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
@@ -149,7 +155,6 @@ class ThreadWithReturnValue(Thread):
         self._return = None
 
     def run(self):
-        print(type(self._target))
         if self._target is not None:
             self._return = self._target(*self._args,
                                         **self._kwargs)
