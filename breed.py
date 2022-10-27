@@ -1,43 +1,40 @@
-import time
 from utils import closePopup, delay, exists, getImagePosition, getImagePositionRegion, moveAndClick
 
-# TODO improve the search of sell when the egg is placed
-# try to use the moveAndClickOnIsland
 def feed():
-    feedBtn = getImagePosition('./img/breed/feed.png')
-    arr = [1, 2, 3, 4, 5, 6, 7, 8]
+    feedBtn = getImagePositionRegion('./img/breed/feed.png', 300, 700, 600, 850)
+    if not exists(feedBtn): return print('No Feed button available')
+    times = 8
+    while(times > 0):
+        times -= 1
+        moveAndClick(feedBtn)
+        delay(.3)
+           
 
-    if exists(feedBtn):
-        for a in arr:
-            moveAndClick(feedBtn)
-            time.sleep(0.5)
-    return
+def sellEgg(sell = [-1]):
+    if not exists(sell):
+        sell = getImagePositionRegion('./img/breed/sell.png', 1300, 750, 1500, 850, .8, 3)
 
-def sellEgg():
-    sell = getImagePosition('./img/breed/sell.png')
-
-    if (sell[0] == -1):
+    if not exists(sell):
         return print('Sell btn not found')
-    moveAndClick(sell)
-    confirmSell = getImagePosition('./img/breed/sell_confirmation.png')
+    delay(1)
+    moveAndClick(sell, 'Sell btn not found')
+    confirmSell = getImagePositionRegion('./img/breed/sell_confirmation.png', 800, 550, 1000, 700)
 
-    if (confirmSell[0] == -1):
+    if not exists(confirmSell):
         return print('Confirm sell not found')
     moveAndClick(confirmSell)
 
 
 def placeEgg():
-    place = getImagePosition('./img/breed/place.png')
-
+    place = getImagePositionRegion('./img/breed/place.png', 700, 550, 1000, 650)
     if not exists(place):
         return print('Place btn not found')
-    print('found place', place)
     moveAndClick(place)
 
     delay(2)
     tree = getImagePosition('./img/breed/tree.png')
     moveAndClick([tree[0] + 80, tree[1] + 50])
-    dragon = getImagePositionRegion('./img/breed/dragon.png', 300, 500, 1200, 900)
+    dragon = getImagePositionRegion('./img/breed/dragon.png', 300, 700, 1400, 850)
     if not exists(dragon):
         return print('Dragon not found ')
     moveAndClick(dragon)
@@ -50,14 +47,15 @@ def placeAndFeed():
 
 
 def hatchery(priority):
-    egg = getImagePosition('./img/breed/terra_egg.png')
+    egg = getImagePositionRegion('./img/breed/terra_egg.png', 500, 700, 1400, 850)
 
     if not exists(egg):
         return print('Egg not found')
+
     moveAndClick(egg)
-    print('Hatched the egg')
+    print('Hatched the Terra egg')
     if (priority == 'breed' or priority == -1):
-        return sellEgg()
+        return sellEgg([1000, 600])
     if (priority == 'hatch'):
         placeEgg()
         sellEgg()
@@ -65,39 +63,31 @@ def hatchery(priority):
         placeAndFeed()
 
 
-def finishBreed(priority):
-    icon = getImagePosition('./img/breed/finish_breed.png')
-
-    if (icon == -1):
-        return print('Breed not ready yet')
-    moveAndClick(icon)
-    print('Finished breeding, go to hatchery')
-    hatchery(priority)
-
-
 def startBreeding(priority='hatch'):
     print('Start breeding')
-    tree = getImagePosition('./img/breed/tree.png')
+    tree_position = getImagePosition('./img/breed/tree.png')
 
-    if (tree[0] == -1):
+    if not exists(tree_position):
         return print('Tree not found')
-    moveAndClick(tree)
 
-    rebreed = getImagePosition('./img/breed/rebreed.png')
+    moveAndClick(tree_position)
+    rebreed = getImagePositionRegion('./img/breed/rebreed.png', 1100, 700, 1400, 900, .8, 3)
 
-    if (rebreed[0] == -1):
-        return print('Rebreed icon not found')
+    if not exists(rebreed):
+        return print('Rebreed btn icon not found')
+
     moveAndClick(rebreed)
+    delay(.5)
+    breedBtn = getImagePositionRegion('./img/breed/breed_btn.png', 700, 600, 900, 750, .8, 3)
 
-    breedBtn = getImagePosition('./img/breed/breed_btn.png')
-
-    if (breedBtn[0] == -1):
+    if not exists(breedBtn):
         return print('Breed btn not found')
+
     moveAndClick(breedBtn)
     closePopup()
-    delay(12)
-    finishBreed(priority)
-    print('Finish breeding, hatching and feeding')
+    delay(13)
+    moveAndClick(tree_position)
+    hatchery(priority)
 
 
 def start():

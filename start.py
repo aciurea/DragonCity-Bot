@@ -2,10 +2,9 @@ from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
-from fail import checkAndCloseIfFails
 from heroic import heroic
 from rewards import collectRewards
-from utils import delay, dragMapToCenter
+from utils import check_if_not_ok, delay, dragMapToCenter
 
 halfAnHour = 1800
 
@@ -34,12 +33,15 @@ def doHeroicRace():
 
 def start():
     # doHeroicRace()
-    runAction(collectGold)
+    pos = dragMapToCenter()
+    print('center is ', pos)
+    collectGold(pos)
     runAction(collectFood)
     runAction(collectRewards)
     runAction(startBattle)
     runAction(startBreeding)
-    # checkAndCloseIfFails()
+    delay(.5)
+    check_if_not_ok()
 
 
 def hatchAndCollect():
@@ -53,6 +55,6 @@ def hatchAndCollect():
 def run():
     while (True):
         start()
-        delay(60)
+        delay(15)
 
 run()

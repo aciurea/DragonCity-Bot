@@ -2,8 +2,22 @@ from threading import Thread
 import pyautogui
 import time
 import mouse
-from python_imagesearch.imagesearch import (imagesearch_loop, imagesearch,
-                                            imagesearcharea)
+from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
+
+class ThreadWithReturnValue(Thread):
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args,
+                                        **self._kwargs)
+
+    def join(self, *args):
+        Thread.join(self, *args)
+        return self._return
 
 def video_error():
     error = getImagePosition('./img/tv/video_error.png')
@@ -60,7 +74,7 @@ def checkIfCanClaim():
 
 
 def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
-    image = imagesearch(path, precision)
+    image = imagesearcharea(path, 0, 0, 1600, 900, precision)
 
     while (not exists(image)):
         tries -= 1
@@ -71,52 +85,55 @@ def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
 
     return image
 
-def retry(fn, tries = 3):
-    if tries == 0: return [-1]
 
-    if(tries > 0):
-        img = fn()
-        if not exists(img):
-            return retry(fn, tries -1)
-        return img
+
+def check_if_not_ok():
+    list= [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/back.png', 0, 0, 150, 150, .8, 2)),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/red_close.png', 800, 0, 1600, 500, .8, 2)),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/claim_yellow.png', 700, 600, 1200, 850, .8, 2))
+    ]
+    
+    for thread in list:
+        thread.start()
+    
+    index = -1
+    for thread in list:
+        index += 1
+        item = thread.join()
+        if exists(item):
+            print ('missclicked.......')
+            moveAndClick(item)
+            if index == len(list):
+                delay(2)
+                openChest()
+                closePopup()
+            print('Clicked outside:: ')
+            dragMapToCenter()
+    
+def openChest():
+    tap = getImagePositionRegion('./img/tv/tap.png', 300, 300, 1600, 800)
+    moveAndClick(tap, 'No tap button found')
+    delay(3)
+    claim = getImagePositionRegion(
+        './img/tv/yellow_claim.png', 200, 300, 1600, 800)
+    moveAndClick(claim, 'No claim button after opening chest found')
+    delay(.5)
+    if not exists(claim):
+        closePopup()
+
 
 def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
-def closeFn(): return imagesearcharea('./img/utils/close.png', 300, 0, 1600, 450)
+def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)
+def claim(): return imagesearcharea('./img/utils/close.png', 400, 200, 1200, 800)
 
-def moveAndClickOnIslandWrapper(lastCall='none'):
-    times = {'gold': 0, 'food': 0, 'breed': 0,
-             'hatch': 0, 'none': 0, 'farm': 0, 'regrow': 0}
-    lastCall = ['none']
-    # TODO try to use the function that is called as the key. 
-    # Clear the object after is success
-    def inner(pos, msg='Nothing to click', type='none'):
-        if (times[type] >= 4):
-            dragMapToCenter()
-            times[type] = 0
-            return print(type + ' to many calls')
-
+def moveAndClickOnIsland(pos, msg='Nothing to click'):
         moveAndClick(pos, msg)
-        delay(.5)
-        # start at 0, 0, and end at 1600, 450. (most right horizonatlly, half the screen vertically)
+        # delay(.5)
 
-        backBtn = retry(backFn, 3)  # start at 0, 0, and end at 500, 200
-        closeBtn = retry(closeFn, 3)
-
-        if exists(backBtn) or exists(closeBtn):
-            times[type] += 1
-        if (lastCall[0] != type):  # reset when it fails for other reason
-            times[type] = 0
-            lastCall[0] = type
-
-        if exists(backBtn):
-            moveAndClick(backBtn, 'Back button')
-        if exists(closeBtn):
-            moveAndClick([closeBtn[0] + 300, closeBtn[1]], 'Close button')
-
-    return inner
-
-
-moveAndClickOnIsland = moveAndClickOnIslandWrapper()
+        # if check_if_not_ok():
+            # dragMapToCenter()
 
 def moveAndClick(pos, msg = 'Nothing to click'):
     if not exists(pos):
@@ -127,10 +144,10 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     while(mouse.get_position()[0] != pos[0]):
        delay(0.2)
 
-    delay(0.2)
+    delay(0.1)
     mouse.click()
 
-def get_close_btn(x1 = 900, y1= 0, x2 = 1600, y2 = 450):
+def get_close_btn(x1 = 1400, y1= 0, x2 = 1600, y2 = 150):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2)
 
 def closePopup(btn = [-1]):
@@ -148,44 +165,28 @@ def moveTo(position):
    mouse.move(position[0], position[1])
 
 
-class ThreadWithReturnValue(Thread):
-    def __init__(self, group=None, target=None, name=None,
-                 args=(), kwargs={}, Verbose=None):
-        Thread.__init__(self, group, target, name, args, kwargs)
-        self._return = None
-
-    def run(self):
-        if self._target is not None:
-            self._return = self._target(*self._args,
-                                        **self._kwargs)
-
-    def join(self, *args):
-        Thread.join(self, *args)
-        return self._return
-
-def drag(center):
-    island = getImagePositionRegion('./img/utils/center_island.png', 0, 0, 1600, 900)
-    if (island[0] == -1):
-        return print('Cannot move the map since there is no point of reference')
-
-    pyautogui.moveTo(island)
-    dragMap(center)
-
-
-def dragMap(position):
-    pyautogui.mouseDown(button='left')
-    pyautogui.moveTo(position[0], position[1], .5)
-    time.sleep(.5)
+def dragMap(artifact):
+    moveTo(artifact)
+    delay(.2)
+    pyautogui.mouseDown()
+    pyautogui.moveTo(800, 450)
+    delay(1)
     pyautogui.mouseUp()
 
 
-def dragMapToCenter(center=[800, 400]):
+def dragMapToCenter():
     print('Drag map to center')
-    drag(center)
+    artifact = getImagePosition('./img/utils/artifact_2.png', 5, .8, .5)
 
-
+    if not exists(artifact):
+        return print('Cannot move the map since there is no point of reference')
+    print('artifact is ', artifact)
+    dragMap(artifact)
+    return artifact
+    
 def getMovePositions():
     return [
         'down',
         'up',
     ]
+
