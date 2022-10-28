@@ -1,9 +1,10 @@
 from quest import openQuestPanel
-from utils import exists, getImagePosition, getImagePositionRegion, moveAndClick
+from utils import exists, getImagePositionRegion, moveAndClick
 from league import openLeaguePanel
 
 
 def chooseBattle():
+    moveAndClick([800, 450])
     battleBtn = getImagePositionRegion('./img/battle/battle_btn.png', 400, 700, 600, 900, .8, 3)
 
     if not exists(battleBtn):
@@ -14,11 +15,6 @@ def chooseBattle():
 
 def startBattle():
     for action in [openQuestPanel, openLeaguePanel]:
-        centerIsland = getImagePosition('./img/utils/artifact_2.png')
-
-        if not exists(centerIsland):
-            return print('Center not found. Cannot continue')
-        moveAndClick([centerIsland[0] - 30, centerIsland[1]])
         chooseBattle()
         action()
     return print('Finishe battles')

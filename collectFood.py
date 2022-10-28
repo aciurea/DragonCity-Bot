@@ -2,10 +2,10 @@ from utils import check_if_not_ok, delay, exists, getImagePosition, getImagePosi
 
 
 def regrowFood():
-    farm = getImagePosition('./img/food/farm.png')
+    farm = getImagePositionRegion('./img/food/farm.png', 300, 200, 1000, 600)
 
     if not exists(farm):
-        check_if_not_ok()
+        check_if_not_ok('farm')
         return print('Farm not found')
 
     moveAndClick(farm, 'Farm not found')
@@ -15,8 +15,8 @@ def regrowFood():
         moveAndClick(regrow, 'Regrow not found')
         return print('Regrow successful!')
 
-    check_if_not_ok()
-    return print('Regrow not found')
+    check_if_not_ok('regrow')
+    print('Regrow not found')
 
 
 def getFoodPosition():
@@ -27,12 +27,15 @@ def getFoodPosition():
 def collectFood():
     food = getFoodPosition()
 
-    if not exists(food):
-        print('Food not ready yet or not found')
-        return regrowFood()
+    if exists(food):
+        print('Food position is ', food)
+        moveAndClick(food)
+        delay(.3)
+        return collectFood()
 
-    moveAndClick(food)
-    collectFood()
+    print('Food not ready yet or not found')
+    check_if_not_ok('Food')
+    return regrowFood()
 
 
 def start():

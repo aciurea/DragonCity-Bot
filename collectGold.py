@@ -11,15 +11,13 @@ def getGoldPosition():
    
     return image1 if exists(image1) else image2
 
-def collectGold(center):
-    if not exists(center): return print('No Center....')
-    edge = 300
+def collectGold():
     gold = getGoldPosition()
     if exists(gold):
-        print('gold pos is ', gold, center)
-        if (center[0] + edge) < gold[0]: return print('Wrong position')
+        print('gold pos is ', gold)
+        if gold[0] > 1200: return print('Wrong position')
         moveAndClick(gold)
-        return collectGold(center)
+        return collectGold()
     check_if_not_ok()
     return print('Gold not found')
 

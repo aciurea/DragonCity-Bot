@@ -1,7 +1,7 @@
 import mouse
 from league import goToFight
 from rewards import openChest
-from utils import backFn, closePopup, delay, exists, getImagePosition, moveAndClick, getImagePositionRegion, dragMap
+from utils import backFn, closePopup, delay, exists, getImagePosition, moveAndClick, getImagePositionRegion
 
 
 def getQuest(retries=2):

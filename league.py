@@ -56,16 +56,20 @@ def goToFight():
 
 def goToLeague():
     # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped
-    thread1 = ThreadWithReturnValue(target=getImagePositionRegion,
-     args=('./img/battle/no_new_combats.png', 1200, 100, 1600, 300, 0.9, 5))
+    list = [ 
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/no_new_combats.png', 1200, 100, 1600, 300)),
+        ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/battle/refill.png', 1100, 100, 1600, 400)),
+    ]
+    for thread in list:
+        thread.start()
     thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/league_oponent.png', 0, 300, 1600, 800))
-    thread1.start()
     thread2.start()
-    noMoreBattles = thread1.join()
-
-    if exists(noMoreBattles):
-        print('No More battle available. Close the popup')
-        return closePopup()
+    
+    for thread in list:
+        noMoreBattles = thread.join()
+        if exists(noMoreBattles):
+            print('No More battle available. Close the popup')
+            return closePopup()
 
     oponent = thread2.join()
 

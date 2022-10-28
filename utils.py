@@ -87,7 +87,7 @@ def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
 
 
 
-def check_if_not_ok():
+def check_if_not_ok(msg = 'None'):
     list= [
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/back.png', 0, 0, 150, 150, .8, 2)),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)),
@@ -103,13 +103,13 @@ def check_if_not_ok():
         index += 1
         item = thread.join()
         if exists(item):
-            print ('missclicked.......')
             moveAndClick(item)
+            print('Clicked outside:: ', msg)
             if index == len(list):
                 delay(2)
                 openChest()
                 closePopup()
-            print('Clicked outside:: ')
+                print(msg, '::: when closePopup')
             dragMapToCenter()
     
 def openChest():
@@ -176,13 +176,13 @@ def dragMap(artifact):
 
 def dragMapToCenter():
     print('Drag map to center')
-    artifact = getImagePosition('./img/utils/artifact_2.png', 5, .8, .5)
+    artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
+    if(artifact[0] == 800 and artifact[1] == 450): return
 
     if not exists(artifact):
         return print('Cannot move the map since there is no point of reference')
     print('artifact is ', artifact)
     dragMap(artifact)
-    return artifact
     
 def getMovePositions():
     return [
