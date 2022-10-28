@@ -1,7 +1,7 @@
 import mouse
 from league import goToFight
 from rewards import openChest
-from utils import backFn, closePopup, delay, exists, getImagePosition, moveAndClick, getImagePositionRegion
+from utils import closePopup, delay, exists, moveAndClick, getImagePositionRegion
 
 
 def getQuest(retries=2):
@@ -37,19 +37,21 @@ def battle():
     delay(1)
     battle = getImagePositionRegion(
         './img/battle/go_to_battle.png', 600, 600, 900, 750)
+
+
     if exists(battle):
         print('battle 2', battle)
         moveAndClick(battle)
-        delay(5) # wait for the battle to start
+        battle =  getImagePositionRegion('./img/battle/go_to_battle.png', 600, 600, 900, 750, .8, 2)
+        if exists(battle):
+            delay(1)
+            closePopup()
+            return print('The battle didnt start')
+        delay(3) # wait for the battle to start
         goToFight()
         openChest()
         return
-
-    dragonIsMissing = getImagePosition('./img/battle/missing_dragon.png', 10)
-    if exists(dragonIsMissing):
-        return moveAndClick(backFn())
-    
-    print('No quest go to battle available')
+   
 
 
 def openQuestPanel():

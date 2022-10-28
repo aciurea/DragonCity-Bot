@@ -37,9 +37,9 @@ def start():
     runAction(collectGold)
     runAction(shop)
     runAction(collectFood)
-    # runAction(collectRewards)
+    runAction(collectRewards)
     runAction(startBattle)
-    # runAction(startBreeding)
+    runAction(startBreeding)
     delay(.5)
     check_if_not_ok()
 
