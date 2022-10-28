@@ -3,7 +3,7 @@ import mouse
 
 
 def buy():
-    gold = getImagePositionRegion('./img/gold.png', 1300, 300, 1600, 900)
+    gold = getImagePositionRegion('./img/orbs/gold.png', 1300, 300, 1600, 900)
 
     if not exists(gold): return print('Nothing to buy')
     i = 5
@@ -14,7 +14,7 @@ def buy():
 
 
 def shop():
-    sh = getImagePositionRegion('./img/shop.png', 1300, 700, 1600, 900)
+    sh = getImagePositionRegion('./img/orbs/shop.png', 1300, 700, 1600, 900)
 
     if not exists(sh):
         print('Shop not found')
@@ -22,7 +22,7 @@ def shop():
 
     moveAndClick(sh)
     delay(1)
-    orbs = getImagePositionRegion('./img/orbs.png', 400, 600, 1400, 900)
+    orbs = getImagePositionRegion('./img/orbs/orbs.png', 400, 600, 1400, 900)
     if not exists(orbs):
         print('No orbs')
         return closePopup()
