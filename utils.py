@@ -10,6 +10,10 @@ class ThreadWithReturnValue(Thread):
         Thread.__init__(self, group, target, name, args, kwargs)
         self._return = None
 
+    def start(self) -> None:
+        super().start()
+        return self
+
     def run(self):
         if self._target is not None:
             self._return = self._target(*self._args,
@@ -128,13 +132,6 @@ def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
 def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)
 def claim(): return imagesearcharea('./img/utils/close.png', 400, 200, 1200, 800)
 
-def moveAndClickOnIsland(pos, msg='Nothing to click'):
-        moveAndClick(pos, msg)
-        # delay(.5)
-
-        # if check_if_not_ok():
-            # dragMapToCenter()
-
 def moveAndClick(pos, msg = 'Nothing to click'):
     if not exists(pos):
         return print(msg)
@@ -165,11 +162,12 @@ def moveTo(position):
    mouse.move(position[0], position[1])
 
 
-def dragMap(artifact):
+def dragMap(artifact, next=[800, 450]):
+    x, y = next
     moveTo(artifact)
     delay(.2)
     pyautogui.mouseDown()
-    pyautogui.moveTo(800, 450)
+    pyautogui.moveTo(x, y)
     delay(1)
     pyautogui.mouseUp()
 
@@ -177,16 +175,33 @@ def dragMap(artifact):
 def dragMapToCenter():
     print('Drag map to center')
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
-    if(artifact[0] == 800 and artifact[1] == 450): return
+    if(artifact[0] == 800 and artifact[1] == 450): return artifact
 
     if not exists(artifact):
-        return print('Cannot move the map since there is no point of reference')
+        print('Cannot move the map since there is no point of reference')
+        return [-1]
     print('artifact is ', artifact)
     dragMap(artifact)
+    return artifact
     
+def move_to_top():
+    artifact = dragMapToCenter()
+    if not exists(artifact): return
+    print('move to top')
+    dragMap(artifact, [800, 600])
+
+def move_to_bottom():
+    artifact = dragMapToCenter()
+    if not exists(artifact): return
+    print('move to top')
+    dragMap(artifact, [800, 300])
+
 def getMovePositions():
     return [
         'down',
         'up',
     ]
 
+
+def scroll():
+    mouse.wheel(-300)
