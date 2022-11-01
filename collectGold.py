@@ -1,4 +1,4 @@
-from utils import ThreadWithReturnValue, check_if_not_ok, exists, getImagePosition, moveAndClick
+from utils import ThreadWithReturnValue, check_if_not_ok, exists, getImagePosition, move_to_top, moveAndClick
 
 
 def getGoldPosition():
@@ -12,13 +12,18 @@ def getGoldPosition():
     return image1 if exists(image1) else image2
 
 def collectGold():
-    gold = getGoldPosition()
-    if exists(gold):
-        print('gold pos is ', gold)
-        if gold[0] > 1200: return print('Wrong position')
-        moveAndClick(gold)
-        return collectGold()
-    check_if_not_ok()
-    return print('Gold not found')
-
+    def inner_collect(times):
+        if(times > 20):
+            return print('Called too many times. Exists and try again')
+        gold = getGoldPosition()
+        if exists(gold):
+            print('gold pos is ', gold)
+            moveAndClick(gold)
+            return inner_collect(times + 1)
+        check_if_not_ok()
+        return print('Gold not found')
+        
+    inner_collect(0)
+    move_to_top()
+    inner_collect(10)
 # collectGold()

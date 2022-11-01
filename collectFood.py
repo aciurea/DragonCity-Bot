@@ -1,4 +1,4 @@
-from utils import check_if_not_ok, delay, exists, getImagePosition, getImagePositionRegion, moveAndClick, moveAndClickOnIsland
+from utils import ThreadWithReturnValue, check_if_not_ok, delay, exists, getImagePosition, getImagePositionRegion, move_to_bottom, moveAndClick
 
 
 def regrowFood():
@@ -10,7 +10,12 @@ def regrowFood():
 
     moveAndClick(farm, 'Farm not found')
 
-    regrow = getImagePositionRegion('./img/food/regrow_0.png',  1000, 700, 1200, 900, 0.8, 3)
+    regrow_all = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/food/regrow.png',  900, 700, 1100, 900, 0.8, 3)).start()
+    regrow_single = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/food/regrow_0.png',  1000, 700, 1200, 900, 0.8, 3)).start()
+    regrow_all = regrow_all.join()
+    regrow_single = regrow_single.join()
+    regrow = regrow_all if exists(regrow_all) else regrow_single
+
     if exists(regrow):
         moveAndClick(regrow, 'Regrow not found')
         return print('Regrow successful!')
@@ -25,17 +30,23 @@ def getFoodPosition():
     return food if exists(food) else [-1]
 
 def collectFood():
-    food = getFoodPosition()
+    def inner_collect(times):
+        if times > 15:
+            return print('Too many farms to collect. Safe exit')
+        food = getFoodPosition()
 
-    if exists(food):
-        print('Food position is ', food)
-        moveAndClick(food)
-        delay(.3)
-        return collectFood()
+        if exists(food):
+            print('Food position is ', food)
+            moveAndClick(food)
+            return inner_collect(times +1)
 
-    print('Food not ready yet or not found')
-    check_if_not_ok('Food')
-    return regrowFood()
+        print('Food not ready yet or not found')
+        check_if_not_ok('Food')
+      
+    inner_collect(0)
+    move_to_bottom()
+    inner_collect(5)
+    regrowFood()
 
 
 def start():

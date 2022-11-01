@@ -1,19 +1,27 @@
 import mouse
 from league import goToFight
 from rewards import openChest
-from utils import closePopup, delay, exists, moveAndClick, getImagePositionRegion
+from utils import ThreadWithReturnValue, closePopup, delay, exists, moveAndClick, getImagePositionRegion
 
 
 def getQuest(retries=2):
     if retries == 0:
         return [-1]
+    path = './img/battle/start_quest1.png'
 
-    next = getImagePositionRegion(
-        './img/battle/start_quest1.png', 0, 600, 1600, 800)
+    list = []
+    step_px = 500
+    for i in range(3):
+        start, end = [i * step_px, i * step_px + step_px]
+        list.append(ThreadWithReturnValue(target=getImagePositionRegion, args=(path, start, 600, end, 800, .5, 3)).start())
 
-    print('next is ', next)
-    if exists(next):
-        return [next[0], next[1] - 100]
+  
+    for thread in list:
+        quest = thread.join()
+      
+        if exists(quest):
+            print('Quest is::: ', quest)
+            return [quest[0], quest[1] - 100]
 
     mouse.drag(1500, 450, 800, 450, True, .5)
     return getQuest(retries - 1)
@@ -42,6 +50,7 @@ def battle():
     if exists(battle):
         print('battle 2', battle)
         moveAndClick(battle)
+        delay(3)
         battle =  getImagePositionRegion('./img/battle/go_to_battle.png', 600, 600, 900, 750, .8, 2)
         if exists(battle):
             delay(1)

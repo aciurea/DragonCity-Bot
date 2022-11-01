@@ -74,7 +74,7 @@ def collectRewards():
     tv = getImagePosition('./img/tv/tv.png')
 
     if exists(tv):
-        moveAndClick(tv)
+        moveAndClick([tv[0] + 20, tv[1]])
         openTv()
     else:
         print('No TV available')
