@@ -35,6 +35,9 @@ def video_error():
     moveAndClick(close)
     return [1]
     
+def go_back():
+    back_btn = getImagePositionRegion('./img/fails/back.png', 0, 0, 150, 150, .8, 2)
+    moveAndClick(back_btn)
 
 # It retries 10 times which means 5 seconds for the image to appear
 def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10):
@@ -159,7 +162,7 @@ def closeVideo():
     moveAndClick(closeBtn, 'Close video button not found')
 
 def moveTo(position):
-   mouse.move(position[0], position[1])
+   mouse.move(position[0], position[1], True, .05)
 
 
 def dragMap(artifact, next=[800, 450]):
@@ -203,5 +206,12 @@ def getMovePositions():
     ]
 
 
-def scroll():
-    mouse.wheel(-300)
+def scroll(pos1, pos2):
+    moveTo(pos1)
+    delay(.5)
+    mouse.hold()
+    delay(.1)
+    moveTo(pos2)
+    delay(.5)
+    mouse.release()
+   

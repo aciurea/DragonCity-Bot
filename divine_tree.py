@@ -31,7 +31,7 @@ def recall():
 
     if exists(finish):
         moveAndClick(finish)
-    select_dragon = getImagePositionRegion('./img/tree/select_new_dragon.png', 900, 200, 1400, 600, .8, 100)
+    select_dragon = getImagePositionRegion('./img/tree/select_new_dragon.png', 900, 200, 1400, 600, .8, 20) 
    
     if not exists(select_dragon): return print('Recall not ready yet')
 
@@ -69,9 +69,7 @@ def trading_hub():
     if exists(rarity):
         moveTo(rarity)
         moveAndClick(rarity)
-        delay(1)
-        # scroll(-1000, None, None)
-
+        delay(1) 
 
     # continue with trying to claim something new 
 
@@ -95,7 +93,7 @@ def devine_tree():
 
     if not exists(tree):
         return print('Devine Tree not found')
-    moveAndClick(tree)
+  
     delay(2)
 
     trade_btn = getImagePositionRegion('./img/tree/trade.png', 1200, 700, 1600, 900)
@@ -112,4 +110,4 @@ def start():
     delay(2)
     devine_tree()
 
-start()
+# start()

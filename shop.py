@@ -1,4 +1,4 @@
-from utils import check_if_not_ok, closePopup, getImagePositionRegion, exists, moveAndClick, delay
+from utils import check_if_not_ok, closePopup, getImagePositionRegion, exists, moveAndClick, delay, scroll
 import mouse
 
 
@@ -28,8 +28,7 @@ def shop():
         return closePopup()
     moveAndClick(orbs)
     delay(1)
-    mouse.drag(1500, 550, 0, 550, True, .5)
-    mouse.drag(1500, 550, 0, 550, True, .5)
-    delay(3)
+    scroll([1550, 550], [0, 550])
+    delay(1)
     buy()
     closePopup()

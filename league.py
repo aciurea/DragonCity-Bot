@@ -39,13 +39,8 @@ def getStrongAttacks(avoid, attacks):
     return newAttacks
 
 
-def getAttacks():
-    attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210)
-
-    return attack if exists(attack) else [-1]
-
 def goToFight():
-    attack = getAttacks() or [80, 180]
+    attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210,.8, 100)
     moveAndClick(attack)
 
     in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 0, 120, 350)
