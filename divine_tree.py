@@ -1,4 +1,4 @@
-from utils import closePopup, exists, getImagePositionRegion, moveAndClick, delay, moveTo
+from utils import closePopup, exists, getImagePositionRegion, moveAndClick, delay, scroll
 
 RARITY_PATHS = [
     './img/tree/common.png',
@@ -60,18 +60,25 @@ def trading_hub():
     if exists(claim):
         moveAndClick(claim) 
         delay(2)
+
     unavailable_btn = getImagePositionRegion('./img/tree/unavailable.png', 600, 600, 1400, 900, .8, 3)
 
     if not exists(unavailable_btn):
         return print('Cannot continue since there is no unavailable btn')
+    delay(1)
 
-    rarity = change_rarity(RARITY_PATHS[0])
-    if exists(rarity):
-        moveTo(rarity)
-        moveAndClick(rarity)
-        delay(1) 
-
-    # continue with trying to claim something new 
+    while(True):
+        new = getImagePositionRegion('./img/tree/trading_new.png', 300, 200, 800, 600, .8, 3)
+        if not exists(new):
+            scroll([410, 795], [410, 700])
+            continue
+        moveAndClick(new)
+        delay(1)
+        moveAndClick([310, 350]) # first dragon always
+        delay(1)
+        moveAndClick([1260, 780]) # hard to identify the essence, hardcoded the position
+        delay(1)
+        return print('Trading placed')
 
 def inside_divine_tree():
     trading_hub()
@@ -89,13 +96,13 @@ def inside_divine_tree():
 
 def devine_tree():
     print('start looking for divine tree')
-    tree = getImagePositionRegion('./img/tree/devine_tree.png', 200, 200, 800, 500)
+    tree = getImagePositionRegion('./img/tree/devine_tree.png', 300, 100, 800, 400,.8, 20)
 
     if not exists(tree):
         return print('Devine Tree not found')
-  
-    delay(2)
+    moveAndClick(tree)
 
+    delay(.5)
     trade_btn = getImagePositionRegion('./img/tree/trade.png', 1200, 700, 1600, 900)
 
     if not exists(trade_btn):

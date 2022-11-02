@@ -146,7 +146,7 @@ def fastBreed():
 
 def start():
     while (True):
-        fastBreed()
+        startBreeding('hatch')
 
 
 # start()
