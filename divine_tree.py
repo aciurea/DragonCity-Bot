@@ -1,4 +1,4 @@
-from utils import closePopup, exists, getImagePositionRegion, moveAndClick, delay, scroll
+from utils import ThreadWithReturnValue, closePopup, exists, getImagePositionRegion, moveAndClick, delay, scroll
 
 RARITY_PATHS = [
     './img/tree/common.png',
@@ -40,7 +40,9 @@ def recall():
         if exists(rarity):
             dragon = getImagePositionRegion('./img/tree/40.png', 100, 200, 1000, 800)
             if exists(dragon):
+                print('dragon is ', dragon)
                 moveAndClick(dragon)
+                delay(10)
                 recall_btn = getImagePositionRegion('./img/tree/recall_btn.png', 1000, 700, 1400, 850, .8,3 )
                 if not exists(recall_btn): return print('Recall btn not found')
                 moveAndClick(recall_btn)
@@ -55,10 +57,15 @@ def empower():
     print('TODO empower ')
     
 def trading_hub():
-    claim = getImagePositionRegion('./img/tree/trading_claim.png', 1000, 700, 1400, 850, .8, 3)
-    print('loogin for claim', claim)
-    if exists(claim):
-        moveAndClick(claim) 
+    refund = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tree/refund.png', 1000, 600, 1500, 850, .8, 3)).start()
+    claim = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tree/trading_claim.png', 1000, 700, 1400, 850, .8, 3)).start()
+    claim = claim.join()
+    refund = refund.join()
+
+    print('claim :', claim, ' refund: ', refund)
+    btn = claim if exists(claim) else refund
+    if exists(btn) or exists:
+        moveAndClick(btn) 
         delay(2)
 
     unavailable_btn = getImagePositionRegion('./img/tree/unavailable.png', 600, 600, 1400, 900, .8, 3)
@@ -69,16 +76,15 @@ def trading_hub():
 
     while(True):
         new = getImagePositionRegion('./img/tree/trading_new.png', 300, 200, 800, 600, .8, 3)
-        if not exists(new):
-            scroll([410, 795], [410, 700])
-            continue
-        moveAndClick(new)
-        delay(1)
-        moveAndClick([310, 350]) # first dragon always
-        delay(1)
-        moveAndClick([1260, 780]) # hard to identify the essence, hardcoded the position
-        delay(1)
-        return print('Trading placed')
+        if exists(new):
+            moveAndClick(new)
+            delay(1)
+            moveAndClick([310, 350]) # first dragon always
+            delay(10)
+            moveAndClick([1260, 780]) # hard to identify the essence, hardcoded the position
+            delay(1)
+            return print('Trading placed')
+        scroll([410, 795], [410, 700])
 
 def inside_divine_tree():
     trading_hub()
@@ -96,7 +102,7 @@ def inside_divine_tree():
 
 def devine_tree():
     print('start looking for divine tree')
-    tree = getImagePositionRegion('./img/tree/devine_tree.png', 300, 100, 800, 400,.8, 20)
+    tree = getImagePositionRegion('./img/tree/devine_tree.png', 300, 100, 800, 400,.8, 10)
 
     if not exists(tree):
         return print('Devine Tree not found')

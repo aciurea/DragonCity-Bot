@@ -2,10 +2,8 @@ from utils import ThreadWithReturnValue, checkIfCanClaim, delay, getImagePositio
 
 def getRewards():
     ## TODO update the starting position
-    thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800))
-    thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800))
-    thread1.start()
-    thread2.start()
+    thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800)).start()
+    thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800)).start()
     video = thread1.join()
     if not exists(video):
         return print('Video not found ')
@@ -39,15 +37,17 @@ def getStrongAttacks(avoid, attacks):
     return newAttacks
 
 
-def goToFight():
+def goToFight(pos=[-1]):
     attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210,.8, 100)
     moveAndClick(attack)
+    if exists(pos):
+        moveAndClick(pos)
 
-    in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 0, 120, 350)
+    in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 20, 200, 80, 320, .8, 5)
     while exists(in_progress):
         print('Fight in progress')
-        delay(3)
-        in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 0, 120, 350)
+        in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 20, 200, 80, 320, .8, 5)
+        delay(1)
 
 def goToLeague():
     # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped
@@ -74,6 +74,7 @@ def goToLeague():
     moveAndClick(oponent)
     delay(5) # wait for the battle to start
     goToFight()
+    delay(1)
     print('Battle finished since I have no attacks, go and take the rewards')
     return getRewards()
 

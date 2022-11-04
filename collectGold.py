@@ -13,17 +13,17 @@ def getGoldPosition():
 
 def collectGold():
     def inner_collect(times):
-        if(times > 20):
+        if(times < 0):
             return print('Called too many times. Exists and try again')
         gold = getGoldPosition()
         if exists(gold):
             print('gold pos is ', gold)
             moveAndClick(gold)
-            return inner_collect(times + 1)
+            return inner_collect(times - 1)
         check_if_not_ok()
         return print('Gold not found')
         
-    inner_collect(0)
+    inner_collect(15)
     move_to_top()
     inner_collect(10)
 # collectGold()

@@ -7,8 +7,7 @@ from heroic import heroic
 from rewards import collectRewards
 from shop import shop
 from utils import check_if_not_ok, delay, dragMapToCenter
-
-halfAnHour = 1800
+HALF_AN_HOURS = 1800
 
 def runAction(action):
     dragMapToCenter()
@@ -35,14 +34,13 @@ def doHeroicRace():
 
 def start():
     # doHeroicRace()
-
+    runAction(shop)
     runAction(collectGold)
     runAction(collectFood)
     runAction(startBattle)
     runAction(collectRewards)
     runAction(startBreeding)
     runAction(devine_tree)
-    runAction(shop)
     delay(.5)
     check_if_not_ok()
 
@@ -53,7 +51,7 @@ def hatchAndCollect():
     while (index > 0):
         startBreeding('hatch')
         index -= 1
-    delay(5)
+    delay(30)
 
 def run():
     while (True):

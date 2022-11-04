@@ -3,6 +3,23 @@ import pyautogui
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
+from pynput.keyboard import Controller
+
+def type_on_keyboard(key, times = 1):
+    while(times > 0):
+        times -= 1
+        pyautogui.press(key)
+
+def type_combination(key1, key2):
+    print('Try to press ', key1, '+ ', key2)
+    keyboard = Controller()
+    keyboard.press(key1)
+    keyboard.press(key2)
+    keyboard.release(key2)
+    keyboard.release(key1)
+
+def get_path(path):
+    return path+'.png'
 
 class ThreadWithReturnValue(Thread):
     def __init__(self, group=None, target=None, name=None,
@@ -178,7 +195,9 @@ def dragMap(artifact, next=[800, 450]):
 def dragMapToCenter():
     print('Drag map to center')
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
-    if(artifact[0] == 800 and artifact[1] == 450): return artifact
+    if(artifact[0] == 800 and artifact[1] == 450):
+        moveAndClick(artifact)
+        return artifact
 
     if not exists(artifact):
         print('Cannot move the map since there is no point of reference')
