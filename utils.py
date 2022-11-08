@@ -86,18 +86,19 @@ def exists(value):
     return value[0] != -1;
 
 def checkIfCanClaim():
-    ## stop after 90s, try 30 times * 3 = 90 seconds
-    times = 30
+    ## stop after 50, try 30 times * 3 = 90 seconds
+    times = 25
     while(times > 0):
-        image = getImagePosition('./img/utils/ready_to_claim.png', 5)
+        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 5)
+        
         if exists(image):
             return image
-        delay(3)
+        delay(2)
    
     return [-1]
 
 
-def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
+def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
     image = imagesearcharea(path, 0, 0, 1600, 900, precision)
 
     while (not exists(image)):
@@ -111,42 +112,41 @@ def getImagePosition(path, tries=20, precision=0.8, seconds=0.5):
 
 
 
-def check_if_not_ok(msg = 'None'):
-    list= [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/back.png', 0, 0, 150, 150, .8, 2)),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/red_close.png', 800, 0, 1600, 500, .8, 2)),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/claim_yellow.png', 700, 600, 1200, 850, .8, 2))
+def check_if_not_ok():
+    claim, close_btn = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/back.png', 0, 0, 150, 150, .8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
+        # ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/red_close.png', 800, 0, 1600, 500, .8, 2)),
     ]
+    claim = claim.join()
+    close_btn = close_btn.join()
     
-    for thread in list:
-        thread.start()
-    
-    index = -1
-    for thread in list:
-        index += 1
-        item = thread.join()
-        if exists(item):
-            moveAndClick(item)
-            print('Clicked outside:: ', msg)
-            if index == len(list):
-                delay(2)
-                openChest()
-                closePopup()
-                print(msg, '::: when closePopup')
-            dragMapToCenter()
-    
+    if exists(claim):
+        moveAndClick(claim)
+    if exists(close_btn):
+        moveAndClick(close_btn)
+
 def openChest():
-    tap = getImagePositionRegion('./img/tv/tap.png', 300, 300, 1600, 800)
-    moveAndClick(tap, 'No tap button found')
+    tap, close_btn = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tv/tap.png', 300, 300, 1600, 800)).start(),
+        ThreadWithReturnValue(target=get_close_btn).start(),
+    ]
+    tap = tap.join()
+    close_btn = close_btn.join()
+    if not exists(tap):
+        moveAndClick(close_btn, 'Close btn from open chest not found')
+        return print('Chest not found in order to be opened')
+    moveAndClick(tap)
     delay(3)
     claim = getImagePositionRegion(
         './img/tv/yellow_claim.png', 200, 300, 1600, 800)
-    moveAndClick(claim, 'No claim button after opening chest found')
-    delay(.5)
     if not exists(claim):
+        delay(1)
         closePopup()
 
+    moveAndClick(claim)
+    delay(1)
+  
 
 def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
 def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)
@@ -160,11 +160,10 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     
     while(mouse.get_position()[0] != pos[0]):
        delay(0.2)
-
     delay(0.1)
     mouse.click()
 
-def get_close_btn(x1 = 1400, y1= 0, x2 = 1600, y2 = 150):
+def get_close_btn(x1 = 1200, y1= 0, x2 = 1600, y2 = 300):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2)
 
 def closePopup(btn = [-1]):
@@ -180,7 +179,6 @@ def closeVideo():
 
 def moveTo(position):
    mouse.move(position[0], position[1], True, .05)
-
 
 def dragMap(artifact, next=[800, 450]):
     x, y = next
@@ -208,14 +206,16 @@ def dragMapToCenter():
     
 def move_to_top():
     artifact = dragMapToCenter()
-    if not exists(artifact): return
+    print('artifact is', artifact)
+    if not exists(artifact): return [-1]
     print('move to top')
     dragMap(artifact, [800, 600])
 
 def move_to_bottom():
     artifact = dragMapToCenter()
+    print('artifact is', artifact)
     if not exists(artifact): return
-    print('move to top')
+    print('move to bottom')
     dragMap(artifact, [800, 300])
 
 def getMovePositions():

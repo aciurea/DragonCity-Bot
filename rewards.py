@@ -5,69 +5,63 @@ from utils import (ThreadWithReturnValue,
                    closeVideo,
                    delay,
                    exists,
-                   get_close_btn,
+                   get_path as get_path_from_utils,
                    getImagePosition,
                    getImagePositionRegion,
                    moveAndClick,
                    video_error,
                    openChest)
 
+BASE_REWARDS = './img/rewards/'
+def get_path(path):
+    return get_path_from_utils(BASE_REWARDS+path)
 
 def collectTreasure():
-    treasure = getImagePositionRegion(
-        './img/rewards/daily_chest.png', 1300, 700, 1500, 850, .8, 3)
+    print('Looking to collec the treasure')
+    treasure = getImagePositionRegion(get_path('daily_chest'), 1300, 700, 1500, 850, .8, 3)
     if exists(treasure):
         moveAndClick(treasure)
         delay(1)
-    collect = getImagePositionRegion(
-        './img/rewards/collect.png', 0, 700, 300, 800, 0.8, 3)
+    collect = getImagePositionRegion(get_path('collect'), 0, 700, 300, 800, 0.8, 3)
 
-    if not exists(collect):
-        return closePopup()
-    moveAndClick(collect)
-    openChest()
+    if exists(collect):
+        moveAndClick(collect)
+        openChest()
+   
     closePopup()
 
 def claim():
     print('Go to claim')
-    claimBtn = getImagePositionRegion(
-        './img/tv/claim.png', 200, 400, 1400, 800)
+    claim_btn = getImagePositionRegion('./img/tv/claim.png', 200, 400, 1400, 800)
 
-    print('claimBtn ', claimBtn)
-    moveAndClick(claimBtn)
-    openChest()
-    closePopup()
-
+    if exists(claim_btn):
+        moveAndClick(claim_btn)
+        openChest()
 
 def openTv():
     delay(1)
-    rewards_thread = ThreadWithReturnValue(target=getImagePositionRegion, 
-        args=('./img/tv/get_rewards_btn.png', 200, 700, 500, 850, 0.8, 3))
-    prizes_thread = ThreadWithReturnValue(target=getImagePositionRegion,
-                                    args=('./img/tv/prizes.png', 600, 700, 900, 850, 0.8, 3))
-    close_btn_thread = ThreadWithReturnValue(target=get_close_btn)
-    prizes_thread.start()
-    rewards_thread.start()
-    close_btn_thread.start()
+    rewards_thread,prizes_thread = [
+        ThreadWithReturnValue(target=getImagePositionRegion, 
+        args=('./img/tv/get_rewards_btn.png', 200, 700, 500, 850, 0.8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion,
+                                    args=('./img/tv/prizes.png', 600, 700, 900, 850, 0.8, 3)).start()
+    ]
     rewardsBtn = rewards_thread.join()
     prizesBtn = prizes_thread.join()
-    closeBtn = close_btn_thread.join()
     
-    print('buttons are ', rewardsBtn, prizesBtn)
+    if not exists(rewardsBtn) and not exists(prizesBtn):
+        closePopup()
+        return print('Nothing to watch for getting rewards...')
+
     btn = rewardsBtn if exists(rewardsBtn) else prizesBtn
-
-    if exists(btn):
-        print('Watching videos')
-        moveAndClick(btn)
-        if not exists(video_error()):
-            checkIfCanClaim()
-            closeVideo()
-            claim()
-        closePopup(closeBtn)
-
-    else:
-        print('No videos available')
-        return closePopup(closeBtn)
+    moveAndClick(btn)
+    print('Watching videos...')
+    if not exists(video_error()):
+        moveAndClick([802, 352]) # position to play the video
+        checkIfCanClaim()
+        closeVideo()
+        claim()
+    closePopup()
 
 
 def collectRewards():

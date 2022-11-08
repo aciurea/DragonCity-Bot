@@ -1,5 +1,11 @@
-from asyncio import threads
-from utils import ThreadWithReturnValue, closePopup, delay, exists, getImagePosition, getImagePositionRegion, moveAndClick
+from utils import (ThreadWithReturnValue, 
+                    check_if_not_ok,
+                    closePopup,
+                    delay,
+                    exists,
+                    getImagePosition,
+                    getImagePositionRegion,
+                    moveAndClick)
 
 def feed():
     feedBtn = getImagePositionRegion('./img/breed/feed.png', 300, 700, 600, 850)
@@ -47,10 +53,11 @@ def placeAndFeed():
     sellEgg()
 
 
-def hatchery(priority):
-    egg = getImagePosition('./img/breed/terra_egg.png', 50)
+def hatchery(priority, pos=[-1]):
+    egg = pos if exists(pos) else getImagePositionRegion('./img/breed/terra_egg.png', 300, 700, 1100, 850, .8, 50)
 
     if not exists(egg):
+        check_if_not_ok()
         return print('Egg not found')
 
     moveAndClick(egg)
@@ -72,6 +79,7 @@ def startBreeding(priority='breed'):
         return print('Tree not found')
 
     moveAndClick(tree_position)
+    # here double check if the egg can be place, if not delete egg from hatchery
     breed()
     delay(13)
     moveAndClick(tree_position)
@@ -83,8 +91,8 @@ def breed():
     if not exists(rebreed):
         return print('Rebreed btn icon not found')
 
-    moveAndClick(rebreed)
-    delay(.5)
+    moveAndClick(rebreed) #[1246, 764]
+    delay(1)
     breedBtn = getImagePositionRegion('./img/breed/breed_btn.png', 700, 600, 900, 750, .8, 3)
     moveAndClick(breedBtn)
     closePopup()
@@ -114,38 +122,62 @@ def fastHatch():
     
 
 def fastBreed():
-    print('Start fast breeding')
-    pos1 = getImagePosition('./img/breed/finish_breed.png',10)
+    print('Start fast breeding....')
+    # take egg and hatch first place
+    pos1 = getImagePositionRegion('./img/breed/finish_breed.png', 100, 200, 1100, 700, .8, 5)
     pos1 = [pos1[0] + 40, pos1[1]+100]
+    print('pos1  is ', pos1)
     moveAndClick(pos1)
     delay(1)
-    pos2 = getImagePosition('./img/breed/finish_breed.png',10)
+    hatchery('breed')
+
+    # take egg and hatch and rebreed second place
+    print('start looking for the second egg...')
+    pos2 = getImagePositionRegion('./img/breed/finish_breed.png', 100, 200, 1100, 700, .8, 5)
     pos2 = [pos2[0] + 40, pos2[1]+100]
-    delay(3)
+    print('pos2 is ', pos2)
+    moveAndClick(pos2)
+    delay(1)
     hatchery('breed')
     delay(1)
-    moveAndClick(pos1)
+    moveAndClick(pos2)
     delay(1)
     breed()
     delay(1)
-    direction = True
-    
-    while True:
-        btn = pos2 if direction else pos1 
-        direction = not direction
-        moveAndClick(btn)
-        delay(.5)
-        hatchery('breed')
-        delay(.5)
-        moveAndClick(btn)
-        delay(.5)
-        breed()
-        delay(5)
-       
-    
+    # rebreed first place
+    moveAndClick(pos1)
+    delay(1)
+    breed()
+
+    delay(7) # wait for the egg to be ready for heatching
+    time = 2
+    while 1:
+        moveAndClick(pos2)
+        delay(time)
+        hatchery('breed', [828, 772]) # 2s
+        delay(time)
+        moveAndClick(pos2)
+        delay(time)
+        breed() # 2s 
+        delay(time)
+        check_if_not_ok()
+        
+        ## total min 9s
+
+        moveAndClick(pos1)
+        delay(time)
+        hatchery('breed', [828, 772]) # min 2s
+        delay(time)
+        moveAndClick(pos1)
+        delay(time) 
+        breed()# min 2s
+        delay(time)
+        check_if_not_ok()
+        ## tatal 9s
 
 def start():
     while (True):
+        delay(1)
         startBreeding('hatch')
 
 

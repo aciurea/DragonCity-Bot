@@ -1,11 +1,17 @@
-from utils import ThreadWithReturnValue, check_if_not_ok, delay, exists, getImagePosition, getImagePositionRegion, move_to_bottom, moveAndClick
+from utils import (ThreadWithReturnValue,
+                    check_if_not_ok,
+                    delay, exists,
+                    getImagePosition,
+                    getImagePositionRegion,
+                    move_to_bottom,
+                    moveAndClick)
 
 
 def regrowFood():
     farm = getImagePositionRegion('./img/food/farm.png', 300, 200, 1000, 600)
 
     if not exists(farm):
-        check_if_not_ok('farm')
+        check_if_not_ok()
         return print('Farm not found')
 
     moveAndClick(farm, 'Farm not found')
@@ -20,7 +26,7 @@ def regrowFood():
         moveAndClick(regrow, 'Regrow not found')
         return print('Regrow successful!')
 
-    check_if_not_ok('regrow')
+    check_if_not_ok()
     print('Regrow not found')
 
 
@@ -41,7 +47,7 @@ def collectFood():
             return inner_collect(times +1)
 
         print('Food not ready yet or not found')
-        check_if_not_ok('Food')
+        check_if_not_ok()
       
     inner_collect(0)
     move_to_bottom()

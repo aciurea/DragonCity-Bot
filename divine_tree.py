@@ -97,7 +97,7 @@ def inside_divine_tree():
     for action in list:
         moveAndClick(right)
         action()
-        delay(1)
+        delay(2)
   
 
 def devine_tree():

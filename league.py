@@ -1,24 +1,26 @@
-from utils import ThreadWithReturnValue, checkIfCanClaim, delay, getImagePosition, exists, getImagePositionRegion, moveAndClick, closePopup, closeVideo, moveTo, video_error
+from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
 
 def getRewards():
     ## TODO update the starting position
     thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800)).start()
     thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800)).start()
     video = thread1.join()
+    greenClaim = thread2.join()
     if not exists(video):
         return print('Video not found ')
 
     moveAndClick(video)
-    delay(5)
+    delay(1)
     if not exists(video_error()): 
+        moveAndClick([802, 352]) # position to play the video
         checkIfCanClaim()
         closeVideo()
     else: 
-        greenClaim = thread2.join()
         delay(1)
         moveAndClick(greenClaim, 'Claim button for rewards after battle not found')
-    image = getImagePositionRegion('./img/battle/claim.png', 600, 600, 1000, 800)
-    moveAndClick(image, 'Claim after league finished')
+    claim_btn_league_finished = getImagePositionRegion('./img/battle/claim.png', 600, 600, 1000, 800, .8, 5)
+    if exists(claim_btn_league_finished):
+        moveAndClick(claim_btn_league_finished)
     delay(1)
     closePopup()
 
@@ -43,10 +45,10 @@ def goToFight(pos=[-1]):
     if exists(pos):
         moveAndClick(pos)
 
-    in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 20, 200, 80, 320, .8, 5)
+    in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)
     while exists(in_progress):
         print('Fight in progress')
-        in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 20, 200, 80, 320, .8, 5)
+        in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)
         delay(1)
 
 def goToLeague():
