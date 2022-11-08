@@ -39,17 +39,15 @@ def getStrongAttacks(avoid, attacks):
     return newAttacks
 
 
-def goToFight(pos=[-1]):
+def goToFight():
     attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210,.8, 100)
     moveAndClick(attack)
-    if exists(pos):
-        moveAndClick(pos)
 
     in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)
     while exists(in_progress):
         print('Fight in progress')
         in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)
-        delay(1)
+        delay(.5)
 
 def goToLeague():
     # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped

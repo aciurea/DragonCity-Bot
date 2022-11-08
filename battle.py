@@ -1,10 +1,14 @@
+from arena import arena
 from quest import openQuestPanel
-from utils import exists, getImagePositionRegion, moveAndClick
+from utils import delay, exists, getImagePositionRegion, moveAndClick
 from league import openLeaguePanel
 
+# Minimize = win32gui.GetForegroundWindow()
+# win32gui.ShowWindow(Minimize, win32con.SW_MINIMIZE)
 
 def chooseBattle():
     moveAndClick([800, 450])
+    delay(1)
     battleBtn = getImagePositionRegion('./img/battle/battle_btn.png', 400, 700, 600, 900, .8, 3)
 
     if not exists(battleBtn):
@@ -12,9 +16,17 @@ def chooseBattle():
 
     moveAndClick(battleBtn)
 
-
 def startBattle():
-    for action in [openQuestPanel, openLeaguePanel]:
+    for action in [openQuestPanel, openLeaguePanel, arena]:
         chooseBattle()
+       
         action()
     return print('Finishe battles')
+
+
+def start():
+    delay(1)
+    startBattle()
+
+# start()
+    

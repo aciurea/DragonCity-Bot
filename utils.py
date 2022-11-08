@@ -4,6 +4,10 @@ import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
 from pynput.keyboard import Controller
+import cv2
+from pytesseract import pytesseract
+from PIL import ImageGrab
+import numpy as nm
 
 def type_on_keyboard(key, times = 1):
     while(times > 0):
@@ -224,7 +228,6 @@ def getMovePositions():
         'up',
     ]
 
-
 def scroll(pos1, pos2):
     moveTo(pos1)
     delay(.5)
@@ -234,3 +237,13 @@ def scroll(pos1, pos2):
     delay(.5)
     mouse.release()
    
+def get_text():
+    pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    path ='./temp/img.png'
+    cap = ImageGrab.grab(bbox=(510, 110, 700, 220))
+    cap.save(path)
+    text = pytesseract.image_to_string(cv2.cvtColor(nm.array(cap), cv2.COLOR_BGR2RGBA))
+    txt = "".join(text.split())
+  
+    print(txt)
+    return txt

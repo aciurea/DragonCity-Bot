@@ -1,5 +1,5 @@
 from battle import startBattle
-from breed import startBreeding
+from breed import fastBreed, startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
 from divine_tree import devine_tree
@@ -12,6 +12,8 @@ HALF_AN_HOURS = 1800
 def runAction(action):
     dragMapToCenter()
     action()
+    delay(.5)
+    check_if_not_ok()
 
 def doHeroicRace():
     priorities = {'breed': startBreeding,
@@ -34,10 +36,11 @@ def doHeroicRace():
 
 def start():
     # doHeroicRace()
-    runAction(shop)
+    
     runAction(collectGold)
     runAction(collectFood)
     runAction(startBattle)
+    runAction(shop)
     runAction(collectRewards)
     runAction(startBreeding)
     runAction(devine_tree)
@@ -56,6 +59,6 @@ def hatchAndCollect():
 def run():
     while (True):
         start()
-        delay(5)
+        # delay(5)
 
 run()
