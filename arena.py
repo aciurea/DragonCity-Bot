@@ -1,6 +1,7 @@
 from freeze import freeze_dragons
-from utils import (ThreadWithReturnValue,
-                closePopup, 
+from utils import (ThreadWithReturnValue, checkIfCanClaim,
+                closePopup,
+                closeVideo, 
                 delay,
                 exists,
                 get_path as get_path_from_utils,
@@ -17,9 +18,18 @@ def check_attack_report():
     threads = [
         ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('attack_report'), 780, 180, 940, 270, .8, 3)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('close_attack_report'), 1190, 180, 1270, 280, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('attack_report_accept'), 550, 550, 670, 670, .8, 3)).start()
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('attack_report_accept'), 550, 550, 1000, 670, .8, 3)).start()
     ]
- 
+
+    repeal = ThreadWithReturnValue(target=getImagePositionRegion,args=(get_path('repeal'), 550, 550, 1100, 750, .8, 3)).start()
+    repeal = repeal.join()
+
+    if exists(repeal):
+        moveAndClick(repeal)
+        checkIfCanClaim()
+        closeVideo()
+        return
+    
     for thread in threads:
         img = thread.join()
         print(img)
@@ -109,4 +119,5 @@ def arena():
     print(claim_btn)
     if(exists(claim_btn)):
         moveAndClick(claim_btn)
+    delay(1)
     closePopup()

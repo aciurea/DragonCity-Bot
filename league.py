@@ -1,4 +1,4 @@
-from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
+from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, get_inprogress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
 
 def getRewards():
     ## TODO update the starting position
@@ -38,15 +38,14 @@ def getStrongAttacks(avoid, attacks):
             newAttacks.append(attack)
     return newAttacks
 
-
 def goToFight():
     attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210,.8, 100)
     moveAndClick(attack)
-
-    in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)
+ 
+    in_progress = get_inprogress()
     while exists(in_progress):
         print('Fight in progress')
-        in_progress = getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)
+        in_progress = get_inprogress()
         delay(.5)
 
 def goToLeague():

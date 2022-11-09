@@ -159,13 +159,14 @@ def claim(): return imagesearcharea('./img/utils/close.png', 400, 200, 1200, 800
 def moveAndClick(pos, msg = 'Nothing to click'):
     if not exists(pos):
         return print(msg)
-        
+    mouse.release() 
     moveTo(pos)
     
     while(mouse.get_position()[0] != pos[0]):
        delay(0.2)
     delay(0.1)
     mouse.click()
+    mouse.release()
 
 def get_close_btn(x1 = 1200, y1= 0, x2 = 1600, y2 = 300):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2)
@@ -182,6 +183,7 @@ def closeVideo():
     moveAndClick(closeBtn, 'Close video button not found')
 
 def moveTo(position):
+   mouse.release()
    mouse.move(position[0], position[1], True, .05)
 
 def dragMap(artifact, next=[800, 450]):
@@ -247,3 +249,11 @@ def get_text():
   
     print(txt)
     return txt
+
+def get_inprogress():
+    in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 5)).start()
+    in_progress = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)).start()
+    in_progress = in_progress.join()
+    in_progress2 = in_progress2.join()
+
+    return in_progress if exists(in_progress) else in_progress2
