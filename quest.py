@@ -76,6 +76,7 @@ def openQuestPanel():
     quest_panel = getImagePositionRegion('./img/battle/quest.png', 650, 200, 1000, 500)
 
     if not exists(quest_panel):
+        closePopup()
         return print('Quest is not available')
 
     print('Start to battle...')

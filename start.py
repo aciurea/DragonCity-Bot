@@ -3,10 +3,10 @@ from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
 from divine_tree import devine_tree
-from heroic import heroic
+from heroic import heroic_race
 from rewards import collectRewards
 from shop import shop
-from utils import check_if_not_ok, delay, dragMapToCenter
+from utils import check_if_not_ok, delay, dragMapToCenter, exists
 import win32gui
 import win32con
 HALF_AN_HOURS = 1800
@@ -17,31 +17,32 @@ win32gui.ShowWindow(Minimize, win32con.SW_MINIMIZE)
 def runAction(action):
     dragMapToCenter()
     action()
-    delay(.5)
+    delay(1)
     check_if_not_ok()
 
 def doHeroicRace():
-    priorities = {'breed': startBreeding,
+    priorities = { 'breed': startBreeding,
                   'feed': startBreeding,
                   'hatch': startBreeding,
                   'food': collectFood
                   }
-    priority = heroic()
-    print('priority is ', priority)
-    if (priority == -1):
-        print('no priority')
-    else:
-        work = priorities['hatch']
-        print(work, priority)
-        times = 20
-        while (times > 0):
-            work('hatch')
-            times -= 1
-            delay(0.5)
+    mission = heroic_race()
+    if not exists(mission):
+       return print('no priority')
+
+    action = priorities[mission]
+
+    def do_action():
+        action(mission)
+    times = 20
+    while (times > 0):
+        runAction(do_action)
+        times -= 1
+        delay(0.5)
 
 def start():
-    # doHeroicRace()
-    
+    runAction(doHeroicRace)
+    print('start doing the rest of the actions....')
     runAction(collectGold)
     runAction(collectFood)
     runAction(startBattle)

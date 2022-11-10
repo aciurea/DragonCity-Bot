@@ -4,17 +4,17 @@ from utils import getImagePosition, moveAndClick
 
 def checkAndCloseIfFails():
     paths = [
-        './img/fails/back.png',
-        './img/fails/close.png',
+        './img/app_start/back.png',
+        './img/app_start/close.png',
         './img/utils/close.png',
-        './img/fails/claim_yellow.png',
-        './img/fails/lucky.png',
-        './img/fails/card.png',
-        './img/fails/tap_to_open.png',
+        './img/app_start/claim_yellow.png',
+        './img/app_start/lucky.png',
+        './img/app_start/card.png',
+        './img/app_start/tap_to_open.png',
         'img/utils/piggy_close.png',
-        'img/fails/twd_close.png',
-        'img/fails/mega_pack_close.png',
-        'img/fails/legendary_close.png',
+        'img/app_start/twd_close.png',
+        'img/app_start/mega_pack_close.png',
+        'img/app_start/legendary_close.png',
 
     ]
 

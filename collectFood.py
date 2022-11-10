@@ -35,7 +35,7 @@ def getFoodPosition():
 
     return food if exists(food) else [-1]
 
-def collectFood():
+def collectFood(priority = False):
     def inner_collect(times):
         if times > 15:
             return print('Too many farms to collect. Safe exit')

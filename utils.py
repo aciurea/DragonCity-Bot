@@ -78,7 +78,7 @@ def commonClaim():
     tap = getImagePosition('./img/tv/tap.png', 3)
     moveAndClick(tap)
     delay(1)
-    claim = getImagePosition('./img/fails/claim_yellow.png', 3)
+    claim = getImagePosition('./img/app_start/claim_yellow.png', 3)
     moveAndClick(claim)
     closePopup()
     print('Claimed rewards')
@@ -91,9 +91,9 @@ def exists(value):
 
 def checkIfCanClaim():
     ## stop after 50, try 30 times * 3 = 90 seconds
-    times = 25
+    times = 20
     while(times > 0):
-        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 5)
+        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 3)
         
         if exists(image):
             return image
@@ -117,16 +117,17 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
-    claim, close_btn = [
+    back_btn, close_btn = [
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
     ]
-    claim = claim.join()
+    back_btn = back_btn.join()
     close_btn = close_btn.join()
     
-    if exists(claim):
-        moveAndClick(claim)
+    if exists(back_btn):
+        moveAndClick(back_btn)
     if exists(close_btn):
+        print('clicked on close_btn')
         moveAndClick(close_btn)
 
 def openChest():
@@ -142,7 +143,7 @@ def openChest():
     moveAndClick(tap)
     delay(3)
     claim = getImagePositionRegion(
-        './img/tv/yellow_claim.png', 200, 300, 1600, 800)
+        './img/tv/yellow_claim.png', 630, 500, 1200, 800, .8, 3)
     if not exists(claim):
         delay(1)
         closePopup()
@@ -241,10 +242,10 @@ def get_text():
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
     # cap = ImageGrab.grab(bbox=(355, 110, 493, 220))
-    cap = ImageGrab.grab(bbox=(1115, 270, 1250, 343))
+    cap = ImageGrab.grab(bbox=(1100, 225, 1600, 655))
     cap.save(path)
     gray = cv2.cvtColor(nm.array(cap), cv2.COLOR_BGR2GRAY) #COLOR_BGR2GRAY
-    text = pytesseract.image_to_string(gray,config='load_system_dawg=0 load_freq_dawg=0 osd --oem 3 --psm 6')
+    text = pytesseract.image_to_string(gray, lang='english') # ,config='load_system_dawg=0 load_freq_dawg=0 osd --oem 3 --psm 6'
     print(text)
   
     return text

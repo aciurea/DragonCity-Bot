@@ -28,6 +28,7 @@ def check_attack_report():
         moveAndClick(repeal)
         checkIfCanClaim()
         closeVideo()
+        delay(1)
         return
     
     for thread in threads:
@@ -115,10 +116,8 @@ def arena():
 
     delay(.5)
     freeze_dragons(start_figthing)
-    delay(2)
-    claim_btn = getImagePositionRegion(get_path('claim'), 700, 750, 900, 850)
-    print(claim_btn)
-    if(exists(claim_btn)):
-        moveAndClick(claim_btn)
-    delay(2)
+    delay(3)
+    claim_btn = getImagePositionRegion(get_path('claim'), 700, 750, 900, 850, .8, 20)
+    moveAndClick(claim_btn, 'No arena claim button')
+    delay(3)
     closePopup()

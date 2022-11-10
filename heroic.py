@@ -1,14 +1,14 @@
 from league import goToFight
-from utils import closePopup, commonClaim, delay, exists, moveAndClick, getImagePosition
+from utils import ThreadWithReturnValue, closePopup, delay, exists, getImagePositionRegion, go_back, moveAndClick, getImagePosition, openChest
 
 
-def exitHeroic():
-    back = getImagePosition('./img/fails/back.png')
-    moveAndClick(back)
+def exit_heroic():
+    go_back()
+    delay(.5)
     closePopup()
 
 
-def fightHeroic(fight):
+def fight_heroic(fight):
     moveAndClick(fight)
     select = getImagePosition('./img/heroic/select.png')
     moveAndClick(select)
@@ -20,60 +20,77 @@ def fightHeroic(fight):
     goToFight()
 
 
-def findMission():
-    # update here with all the missions
-    missions = [['./img/heroic/breed.png', 'breed'],
-                ['./img/heroic/food.png', 'food'],
-                ['./img/heroic/hatch.png', 'hatch'],
-                ]
+def find_mission():
+    missions = [
+        [ThreadWithReturnValue(target=getImagePositionRegion, 
+        args=('./img/heroic/food.png', 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
+        [ThreadWithReturnValue(target=getImagePositionRegion, 
+        args=('./img/heroic/breed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
+        [ThreadWithReturnValue(target=getImagePositionRegion, 
+        args=('./img/heroic/hatch.png', 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
+        ]
+    feed = ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/heroic/feed.png', 1090, 225, 1270, 725, .8, 3)).start()
+    if exists(feed.join()):
+        return 'feed'
     for mission in missions:
-        image = getImagePosition(mission[0], 3, 0.9)
+        image, mission_type = mission
+        image = image.join()
         if exists(image):
-            return mission[1]
-    return -1
+            return mission_type
+    return [-1]
 
 
-def checkIfCanClaim():
-    paths = ['./img/heroic/no_claim2.png', './img/heroic/no_claim.png']
-    for path in paths:
-        noClaim = getImagePosition(path, 3)
-        if exists(noClaim):
+def check_if_can_claim():
+    no_claim_threads = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/no_claim2.png', 1100,690, 1430, 760, 0.8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/no_claim.png', 1100,690, 1430, 760, 0.8, 3)).start()
+    ]
+
+    for thread in no_claim_threads:
+        no_claim_img = thread.join()
+        if exists(no_claim_img):
             return print('Nothing to claim')
 
-    claim = getImagePosition('./img/heroic/claim.png', 3)
+    claim = getImagePositionRegion('./img/heroic/claim.png', 652, 700, 950, 800, .8, 3)
+    if exists(claim):
+        moveAndClick(claim)
+        openChest()
 
-    moveAndClick(claim)
-    commonClaim()
-
-
-def heroic():
+def heroic_race():
     island = getImagePosition('./img/heroic/heroic_arena.png', 3)
+    enter_fight_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/fight.png', 1260, 285, 1435, 735, .8, 3)).start()
 
     if not exists(island):
-        return print('No Heroic Island found')
+        print('No Heroic Island found')
+        return [-1]
 
+    delay(.5)
     moveAndClick(island)
-    checkIfCanClaim()
-    mission = findMission()
+    check_if_can_claim()
+    mission = find_mission()
 
-    enterFightBtn = getImagePosition('./img/heroic/fight.png', 3)
+    enter_fight = enter_fight_thread.join()
 
-    if not exists(enterFightBtn):
+    if not exists(enter_fight):
         print('No fight')
         closePopup()
         return mission
 
-    moveAndClick(enterFightBtn)
-    noFight = getImagePosition('./img/heroic/not_ready_yet.png')
+    moveAndClick(enter_fight)
+    delay(1)
+    no_fight, start_fight = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/not_ready_yet.png', 0, 580, 1600, 740, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/start_fight.png', 0, 640, 1600, 760, .8, 3)).start(),
+        ]
 
-    if exists(noFight):
-        exitHeroic()
+    no_fight = no_fight.join()
+    if exists(no_fight):
+        exit_heroic()
         return mission
 
-    startFight = getImagePosition('./img/heroic/start_fight.png')
-
-    if exists(startFight):
-        fightHeroic(startFight)
-
-    exitHeroic()
+    start_fight = start_fight.join()
+    if exists(start_fight):
+        fight_heroic(start_fight)
+    check_if_can_claim()
+    exit_heroic()
     return mission
