@@ -38,6 +38,9 @@
     - empower (to be implemented)
 - Watching rewards and automatically close them
 - Buying orbs (only the one with gold)
+- Heroic Race (Work in progress)
+    - Battle
+    - Action based on need (Breeding, Hatching, or Feeding)
 
 ### Heroic Race 
 - Lap1: minTime = 25 minutes
