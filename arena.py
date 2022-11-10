@@ -40,14 +40,13 @@ def check_if_can_fight():
     cannot_fight = getImagePositionRegion(get_path('wait_time'),180, 380, 790, 490, .8, 3)
 
     if not exists(cannot_fight):
-        return print('Battle can start')
+        return print('Battle button not found')
     delay(.5)
     change = getImagePositionRegion(get_path('change_dragon'), 375, 670, 590 ,760, .8, 3)
 
     if not exists(change):
         return print('Change button not found.')
     moveAndClick(change)
-    delay(1)
     
     # try 3 times for 3 dragons
     list = [
@@ -87,6 +86,8 @@ def arena():
     check_attack_report()
     check_if_can_fight()
     check_and_collect()
+    delay(1)
+
 
     # skip = getImagePositionRegion(get_path('gold'), 1000, 665, 1250, 760)
     # if exists(skip):
@@ -114,10 +115,10 @@ def arena():
 
     delay(.5)
     freeze_dragons(start_figthing)
-
-    claim_btn = getImagePositionRegion(get_path('claim'), 740, 750, 890, 850)
+    delay(2)
+    claim_btn = getImagePositionRegion(get_path('claim'), 700, 750, 900, 850)
     print(claim_btn)
     if(exists(claim_btn)):
         moveAndClick(claim_btn)
-    delay(1)
+    delay(2)
     closePopup()

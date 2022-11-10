@@ -1,5 +1,5 @@
 from battle import startBattle
-from breed import fastBreed, startBreeding
+from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
 from divine_tree import devine_tree
@@ -7,7 +7,12 @@ from heroic import heroic
 from rewards import collectRewards
 from shop import shop
 from utils import check_if_not_ok, delay, dragMapToCenter
+import win32gui
+import win32con
 HALF_AN_HOURS = 1800
+
+Minimize = win32gui.GetForegroundWindow()
+win32gui.ShowWindow(Minimize, win32con.SW_MINIMIZE)
 
 def runAction(action):
     dragMapToCenter()

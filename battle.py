@@ -3,9 +3,6 @@ from quest import openQuestPanel
 from utils import delay, exists, getImagePositionRegion, moveAndClick
 from league import openLeaguePanel
 
-# Minimize = win32gui.GetForegroundWindow()
-# win32gui.ShowWindow(Minimize, win32con.SW_MINIMIZE)
-
 def chooseBattle():
     moveAndClick([800, 450])
     delay(1)

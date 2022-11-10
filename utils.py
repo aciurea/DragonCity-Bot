@@ -57,7 +57,7 @@ def video_error():
     return [1]
     
 def go_back():
-    back_btn = getImagePositionRegion('./img/fails/back.png', 0, 0, 150, 150, .8, 2)
+    back_btn = getImagePositionRegion('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)
     moveAndClick(back_btn)
 
 # It retries 10 times which means 5 seconds for the image to appear
@@ -118,9 +118,8 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 def check_if_not_ok():
     claim, close_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/back.png', 0, 0, 150, 150, .8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
-        # ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/fails/red_close.png', 800, 0, 1600, 500, .8, 2)),
     ]
     claim = claim.join()
     close_btn = close_btn.join()
@@ -152,7 +151,7 @@ def openChest():
     delay(1)
   
 
-def backFn(): return imagesearcharea('./img/fails/back.png', 0, 0, 500, 150)
+def backFn(): return imagesearcharea('./img/app_start/back.png', 0, 0, 500, 150)
 def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)
 def claim(): return imagesearcharea('./img/utils/close.png', 400, 200, 1200, 800)
 
@@ -183,7 +182,6 @@ def closeVideo():
     moveAndClick(closeBtn, 'Close video button not found')
 
 def moveTo(position):
-   mouse.release()
    mouse.move(position[0], position[1], True, .05)
 
 def dragMap(artifact, next=[800, 450]):
@@ -242,17 +240,18 @@ def scroll(pos1, pos2):
 def get_text():
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    cap = ImageGrab.grab(bbox=(510, 110, 700, 220))
+    # cap = ImageGrab.grab(bbox=(355, 110, 493, 220))
+    cap = ImageGrab.grab(bbox=(1115, 270, 1250, 343))
     cap.save(path)
-    text = pytesseract.image_to_string(cv2.cvtColor(nm.array(cap), cv2.COLOR_BGR2RGBA))
-    txt = "".join(text.split())
+    gray = cv2.cvtColor(nm.array(cap), cv2.COLOR_BGR2GRAY) #COLOR_BGR2GRAY
+    text = pytesseract.image_to_string(gray,config='load_system_dawg=0 load_freq_dawg=0 osd --oem 3 --psm 6')
+    print(text)
   
-    print(txt)
-    return txt
+    return text
 
 def get_inprogress():
-    in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 5)).start()
-    in_progress = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 5)).start()
+    in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
+    in_progress = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 3)).start()
     in_progress = in_progress.join()
     in_progress2 = in_progress2.join()
 

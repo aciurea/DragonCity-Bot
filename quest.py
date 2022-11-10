@@ -11,7 +11,7 @@ def getQuests():
     step_px = 500
     for i in range(3):
         start, end = [i * step_px, i * step_px + step_px]
-        list.append(ThreadWithReturnValue(target=getImagePositionRegion, args=(path, start, 600, end, 800, .5, 2)).start())
+        list.append(ThreadWithReturnValue(target=getImagePositionRegion, args=(path, start, 600, end, 800, .8, 2)).start())
 
     for thread in list:
         quest = thread.join()
@@ -63,8 +63,7 @@ def open_quest():
     if exists(quest): 
        return quest
 
-    print('is it necessary to scroll???')
-    delay(1)
+    delay(.5)
     scroll([1550, 450], [9, 450])
     delay(1)
     quest = inner_quest()
