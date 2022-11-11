@@ -4,6 +4,7 @@ _BASE_BATTLE = './img/battle/'
 _BASE_ARENA = _BASE_BATTLE + 'arenas/'
 _BASE_GOLD = './img/gold/'
 _BASE_FOOD = './img/food/'
+_BASE_ORBS = './img/orbs/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -29,3 +30,7 @@ FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
 FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_0')
 FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_single')
 FOOD_IMG = get_path(_BASE_FOOD + 'food')
+
+ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
+ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
+ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
