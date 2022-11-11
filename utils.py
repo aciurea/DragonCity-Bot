@@ -183,6 +183,7 @@ def closeVideo():
     moveAndClick(closeBtn, 'Close video button not found')
 
 def moveTo(position):
+   mouse.release()
    mouse.move(position[0], position[1], True, .05)
 
 def dragMap(artifact, next=[800, 450]):
@@ -234,7 +235,7 @@ def scroll(pos1, pos2):
     delay(.5)
     mouse.hold()
     delay(.1)
-    moveTo(pos2)
+    mouse.move(pos2[0], pos2[1], True, .05)
     delay(.5)
     mouse.release()
    
