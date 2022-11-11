@@ -2,6 +2,7 @@ from utils import get_path
 
 _BASE_BATTLE = './img/battle/'
 _BASE_ARENA = _BASE_BATTLE + 'arenas/'
+_BASE_GOLD = './img/gold/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -18,3 +19,6 @@ ARENA_CLAIM_BTN = get_path(_BASE_ARENA + 'claim')
 
 FIGHT_SWAP_DRAGON = get_path(_BASE_BATTLE + 'swap')
 FIGHT_PLAY = get_path(_BASE_BATTLE+'play')
+
+GOLD_1 = get_path(_BASE_GOLD+'gold')
+GOLD_2 = get_path(_BASE_GOLD+'gold2')

@@ -1,15 +1,16 @@
 from utils import ThreadWithReturnValue, check_if_not_ok, exists, getImagePosition, move_to_top, moveAndClick
-
+import constants as C
 
 def getGoldPosition():
-    thread1 = ThreadWithReturnValue(target=getImagePosition, args=('./img/gold/gold.png', 2, .7, .5))
-    thread2 = ThreadWithReturnValue(target=getImagePosition, args=('./img/gold/gold3.png', 2, .7, .5))
-    thread1.start()
-    thread2.start()
-    image1 = thread1.join()
-    image2 = thread2.join()
-   
-    return image1 if exists(image1) else image2
+    list = [
+        ThreadWithReturnValue(target=getImagePosition, args=(C.GOLD_1, 2, .8, .1)).start(),
+        ThreadWithReturnValue(target=getImagePosition, args=(C.GOLD_2, 2, .8, .1)).start()
+    ]
+    for thread in list:
+        img = thread.join()
+        if exists(img):
+            return img
+    return [-1]
 
 def collectGold():
     def inner_collect(times):
