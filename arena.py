@@ -4,24 +4,19 @@ from utils import (ThreadWithReturnValue, checkIfCanClaim,
                 closeVideo, 
                 delay,
                 exists,
-                get_path as get_path_from_utils,
                 getImagePositionRegion,
                 moveAndClick,
                 openChest)
-
-BASE_ARENA = './img/battle/arenas/' 
-
-def get_path(path):
-    return get_path_from_utils(BASE_ARENA+path)
+import constants as C
 
 def check_attack_report():
     threads = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('attack_report'), 780, 180, 940, 270, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('close_attack_report'), 1190, 180, 1270, 280, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('attack_report_accept'), 550, 550, 1000, 670, .8, 3)).start()
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT, 780, 180, 940, 270, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1190, 180, 1270, 280, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)).start()
     ]
 
-    repeal = ThreadWithReturnValue(target=getImagePositionRegion,args=(get_path('repeal'), 550, 550, 1100, 750, .8, 3)).start()
+    repeal = ThreadWithReturnValue(target=getImagePositionRegion,args=(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)).start()
     repeal = repeal.join()
 
     if exists(repeal):
@@ -38,12 +33,12 @@ def check_attack_report():
             moveAndClick(img)
 
 def check_if_can_fight():
-    cannot_fight = getImagePositionRegion(get_path('wait_time'),180, 380, 790, 490, .8, 3)
+    cannot_fight = getImagePositionRegion(C.ARENA_WAIT_TIME,180, 380, 790, 490, .8, 3)
 
     if not exists(cannot_fight):
         return print('Battle button not found')
     delay(.5)
-    change = getImagePositionRegion(get_path('change_dragon'), 375, 670, 590 ,760, .8, 3)
+    change = getImagePositionRegion(C.ARENA_CHANGE_DRAGON, 375, 670, 590 ,760, .8, 3)
 
     if not exists(change):
         return print('Change button not found.')
@@ -51,9 +46,9 @@ def check_if_can_fight():
     
     # try 3 times for 3 dragons
     list = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('speed'), 280, 620, 680, 720, .8, 20)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('speed'), 800, 620, 1020, 720, .8, 20)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(get_path('speed'), 1300, 620, 1530, 720, .8, 20)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 280, 620, 680, 720, .8, 20)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 800, 620, 1020, 720, .8, 20)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 1300, 620, 1530, 720, .8, 20)).start(),
     ]
     for item in list:
         speed_up_btn = item.join()
@@ -70,7 +65,7 @@ def check_if_can_fight():
            
 
 def check_and_collect():
-    collect= getImagePositionRegion(get_path('collect'), 1015, 125, 1200, 200, .8, 3)
+    collect= getImagePositionRegion(C.ARENA_CHEST_COLLECT, 1015, 125, 1200, 200, .8, 3)
 
     if exists(collect):
         moveAndClick(collect)
@@ -78,7 +73,7 @@ def check_and_collect():
 
 def arena():
     delay(1)
-    if not exists(getImagePositionRegion(get_path('arenas_quest'), 1000, 120, 1200, 220)): 
+    if not exists(getImagePositionRegion(C.ARENA_QUEST, 1000, 120, 1200, 220)): 
         return print('No arena found')
    
     arena_btn = [1100, 400]; # We should calculate in percentages
@@ -94,30 +89,30 @@ def arena():
     # if exists(skip):
     #     moveAndClick(skip)
     #     delay(1)
-    fight = getImagePositionRegion(get_path('fight'), 740, 730, 870, 800)
+    fight = getImagePositionRegion(C.ARENA_FIGHT, 740, 730, 870, 800)
 
     if not exists(fight): 
         closePopup()
         return print('No fight button found')
     moveAndClick(fight)
 
-    def start_figthing():
-        swap = getImagePositionRegion(get_path('swap'), 80, 650, 305, 740, .8, 10)
+    def start_fighting():
+        swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 10)
 
         moveAndClick(swap)
 
         delay(1)
-        select_new_dragon = getImagePositionRegion(get_path('new_dragon'), 600, 730, 1520, 830, .8, 10)
+        select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 600, 730, 1520, 830, .8, 10)
         if not exists(select_new_dragon): return print('Select new Dragon Btn not found')
         moveAndClick(select_new_dragon)
     
-        attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210,.8, 100)
+        attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
         moveAndClick(attack)
 
     delay(.5)
-    freeze_dragons(start_figthing)
+    freeze_dragons(start_fighting)
     delay(3)
-    claim_btn = getImagePositionRegion(get_path('claim'), 700, 750, 900, 850, .8, 20)
+    claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 20)
     moveAndClick(claim_btn, 'No arena claim button')
     delay(3)
     closePopup()
