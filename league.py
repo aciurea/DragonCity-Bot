@@ -1,4 +1,5 @@
 from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, get_inprogress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
+import constants as C
 
 def getRewards():
     ## TODO update the starting position
@@ -39,7 +40,7 @@ def getStrongAttacks(avoid, attacks):
     return newAttacks
 
 def goToFight():
-    attack = getImagePositionRegion('./img/battle/attacks/play.png', 50, 100, 110, 210,.8, 100)
+    attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
     moveAndClick(attack)
  
     in_progress = get_inprogress()

@@ -62,7 +62,7 @@ def heroic_race():
 
     if not exists(island):
         print('No Heroic Island found')
-        return [-1]
+        return []
 
     delay(.5)
     moveAndClick(island)

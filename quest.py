@@ -83,6 +83,7 @@ def openQuestPanel():
     moveAndClick(quest_panel)
     if exists(open_quest()):
         goToFight()
+        delay(2)
         openChest()
     delay(.5)
     closePopup()
