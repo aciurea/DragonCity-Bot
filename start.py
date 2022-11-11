@@ -26,19 +26,23 @@ def doHeroicRace():
                   'hatch': startBreeding,
                   'food': collectFood
                   }
-    mission = heroic_race()
-    if not exists(mission):
+    missions = heroic_race()
+    print('Missions are ', missions)
+    if len(missions) == 0:
        return print('no priority')
+    def do_action(mission):
+        def inner():
+            action(mission)
+        return inner
 
-    action = priorities[mission]
-
-    def do_action():
-        action(mission)
-    times = 20
-    while (times > 0):
-        runAction(do_action)
-        times -= 1
-        delay(0.5)
+    for mission in missions:
+        action = priorities[mission]
+  
+        times = 15
+        while (times > 0):
+            runAction(do_action(mission))
+            times -= 1
+            delay(0.1)
 
 def start():
     runAction(doHeroicRace)

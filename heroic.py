@@ -20,24 +20,24 @@ def fight_heroic(fight):
     goToFight()
 
 
-def find_mission():
-    missions = [
+def find_missions():
+    threads = [
         [ThreadWithReturnValue(target=getImagePositionRegion, 
         args=('./img/heroic/food.png', 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
         [ThreadWithReturnValue(target=getImagePositionRegion, 
         args=('./img/heroic/breed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
         [ThreadWithReturnValue(target=getImagePositionRegion, 
         args=('./img/heroic/hatch.png', 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
+        [ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/heroic/feed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'feed']
         ]
-    feed = ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/heroic/feed.png', 1090, 225, 1270, 725, .8, 3)).start()
-    if exists(feed.join()):
-        return 'feed'
-    for mission in missions:
-        image, mission_type = mission
-        image = image.join()
-        if exists(image):
-            return mission_type
-    return [-1]
+
+    missions = []
+    for mission_thread in threads:
+        thread, mission_type = mission_thread
+        mission = thread.join()
+        if exists(mission):
+            missions.append(mission_type)
+    return missions
 
 
 def check_if_can_claim():
@@ -67,14 +67,14 @@ def heroic_race():
     delay(.5)
     moveAndClick(island)
     check_if_can_claim()
-    mission = find_mission()
+    missions = find_missions()
 
     enter_fight = enter_fight_thread.join()
 
     if not exists(enter_fight):
         print('No fight')
         closePopup()
-        return mission
+        return missions
 
     moveAndClick(enter_fight)
     delay(1)
@@ -86,11 +86,11 @@ def heroic_race():
     no_fight = no_fight.join()
     if exists(no_fight):
         exit_heroic()
-        return mission
+        return missions
 
     start_fight = start_fight.join()
     if exists(start_fight):
         fight_heroic(start_fight)
     check_if_can_claim()
     exit_heroic()
-    return mission
+    return missions

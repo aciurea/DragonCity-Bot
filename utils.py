@@ -117,18 +117,24 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
-    back_btn, close_btn = [
+    back_btn, close_btn, no = [
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/no.png', 610, 635, 800, 735 , .8, 2)).start(),
     ]
     back_btn = back_btn.join()
     close_btn = close_btn.join()
+    no = no.join()
     
     if exists(back_btn):
         moveAndClick(back_btn)
     if exists(close_btn):
-        print('clicked on close_btn')
         moveAndClick(close_btn)
+    if exists(no):
+        moveAndClick(no)
+        delay(1)
+        closePopup()
+
 
 def openChest():
     tap, close_btn = [
@@ -168,8 +174,8 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     mouse.click()
     mouse.release()
 
-def get_close_btn(x1 = 1200, y1= 0, x2 = 1600, y2 = 300):
-    return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2)
+def get_close_btn(x1 = 1100, y1= 0, x2 = 1600, y2 = 300):
+    return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2, .8, 3)
 
 def closePopup(btn = [-1]):
     if exists(btn): 
