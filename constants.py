@@ -23,7 +23,7 @@ FIGHT_SWAP_DRAGON = get_path(_BASE_BATTLE + 'swap')
 FIGHT_PLAY = get_path(_BASE_BATTLE+'play')
 
 GOLD_1 = get_path(_BASE_GOLD+'gold')
-GOLD_2 = get_path(_BASE_GOLD+'gold2')
+GOLD_2 = get_path(_BASE_GOLD+'gold_2')
 
 FOOD_FARM = get_path(_BASE_FOOD + 'farm')
 FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
