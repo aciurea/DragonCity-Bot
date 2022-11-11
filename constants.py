@@ -3,6 +3,7 @@ from utils import get_path
 _BASE_BATTLE = './img/battle/'
 _BASE_ARENA = _BASE_BATTLE + 'arenas/'
 _BASE_GOLD = './img/gold/'
+_BASE_FOOD = './img/food/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -22,3 +23,9 @@ FIGHT_PLAY = get_path(_BASE_BATTLE+'play')
 
 GOLD_1 = get_path(_BASE_GOLD+'gold')
 GOLD_2 = get_path(_BASE_GOLD+'gold2')
+
+FOOD_FARM = get_path(_BASE_FOOD + 'farm')
+FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
+FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_0')
+FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_single')
+FOOD_IMG = get_path(_BASE_FOOD + 'food')

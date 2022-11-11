@@ -5,41 +5,34 @@ from utils import (ThreadWithReturnValue,
                     getImagePositionRegion,
                     move_to_bottom,
                     moveAndClick)
-
+import constants as C
 
 def regrowFood():
-    farm = getImagePositionRegion('./img/food/farm.png', 300, 200, 1000, 600)
+    farm = getImagePositionRegion(C.FOOD_FARM, 300, 200, 1000, 600)
 
     if not exists(farm):
         check_if_not_ok()
         return print('Farm not found')
 
-    moveAndClick(farm, 'Farm not found')
+    moveAndClick(farm)
 
-    regrow_all = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/food/regrow.png',  900, 700, 1100, 900, 0.8, 3)).start()
-    regrow_single = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/food/regrow_0.png',  1000, 700, 1200, 900, 0.8, 3)).start()
+    regrow_all = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FOOD_REGROW_ALL,  900, 700, 1100, 900, 0.8, 3)).start()
+    regrow_single = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FOOD_REGROW_SINGLE,  1000, 700, 1200, 900, 0.8, 3)).start()
     regrow_all = regrow_all.join()
     regrow_single = regrow_single.join()
     regrow = regrow_all if exists(regrow_all) else regrow_single
 
     if exists(regrow):
-        moveAndClick(regrow, 'Regrow not found')
+        moveAndClick(regrow)
         return print('Regrow successful!')
 
     check_if_not_ok()
-    print('Regrow not found')
-
-
-def getFoodPosition():
-    food = getImagePosition('./img/food/food.png', 3)
-
-    return food if exists(food) else [-1]
 
 def collectFood(priority = False):
-    def inner_collect(times):
-        if times > 15:
+    def inner_collect(times = 0):
+        if times > 10:
             return print('Too many farms to collect. Safe exit')
-        food = getFoodPosition()
+        food = getImagePosition(C.FOOD_IMG, 2, 0.8, 0.1)
 
         if exists(food):
             print('Food position is ', food)
@@ -49,11 +42,14 @@ def collectFood(priority = False):
         print('Food not ready yet or not found')
         check_if_not_ok()
       
-    inner_collect(0)
+    inner_collect()
     move_to_bottom()
     inner_collect(5)
     regrowFood()
 
+    if priority != False: # it is in heroic race so delay a little bit to collect the food again
+        time_to_collect = 30
+        delay(time_to_collect)
 
 def start():
     while (True):
