@@ -22,7 +22,7 @@ def freeze_dragons(start_fighting):
     pid = Process.get_pid_by_name('DragonCity.exe')
     addrs = []
     with Process.open_process(pid) as p:
-        addrs = p.search_all_memory(ctypes.c_int32(109111))
+        addrs = p.search_all_memory(ctypes.c_int32(141834))
         print(addrs)
         seal_values(p, addrs, 0)
         start_fighting()

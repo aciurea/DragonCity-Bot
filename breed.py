@@ -54,7 +54,7 @@ def placeAndFeed():
 
 
 def hatchery(priority, pos=[-1]):
-    egg = pos if exists(pos) else getImagePositionRegion('./img/breed/terra_egg.png', 300, 700, 1100, 850, .8, 50)
+    egg = pos if exists(pos) else getImagePositionRegion('./img/breed/terra_egg.png', 300, 700, 1500, 850, .8, 10)
 
     if not exists(egg):
         check_if_not_ok()

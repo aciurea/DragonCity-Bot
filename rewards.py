@@ -60,9 +60,8 @@ def openTv():
         moveAndClick([802, 352]) # position to play the video
         checkIfCanClaim()
         closeVideo()
-        closeBtn = getImagePositionRegion('./img/utils/close_video_no_claim.png', 900, 50, 1500, 350) # close is on the top right corner. I can also be in the middle of the screen
-        moveAndClick(closeBtn, 'No closeBtn in rewards')
         claim()
+    delay(1)
     closePopup()
 
 

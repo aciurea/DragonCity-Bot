@@ -5,6 +5,7 @@ _BASE_ARENA = _BASE_BATTLE + 'arenas/'
 _BASE_GOLD = './img/gold/'
 _BASE_FOOD = './img/food/'
 _BASE_ORBS = './img/orbs/'
+_BASE_APP_START= './img/app_start/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -34,3 +35,7 @@ FOOD_IMG = get_path(_BASE_FOOD + 'food')
 ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
 ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
 ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
+
+APP_START_CLAIM_BTN_1 = get_path(_BASE_APP_START + 'claim_daily')
+APP_START_CLAIM_BTN_2 = get_path(_BASE_APP_START + 'claim_yellow')
+APP_START_DIVINE_CLOSE = get_path(_BASE_APP_START + 'close_divine')

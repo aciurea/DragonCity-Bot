@@ -1,3 +1,4 @@
+from app_start import check_if_can_claim_daily, check_if_can_close_divine_offer
 from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
@@ -19,6 +20,8 @@ def runAction(action):
     action()
     delay(1)
     check_if_not_ok()
+    check_if_can_claim_daily()
+    check_if_can_close_divine_offer()
 
 def doHeroicRace():
     priorities = { 'breed': startBreeding,

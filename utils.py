@@ -45,16 +45,26 @@ class ThreadWithReturnValue(Thread):
         return self._return
 
 def video_error():
-    error = getImagePosition('./img/tv/video_error.png')
+    video_error, close_btn = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tv/video_error.png', 200, 50, 1600, 800, 0.8, 12)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 5)).start()
+    ]
+    close_btn = close_btn.join()
+    if exists(close_btn):
+        moveAndClick(close_btn)
+        return close_btn
+    
+    video_error = video_error.join()
+    if not exists(video_error): return video_error
 
-    if not exists(error): return [-1]
-    close = getImagePositionRegion('./img/utils/close.png', error[0], error[1], 1600, 600)
+    close = getImagePositionRegion('./img/utils/close.png', video_error[0], video_error[1], 1600, 600)
 
-    if not exists(close):
+    if exists(close):
+        moveAndClick(close)
         print('Error exists but couldnt find the close button')
-        return [-1]
-    moveAndClick(close)
-    return [1]
+        return close
+   
+    return [-1]
     
 def go_back():
     back_btn = getImagePositionRegion('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)
@@ -93,11 +103,11 @@ def checkIfCanClaim():
     ## stop after 50, try 30 times * 3 = 90 seconds
     times = 20
     while(times > 0):
-        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 3)
+        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 1)
         
         if exists(image):
             return image
-        delay(2)
+        delay(1)
    
     return [-1]
 
@@ -184,9 +194,13 @@ def closePopup(btn = [-1]):
     else: moveAndClick(get_close_btn(), 'no close button')
 
 def closeVideo():
-    closeBtn = getImagePositionRegion('./img/utils/close_video.png', 900, 0, 1600, 350) # close is on the top right corner. I can also be in the middle of the screen
+    threads = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video.png', 900, 0, 1600, 350, 0.8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 3)).start()
+    ]
 
-    moveAndClick(closeBtn, 'Close video button not found')
+    for thread in threads:
+        moveAndClick(thread.join(), 'Close btn not found')
 
 def moveTo(position):
    mouse.release()
