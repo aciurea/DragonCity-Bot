@@ -84,11 +84,6 @@ def arena():
     check_and_collect()
     delay(1)
 
-
-    # skip = getImagePositionRegion(get_path('gold'), 1000, 665, 1250, 760)
-    # if exists(skip):
-    #     moveAndClick(skip)
-    #     delay(1)
     fight = getImagePositionRegion(C.ARENA_FIGHT, 740, 730, 870, 800)
 
     if not exists(fight): 
