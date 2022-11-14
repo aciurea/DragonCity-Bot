@@ -7,7 +7,7 @@ from divine_tree import devin_tree
 from heroic import heroic_race
 from rewards import collectRewards
 from shop import shop
-from utils import check_if_not_ok, delay, dragMapToCenter, exists
+from utils import check_if_not_ok, delay, dragMapToCenter
 import win32gui
 import win32con
 HALF_AN_HOURS = 1800

@@ -8,6 +8,7 @@ _BASE_ORBS = './img/orbs/'
 _BASE_APP_START= './img/app_start/'
 _BASE_BREED = './img/breed'
 _BASE_TV = './img/tv/'
+_BASE_HEROIC = './img/heroic/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -64,3 +65,18 @@ TV_GET_REWARDS_BTN = get_path(_BASE_TV + 'get_rewards_btn')
 BATTLE_QUEST_BTN = get_path(_BASE_BATTLE + 'quest')
 BATTLE_GO_TO_BATTLE = get_path(_BASE_BATTLE + 'go_to_battle')
 BATTLE_NEXT_QUEST = get_path(_BASE_BATTLE + 'next_quest')
+
+HEROIC_SELECT_BTN = get_path(_BASE_HEROIC + 'select')
+HEROIC_DRAGON = get_path(_BASE_HEROIC + 'dragon')
+HEROIC_OK = get_path(_BASE_HEROIC + 'ok')
+HEROIC_FOOD = get_path(_BASE_HEROIC + 'food')
+HEROIC_BREED = get_path(_BASE_HEROIC + 'breed')
+HEROIC_HATCH = get_path(_BASE_HEROIC + 'hatch')
+HEROIC_FEED = get_path(_BASE_HEROIC + 'feed')
+HEROIC_CLAIM_BTN = get_path(_BASE_HEROIC + 'claim')
+HEROIC_NO_CLAIM_BTN_2 = get_path(_BASE_HEROIC + 'no_claim2')
+HEROIC_NO_CLAIM_BTN_1 = get_path(_BASE_HEROIC + 'no_claim')
+HEROIC_ARENA = get_path(_BASE_HEROIC + 'heroic_arena')
+HEROIC_FIGHT = get_path(_BASE_HEROIC + 'fight')
+HEROIC_NOT_READY = get_path(_BASE_HEROIC + 'not_ready_yet')
+HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')

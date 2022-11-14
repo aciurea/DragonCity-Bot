@@ -1,20 +1,21 @@
 from league import goToFight
 from utils import ThreadWithReturnValue, closePopup, delay, exists, getImagePositionRegion, go_back, moveAndClick, getImagePosition, openChest
 
+import constants as C
 
 def exit_heroic():
     go_back()
     delay(.5)
     closePopup()
 
-
+# TODO optimize the position to have fast searches
 def fight_heroic(fight):
     moveAndClick(fight)
-    select = getImagePosition('./img/heroic/select.png')
+    select = getImagePosition(C.HEROIC_SELECT_BTN)
     moveAndClick(select)
-    dragon = getImagePosition('./img/heroic/dragon.png')
+    dragon = getImagePosition(C.HEROIC_DRAGON)
     moveAndClick(dragon)
-    ok = getImagePosition('./img/heroic/ok.png', 3)
+    ok = getImagePosition(C.HEROIC_OK, 3)
     moveAndClick(ok)
     delay(5)
     goToFight()
@@ -23,12 +24,12 @@ def fight_heroic(fight):
 def find_missions():
     threads = [
         [ThreadWithReturnValue(target=getImagePositionRegion, 
-        args=('./img/heroic/food.png', 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
+        args=(C.HEROIC_FOOD, 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
         [ThreadWithReturnValue(target=getImagePositionRegion, 
-        args=('./img/heroic/breed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
+        args=(C.HEROIC_BREED, 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
         [ThreadWithReturnValue(target=getImagePositionRegion, 
-        args=('./img/heroic/hatch.png', 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
-        [ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/heroic/feed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'feed']
+        args=(C.HEROIC_HATCH, 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
+        [ThreadWithReturnValue(target=getImagePositionRegion,args=(C.HEROIC_FEED, 1090, 225, 1270, 725, .8, 3)).start(), 'feed']
         ]
 
     missions = []
@@ -42,8 +43,8 @@ def find_missions():
 
 def check_if_can_claim():
     no_claim_threads = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/no_claim2.png', 1100,690, 1430, 760, 0.8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/no_claim.png', 1100,690, 1430, 760, 0.8, 3)).start()
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_NO_CLAIM_BTN_2, 1100,690, 1430, 760, 0.8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_NO_CLAIM_BTN_1, 1100,690, 1430, 760, 0.8, 3)).start()
     ]
 
     for thread in no_claim_threads:
@@ -51,14 +52,14 @@ def check_if_can_claim():
         if exists(no_claim_img):
             return print('Nothing to claim')
 
-    claim = getImagePositionRegion('./img/heroic/claim.png', 652, 700, 950, 800, .8, 3)
+    claim = getImagePositionRegion(C.HEROIC_CLAIM_BTN, 652, 700, 950, 800, .8, 3)
     if exists(claim):
         moveAndClick(claim)
         openChest()
 
 def heroic_race():
-    island = getImagePosition('./img/heroic/heroic_arena.png', 3)
-    enter_fight_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/fight.png', 1260, 285, 1435, 735, .8, 3)).start()
+    island = getImagePosition(C.HEROIC_ARENA, 3)
+    enter_fight_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 285, 1435, 735, .8, 3)).start()
 
     if not exists(island):
         print('No Heroic Island found')
@@ -79,8 +80,8 @@ def heroic_race():
     moveAndClick(enter_fight)
     delay(1)
     no_fight, start_fight = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/not_ready_yet.png', 0, 580, 1600, 740, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/heroic/start_fight.png', 0, 640, 1600, 760, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_NOT_READY, 0, 580, 1600, 740, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_START_FIGHT_BTN, 0, 640, 1600, 760, .8, 3)).start(),
         ]
 
     no_fight = no_fight.join()
