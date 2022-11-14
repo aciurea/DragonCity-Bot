@@ -52,7 +52,7 @@ def check_if_can_claim():
         if exists(no_claim_img):
             return print('Nothing to claim')
 
-    claim = getImagePositionRegion(C.HEROIC_CLAIM_BTN, 652, 700, 950, 800, .8, 3)
+    claim = getImagePositionRegion(C.HEROIC_GREEN_CLAIM_BTN, 652, 700, 950, 800, .8, 3)
     if exists(claim):
         moveAndClick(claim)
         openChest()

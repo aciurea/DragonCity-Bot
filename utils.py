@@ -9,6 +9,7 @@ import cv2
 from pytesseract import pytesseract
 from PIL import ImageGrab
 import numpy as nm
+import constants as C
 
 def type_on_keyboard(key, times = 1):
     while(times > 0):
@@ -47,7 +48,7 @@ class ThreadWithReturnValue(Thread):
 
 def video_error():
     video_error, close_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tv/video_error.png', 200, 50, 1600, 800, 0.8, 12)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_VIDEO_ERROR, 200, 50, 1600, 800, 0.8, 12)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 5)).start()
     ]
     close_btn = close_btn.join()
@@ -83,10 +84,10 @@ def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries
 
 
 def commonClaim():
-    greenClaim = getImagePosition('./img/tv/green_claim.png', 3)
+    greenClaim = getImagePosition(C.HEROIC_GREEN_CLAIM_BTN, 3)
     moveAndClick(greenClaim)
     delay(1)
-    tap = getImagePosition('./img/tv/tap.png', 3)
+    tap = getImagePosition(C.TV_TAP, 3)
     moveAndClick(tap)
     delay(1)
     claim = getImagePosition('./img/app_start/claim_yellow.png', 3)
@@ -149,7 +150,7 @@ def check_if_not_ok():
 
 def openChest():
     tap, close_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tv/tap.png', 300, 300, 1600, 800)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800)).start(),
         ThreadWithReturnValue(target=get_close_btn).start(),
     ]
     tap = tap.join()
