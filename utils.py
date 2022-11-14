@@ -1,4 +1,5 @@
 from threading import Thread
+from win32gui import FindWindow, GetWindowRect
 import pyautogui
 import time
 import mouse
@@ -280,10 +281,16 @@ def get_text():
         return text
     except: return 'error in reading the image'
 
-def get_inprogress():
+def get_in_progress():
     in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
     in_progress = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 3)).start()
     in_progress = in_progress.join()
     in_progress2 = in_progress2.join()
 
     return in_progress if exists(in_progress) else in_progress2
+
+def get_window_size():
+    window_handle = FindWindow(None, "DragonCity")
+    default_size = [1600, 900]
+  
+    return default_size  if (window_handle != None) else GetWindowRect(window_handle)

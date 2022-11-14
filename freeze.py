@@ -1,6 +1,6 @@
 import ctypes
 from mem_edit import Process
-from utils import delay, exists, get_inprogress, get_text, moveAndClick
+from utils import delay, exists, get_in_progress, get_text, moveAndClick
 
 def get_addresses(value):
     pid = Process.get_pid_by_name('DragonCity.exe')
@@ -27,11 +27,11 @@ def freeze_dragons(start_fighting):
         print(addrs)
         seal_values(p, addrs, 0)
         start_fighting()
-        in_progress = get_inprogress()
+        in_progress = get_in_progress()
         while exists(in_progress):
             keep_frozen(p, addrs, 0)
             delay(3)
-            in_progress = get_inprogress()
+            in_progress = get_in_progress()
 
 def seal_values(p, addrs, i = 0):
     if(i > len(addrs) -1): return

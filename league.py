@@ -1,4 +1,4 @@
-from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, get_inprogress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
+from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
 import constants as C
 
 def getRewards():
@@ -43,10 +43,10 @@ def goToFight():
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
     moveAndClick(attack)
  
-    in_progress = get_inprogress()
+    in_progress = get_in_progress()
     while exists(in_progress):
         print('Fight in progress')
-        in_progress = get_inprogress()
+        in_progress = get_in_progress()
         delay(.5)
 
 def goToLeague():
