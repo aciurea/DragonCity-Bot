@@ -60,3 +60,7 @@ TV_CLAIM = get_path(_BASE_TV + 'claim')
 TV_PRIZES = get_path(_BASE_TV + 'prizes')
 TV_TV = get_path(_BASE_TV + 'tv')
 TV_GET_REWARDS_BTN = get_path(_BASE_TV + 'get_rewards_btn')
+
+BATTLE_QUEST_BTN = get_path(_BASE_BATTLE + 'quest')
+BATTLE_GO_TO_BATTLE = get_path(_BASE_BATTLE + 'go_to_battle')
+BATTLE_NEXT_QUEST = get_path(_BASE_BATTLE + 'next_quest')
