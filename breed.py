@@ -33,15 +33,15 @@ def sellEgg(sell = [-1]):
 
 
 def placeEgg():
-    place = getImagePositionRegion('./img/breed/place.png', 700, 550, 1000, 650)
+    place = getImagePositionRegion('./img/breed/place.png', 700, 550, 1000, 650, 0.8, 2)
     if not exists(place):
         return print('Place btn not found')
     moveAndClick(place)
 
     delay(2)
-    point = getImagePosition('./img/breed/dragon_place_point.png', 3)
+    point = getImagePosition('./img/breed/dragon_place_point.png', 2)
     moveAndClick([point[0] - 40, point[1] - 40])
-    dragon = getImagePositionRegion('./img/breed/dragon.png', 300, 700, 1400, 850)
+    dragon = getImagePositionRegion('./img/breed/dragon.png', 300, 700, 1400, 850, 0.8, 2)
     if not exists(dragon):
         return print('Dragon not found ')
     moveAndClick(dragon)
@@ -54,7 +54,7 @@ def placeAndFeed():
 
 
 def hatchery(priority, pos=[-1]):
-    egg = pos if exists(pos) else getImagePositionRegion('./img/breed/terra_egg.png', 300, 700, 1500, 850, .8, 10)
+    egg = pos if exists(pos) else getImagePositionRegion('./img/breed/terra_egg.png', 300, 700, 1500, 850, .8, 5)
 
     if not exists(egg):
         check_if_not_ok()

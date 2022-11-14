@@ -262,14 +262,23 @@ def scroll(pos1, pos2):
 def get_text():
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    # cap = ImageGrab.grab(bbox=(355, 110, 493, 220))
-    cap = ImageGrab.grab(bbox=(1100, 225, 1600, 655))
-    cap.save(path)
-    gray = cv2.cvtColor(nm.array(cap), cv2.COLOR_BGR2GRAY) #COLOR_BGR2GRAY
-    text = pytesseract.image_to_string(gray, lang='english') # ,config='load_system_dawg=0 load_freq_dawg=0 osd --oem 3 --psm 6'
-    print(text)
-  
-    return text
+    # TODO try to take 3 screenshots and compare them
+    # powerless dragon will be with 5 chars
+    # right now it's working for 6 chars
+    # it can be improved to 7 chars also
+    try:
+        cap_length_6 = ImageGrab.grab(bbox=(514, 127, 589, 161))
+        cap_length_6.save(path)
+        ref = cv2.imread(path)
+        ref = cv2.cvtColor(nm.array(ref), cv2.COLOR_BGR2GRAY)
+        text = pytesseract.image_to_string(ref, config='--psm 8')
+        text="".join(text.split())
+        if len(text) > 1 and text[len(text) -1] == ')':
+            text=text[:-1]
+        print('Text is ', text, len(text))
+    
+        return text
+    except: return 'error in reading the image'
 
 def get_inprogress():
     in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()

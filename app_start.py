@@ -48,8 +48,8 @@ claim_btn = {
 
 def check_if_can_claim_daily():
     claim_btn_1, claim_btn2 = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(APP_START_CLAIM_BTN_1, 670, 710, 930, 795, 0.8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(APP_START_CLAIM_BTN_2, 670, 710, 930, 795, .8, 3)).start()
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(APP_START_CLAIM_BTN_1, 670, 710, 930, 795, 0.8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(APP_START_CLAIM_BTN_2, 670, 710, 930, 795, 0.8, 2)).start()
     ]
     claim_btn2 = claim_btn2.join()
     claim_btn_1 = claim_btn_1.join()

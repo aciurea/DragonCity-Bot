@@ -25,7 +25,7 @@ def find_missions():
         [ThreadWithReturnValue(target=getImagePositionRegion, 
         args=('./img/heroic/food.png', 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
         [ThreadWithReturnValue(target=getImagePositionRegion, 
-        args=('./img/heroic/breed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
+        args=('./img/heroic/breed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
         [ThreadWithReturnValue(target=getImagePositionRegion, 
         args=('./img/heroic/hatch.png', 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
         [ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/heroic/feed.png', 1090, 225, 1270, 725, .8, 3)).start(), 'feed']

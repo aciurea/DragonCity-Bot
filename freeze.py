@@ -1,6 +1,6 @@
 import ctypes
 from mem_edit import Process
-from utils import delay, exists, get_inprogress, moveAndClick
+from utils import delay, exists, get_inprogress, get_text, moveAndClick
 
 def get_addresses(value):
     pid = Process.get_pid_by_name('DragonCity.exe')
@@ -22,6 +22,7 @@ def freeze_dragons(start_fighting):
     pid = Process.get_pid_by_name('DragonCity.exe')
     addrs = []
     with Process.open_process(pid) as p:
+        print(get_text())
         addrs = p.search_all_memory(ctypes.c_int32(141834))
         print(addrs)
         seal_values(p, addrs, 0)
