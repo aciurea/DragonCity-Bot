@@ -5,24 +5,21 @@ from utils import (ThreadWithReturnValue,
                    closeVideo,
                    delay,
                    exists,
-                   get_path as get_path_from_utils,
                    getImagePosition,
                    getImagePositionRegion,
                    moveAndClick,
                    video_error,
                    openChest)
 
-BASE_REWARDS = './img/rewards/'
-def get_path(path):
-    return get_path_from_utils(BASE_REWARDS+path)
+import constants as C 
 
 def collectTreasure():
-    print('Looking to collec the treasure')
-    treasure = getImagePositionRegion(get_path('daily_chest'), 1300, 700, 1500, 850, .8, 3)
+    print('Looking to collect the treasure')
+    treasure = getImagePositionRegion(C.TV_DAILY_CHEST, 1300, 700, 1500, 850, .8, 3)
     if exists(treasure):
         moveAndClick(treasure)
         delay(1)
-    collect = getImagePositionRegion(get_path('collect'), 0, 700, 300, 800, 0.8, 3)
+    collect = getImagePositionRegion(C.TV_COLLECT, 0, 700, 300, 800, 0.8, 3)
 
     if exists(collect):
         moveAndClick(collect)
@@ -32,7 +29,7 @@ def collectTreasure():
 
 def claim():
     print('Go to claim')
-    claim_btn = getImagePositionRegion('./img/tv/claim.png', 200, 400, 1400, 800)
+    claim_btn = getImagePositionRegion(C.TV_CLAIM, 200, 400, 1400, 800)
 
     if exists(claim_btn):
         moveAndClick(claim_btn)
@@ -42,9 +39,9 @@ def openTv():
     delay(1)
     rewards_thread,prizes_thread = [
         ThreadWithReturnValue(target=getImagePositionRegion, 
-        args=('./img/tv/get_rewards_btn.png', 200, 700, 500, 850, 0.8, 3)).start(),
+        args=(C.TV_GET_REWARDS_BTN, 200, 700, 500, 850, 0.8, 3)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion,
-                                    args=('./img/tv/prizes.png', 600, 700, 900, 850, 0.8, 3)).start()
+                                    args=(C.TV_PRIZES, 600, 700, 900, 850, 0.8, 3)).start()
     ]
     rewardsBtn = rewards_thread.join()
     prizesBtn = prizes_thread.join()
@@ -57,7 +54,8 @@ def openTv():
     moveAndClick(btn)
     print('Watching videos...')
     if not exists(video_error()):
-        moveAndClick([802, 352]) # position to play the video
+        play_video_pos = [802, 352]
+        moveAndClick(play_video_pos)
         checkIfCanClaim()
         closeVideo()
         claim()
@@ -66,7 +64,7 @@ def openTv():
 
 
 def collectRewards():
-    tv = getImagePosition('./img/tv/tv.png')
+    tv = getImagePosition(C.TV_TV)
 
     if exists(tv):
         moveAndClick([tv[0] + 20, tv[1]])

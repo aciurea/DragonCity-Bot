@@ -7,6 +7,7 @@ _BASE_FOOD = './img/food/'
 _BASE_ORBS = './img/orbs/'
 _BASE_APP_START= './img/app_start/'
 _BASE_BREED = './img/breed'
+_BASE_TV = './img/tv/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -52,3 +53,10 @@ BREED_RE_BREED_BTN = get_path(_BASE_BREED + 're-breed')
 BREED_BREED_BTN = get_path(_BASE_BREED + 'breed_btn') 
 BREED_ROCK = get_path(_BASE_BREED + 'rock') 
 BREED_FINISH_BREED = get_path(_BASE_BREED + 'finish_breed') 
+
+TV_DAILY_CHEST = get_path(_BASE_TV + 'daily_chest')
+TV_COLLECT = get_path(_BASE_TV + 'collect')
+TV_CLAIM = get_path(_BASE_TV + 'claim')
+TV_PRIZES = get_path(_BASE_TV + 'prizes')
+TV_TV = get_path(_BASE_TV + 'tv')
+TV_GET_REWARDS_BTN = get_path(_BASE_TV + 'get_rewards_btn')
