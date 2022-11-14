@@ -1,7 +1,5 @@
-# feeling lucky
-from constants import APP_START_CLAIM_BTN_1, APP_START_CLAIM_BTN_2, APP_START_DIVINE_CLOSE
-from utils import (ThreadWithReturnValue,
-                    closePopup,
+from constants import APP_START_CLAIM_BTN, APP_START_DIVINE_CLOSE
+from utils import ( closePopup,
                     delay,
                     exists,
                     getImagePositionRegion,
@@ -47,23 +45,19 @@ claim_btn = {
 # closePopup
 
 def check_if_can_claim_daily():
-    claim_btn_1, claim_btn2 = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(APP_START_CLAIM_BTN_1, 670, 710, 930, 795, 0.8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(APP_START_CLAIM_BTN_2, 670, 710, 930, 795, 0.8, 2)).start()
-    ]
-    claim_btn2 = claim_btn2.join()
-    claim_btn_1 = claim_btn_1.join()
-    claim_btn = claim_btn_1 if exists(claim_btn_1) else claim_btn2
+    claim_btn = getImagePositionRegion(APP_START_CLAIM_BTN, 670, 710, 930, 795, 0.8, 2)
 
-    if not exists(claim_btn): return
-       
-    moveAndClick(claim_btn)
-    delay(2)
-    openChest()
-    delay(2)
-    openChest()
-    delay(2)
-    closePopup()
+    if exists(claim_btn):
+        print('The time has come to claim the daily reward')
+        moveAndClick(claim_btn)
+        delay(2)
+        openChest()
+        print('Open the first chest in daily reward')
+        closePopup()
+        delay(2)
+        openChest()
+        delay(2)
+        closePopup()
 
 def check_if_can_close_divine_offer():
     divine_close = getImagePositionRegion(APP_START_DIVINE_CLOSE, 1210, 80, 1290, 160, 0.8, 2)

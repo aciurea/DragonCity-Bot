@@ -1,5 +1,4 @@
-from utils import (ThreadWithReturnValue, 
-                    check_if_not_ok,
+from utils import ( check_if_not_ok,
                     closePopup,
                     delay,
                     exists,
