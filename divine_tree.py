@@ -100,7 +100,7 @@ def inside_divine_tree():
         delay(2)
   
 
-def devine_tree():
+def devin_tree():
     print('start looking for divine tree')
     tree = getImagePositionRegion('./img/tree/devine_tree.png', 300, 100, 800, 400,.8, 10)
 
@@ -121,6 +121,6 @@ def devine_tree():
 
 def start():
     delay(2)
-    devine_tree()
+    devin_tree()
 
 # start()

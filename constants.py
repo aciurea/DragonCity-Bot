@@ -6,6 +6,7 @@ _BASE_GOLD = './img/gold/'
 _BASE_FOOD = './img/food/'
 _BASE_ORBS = './img/orbs/'
 _BASE_APP_START= './img/app_start/'
+_BASE_BREED = './img/breed'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -39,3 +40,16 @@ ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
 APP_START_CLAIM_BTN_1 = get_path(_BASE_APP_START + 'claim_daily')
 APP_START_CLAIM_BTN_2 = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_DIVINE_CLOSE = get_path(_BASE_APP_START + 'close_divine')
+
+BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
+BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
+BREED_CONFIRM_SELL_BTN = get_path(_BASE_BREED + 'sell_confirmation') 
+BREED_PLACE_BTN = get_path(_BASE_BREED + 'place') 
+BREED_DRAGON_PLACE_POINT = get_path(_BASE_BREED + 'dragon_place_point') 
+BREED_DRAGON = get_path(_BASE_BREED + 'dragon') 
+BREED_TERRA_EGG = get_path(_BASE_BREED + 'terra_egg') 
+BREED_TREE = get_path(_BASE_BREED + 'tree') 
+BREED_RE_BREED_BTN = get_path(_BASE_BREED + 're-breed') 
+BREED_BREED_BTN = get_path(_BASE_BREED + 'breed_btn') 
+BREED_ROCK = get_path(_BASE_BREED + 'rock') 
+BREED_FINISH_BREED = get_path(_BASE_BREED + 'finish_breed') 
