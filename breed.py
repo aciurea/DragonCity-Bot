@@ -6,6 +6,7 @@ from utils import ( ThreadWithReturnValue, check_if_not_ok,
                     getImagePositionRegion,
                     moveAndClick)
 import constants as C
+import time
 
 def feed():
     feedBtn = getImagePositionRegion(C.BREED_FEED_BTN, 300, 700, 600, 850, 0.8, 3)
@@ -75,7 +76,7 @@ def hatchery(priority):
         placeAndFeed()
 
 
-def breed():
+def breed(fast=False):
     re_breed = getImagePositionRegion(C.BREED_RE_BREED_BTN, 1100, 700, 1400, 900, .8, 3)
 
     if not exists(re_breed):
@@ -87,9 +88,9 @@ def breed():
     if exists(breed_btn):
         moveAndClick(breed_btn)
         closePopup()
-        delay(13)
+        if fast == False:
+            delay(13)
         print('Finish breeding')
-    else: print('Breed button not found')
         
 def startBreeding(priority='breed'):
     print('Start breeding')
@@ -110,3 +111,30 @@ def start():
         startBreeding('hatch')
 
 # start()
+
+
+def fast_breed(priority='breed'):
+    tree_position = getImagePosition(C.BREED_TREE, 3)
+    if not exists(tree_position): return
+    rock = getImagePositionRegion(C.BREED_ROCK, tree_position[0], tree_position[1] - 20, tree_position[0]+300, tree_position[1]+100, 0.8, 3)
+    moveAndClick(tree_position)
+    breed(fast=True)
+    start = time.time()
+
+    if exists(rock):
+        moveAndClick(rock)
+        breed(fast=True)
+    end = time.time()  
+    diff = end - start
+    start= time.time()
+    delay(0 if 12 > diff else diff)
+    moveAndClick(tree_position)
+    hatchery(priority)
+    if exists(rock):
+        rock = getImagePositionRegion(C.BREED_ROCK, tree_position[0], tree_position[1] - 200, tree_position[0]+300, tree_position[1]+300, 0.8, 3)
+        end = time.time()  
+        diff = end - start
+        delay(0 if 12 > diff else diff)
+        moveAndClick(rock)
+        hatchery(priority)
+    
