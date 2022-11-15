@@ -23,7 +23,6 @@ def freeze_dragons(start_fighting):
     pid = Process.get_pid_by_name('DragonCity.exe')
     addrs = []
     with Process.open_process(pid) as p:
-        # seal_values(p, addrs, 0)
         start_fighting()
         delay(1)
         value = get_text()

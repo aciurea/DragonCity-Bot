@@ -98,7 +98,7 @@ def arena():
         moveAndClick(swap)
 
         delay(1)
-        select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 600, 730, 1520, 830, .8, 20)
+        select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 10)
         if not exists(select_new_dragon): return print('Select new Dragon Btn not found')
         moveAndClick(select_new_dragon)
     
