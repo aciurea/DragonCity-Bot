@@ -42,6 +42,7 @@ ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
 
 APP_START_CLAIM_BTN = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_DIVINE_CLOSE = get_path(_BASE_APP_START + 'close_divine')
+APP_START_RED_CLOSE = get_path(_BASE_APP_START + 'red_close')
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 

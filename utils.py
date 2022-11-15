@@ -186,7 +186,7 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     mouse.click()
     mouse.release()
 
-def get_close_btn(x1 = 1100, y1= 0, x2 = 1600, y2 = 300):
+def get_close_btn(x1 = 1000, y1= 0, x2 = 1600, y2 = 300):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2, .8, 3)
 
 def closePopup(btn = [-1]):
