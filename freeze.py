@@ -1,6 +1,7 @@
 import ctypes
 from mem_edit import Process
-from utils import delay, exists, get_inprogress, moveAndClick
+from constants import FIGHT_PLAY
+from utils import delay, exists, get_in_progress, get_text, getImagePositionRegion, moveAndClick
 
 def get_addresses(value):
     pid = Process.get_pid_by_name('DragonCity.exe')
@@ -22,15 +23,20 @@ def freeze_dragons(start_fighting):
     pid = Process.get_pid_by_name('DragonCity.exe')
     addrs = []
     with Process.open_process(pid) as p:
-        addrs = p.search_all_memory(ctypes.c_int32(109111))
-        print(addrs)
-        seal_values(p, addrs, 0)
         start_fighting()
-        in_progress = get_inprogress()
+        delay(1)
+        value = get_text()
+        print('Arena text is', value)
+        addrs = p.search_all_memory(ctypes.c_int32(value))
+        seal_values(p, addrs, 0)
+        print(addrs)
+        attack = getImagePositionRegion(FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
+        moveAndClick(attack)
+        in_progress = get_in_progress()
         while exists(in_progress):
             keep_frozen(p, addrs, 0)
             delay(3)
-            in_progress = get_inprogress()
+            in_progress = get_in_progress()
 
 def seal_values(p, addrs, i = 0):
     if(i > len(addrs) -1): return

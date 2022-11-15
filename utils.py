@@ -1,4 +1,5 @@
 from threading import Thread
+from win32gui import FindWindow, GetWindowRect
 import pyautogui
 import time
 import mouse
@@ -8,6 +9,7 @@ import cv2
 from pytesseract import pytesseract
 from PIL import ImageGrab
 import numpy as nm
+import constants as C
 
 def type_on_keyboard(key, times = 1):
     while(times > 0):
@@ -45,16 +47,26 @@ class ThreadWithReturnValue(Thread):
         return self._return
 
 def video_error():
-    error = getImagePosition('./img/tv/video_error.png')
+    video_error, close_btn = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_VIDEO_ERROR, 200, 50, 1600, 800, 0.8, 12)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 5)).start()
+    ]
+    close_btn = close_btn.join()
+    if exists(close_btn):
+        moveAndClick(close_btn)
+        return close_btn
+    
+    video_error = video_error.join()
+    if not exists(video_error): return video_error
 
-    if not exists(error): return [-1]
-    close = getImagePositionRegion('./img/utils/close.png', error[0], error[1], 1600, 600)
+    close = getImagePositionRegion('./img/utils/close.png', video_error[0], video_error[1], 1600, 600)
 
-    if not exists(close):
+    if exists(close):
+        moveAndClick(close)
         print('Error exists but couldnt find the close button')
-        return [-1]
-    moveAndClick(close)
-    return [1]
+        return close
+   
+    return [-1]
     
 def go_back():
     back_btn = getImagePositionRegion('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)
@@ -72,10 +84,10 @@ def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries
 
 
 def commonClaim():
-    greenClaim = getImagePosition('./img/tv/green_claim.png', 3)
+    greenClaim = getImagePosition(C.HEROIC_GREEN_CLAIM_BTN, 3)
     moveAndClick(greenClaim)
     delay(1)
-    tap = getImagePosition('./img/tv/tap.png', 3)
+    tap = getImagePosition(C.TV_TAP, 3)
     moveAndClick(tap)
     delay(1)
     claim = getImagePosition('./img/app_start/claim_yellow.png', 3)
@@ -93,11 +105,11 @@ def checkIfCanClaim():
     ## stop after 50, try 30 times * 3 = 90 seconds
     times = 20
     while(times > 0):
-        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 3)
+        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 1)
         
         if exists(image):
             return image
-        delay(2)
+        delay(1)
    
     return [-1]
 
@@ -138,7 +150,7 @@ def check_if_not_ok():
 
 def openChest():
     tap, close_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/tv/tap.png', 300, 300, 1600, 800)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800)).start(),
         ThreadWithReturnValue(target=get_close_btn).start(),
     ]
     tap = tap.join()
@@ -174,7 +186,7 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     mouse.click()
     mouse.release()
 
-def get_close_btn(x1 = 1100, y1= 0, x2 = 1600, y2 = 300):
+def get_close_btn(x1 = 1000, y1= 0, x2 = 1600, y2 = 300):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2, .8, 3)
 
 def closePopup(btn = [-1]):
@@ -184,9 +196,13 @@ def closePopup(btn = [-1]):
     else: moveAndClick(get_close_btn(), 'no close button')
 
 def closeVideo():
-    closeBtn = getImagePositionRegion('./img/utils/close_video.png', 900, 0, 1600, 350) # close is on the top right corner. I can also be in the middle of the screen
+    threads = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video.png', 900, 0, 1600, 350, 0.8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 3)).start()
+    ]
 
-    moveAndClick(closeBtn, 'Close video button not found')
+    for thread in threads:
+        moveAndClick(thread.join(), 'Close btn not found')
 
 def moveTo(position):
    mouse.release()
@@ -248,19 +264,34 @@ def scroll(pos1, pos2):
 def get_text():
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    # cap = ImageGrab.grab(bbox=(355, 110, 493, 220))
-    cap = ImageGrab.grab(bbox=(1100, 225, 1600, 655))
-    cap.save(path)
-    gray = cv2.cvtColor(nm.array(cap), cv2.COLOR_BGR2GRAY) #COLOR_BGR2GRAY
-    text = pytesseract.image_to_string(gray, lang='english') # ,config='load_system_dawg=0 load_freq_dawg=0 osd --oem 3 --psm 6'
-    print(text)
-  
-    return text
+    # TODO try to take 3 screenshots and compare them
+    # powerless dragon will be with 5 chars
+    # right now it's working for 6 chars
+    # it can be improved to 7 chars also
+    try:
+        cap_length_6 = ImageGrab.grab(bbox=(514, 127, 589, 161))
+        cap_length_6.save(path)
+        ref = cv2.imread(path)
+        ref = cv2.cvtColor(nm.array(ref), cv2.COLOR_BGR2GRAY)
+        text = pytesseract.image_to_string(ref, config='--psm 8')
+        text="".join(text.split())
+        if len(text) > 1 and text[len(text) -1] == ')':
+            text=text[:-1]
+        print('Text is ', text, len(text))
+    
+        return int(text)
+    except: return 'error in reading the image'
 
-def get_inprogress():
+def get_in_progress():
     in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
     in_progress = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 3)).start()
     in_progress = in_progress.join()
     in_progress2 = in_progress2.join()
 
     return in_progress if exists(in_progress) else in_progress2
+
+def get_window_size():
+    window_handle = FindWindow(None, "DragonCity")
+    default_size = [1600, 900]
+  
+    return default_size  if (window_handle != None) else GetWindowRect(window_handle)

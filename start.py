@@ -1,12 +1,13 @@
+from app_start import check_if_can_claim_daily, check_if_can_close_divine_offer
 from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
-from divine_tree import devine_tree
+from divine_tree import devin_tree
 from heroic import heroic_race
 from rewards import collectRewards
 from shop import shop
-from utils import check_if_not_ok, delay, dragMapToCenter, exists
+from utils import check_if_not_ok, delay, dragMapToCenter
 import win32gui
 import win32con
 HALF_AN_HOURS = 1800
@@ -19,6 +20,8 @@ def runAction(action):
     action()
     delay(1)
     check_if_not_ok()
+    check_if_can_claim_daily()
+    check_if_can_close_divine_offer()
 
 def doHeroicRace():
     priorities = { 'breed': startBreeding,
@@ -53,7 +56,7 @@ def start():
     runAction(shop)
     runAction(collectRewards)
     runAction(startBreeding)
-    runAction(devine_tree)
+    runAction(devin_tree)
     delay(.5)
     check_if_not_ok()
 
