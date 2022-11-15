@@ -1,4 +1,5 @@
-from utils import get_path
+def get_path(path):
+    return path+'.png'
 
 _BASE_BATTLE = './img/battle/'
 _BASE_ARENA = _BASE_BATTLE + 'arenas/'
@@ -6,7 +7,7 @@ _BASE_GOLD = './img/gold/'
 _BASE_FOOD = './img/food/'
 _BASE_ORBS = './img/orbs/'
 _BASE_APP_START= './img/app_start/'
-_BASE_BREED = './img/breed'
+_BASE_BREED = './img/breed/'
 _BASE_TV = './img/tv/'
 _BASE_HEROIC = './img/heroic/'
 

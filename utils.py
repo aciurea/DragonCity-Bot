@@ -279,7 +279,7 @@ def get_text():
             text=text[:-1]
         print('Text is ', text, len(text))
     
-        return text
+        return int(text)
     except: return 'error in reading the image'
 
 def get_in_progress():

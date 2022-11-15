@@ -102,10 +102,10 @@ def arena():
         if not exists(select_new_dragon): return print('Select new Dragon Btn not found')
         moveAndClick(select_new_dragon)
     
-        attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
-        moveAndClick(attack)
+        # attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
+        # moveAndClick(attack)
 
-    delay(.5)
+    delay(1)
     freeze_dragons(start_fighting)
     delay(3)
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 20)

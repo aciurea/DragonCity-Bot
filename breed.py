@@ -1,4 +1,4 @@
-from utils import ( check_if_not_ok,
+from utils import ( ThreadWithReturnValue, check_if_not_ok,
                     closePopup,
                     delay,
                     exists,
@@ -14,11 +14,17 @@ def feed():
     while(times > 0):
         times -= 1
         moveAndClick(feedBtn)
-        delay(.1)
+        delay(.2)
            
 
 def sellEgg():
-    sell = getImagePositionRegion(C.BREED_SELL_BTN, 1099, 590, 1500, 850, .8, 2)
+    sell_1, sell_2 = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1000, 570, 1200, 700, .8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1300, 775, 1530, 850, .8, 2)).start(),
+    ]
+    sell_1 = sell_1.join()
+    sell_2 = sell_2.join()
+    sell = sell_1 if exists(sell_1) else sell_2
     if not exists(sell): return print('Sell btn not found')
 
     moveAndClick(sell)
@@ -53,8 +59,7 @@ def placeAndFeed():
     sellEgg()
 
 def hatchery(priority):
-    delay(.5)
-    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 300, 700, 1500, 850, .8, 3)
+    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 700, 1500, 850, 0.8, 3)
 
     if not exists(egg):
         check_if_not_ok()
