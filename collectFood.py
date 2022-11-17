@@ -48,7 +48,7 @@ def collectFood(priority = False):
     regrowFood()
 
     if priority != False: # it is in heroic race so delay a little bit to collect the food again
-        time_to_collect = 30
+        time_to_collect = 25
         delay(time_to_collect)
 
 def start():

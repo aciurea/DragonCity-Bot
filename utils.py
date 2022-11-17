@@ -184,6 +184,7 @@ def moveAndClick(pos, msg = 'Nothing to click'):
        delay(0.2)
     delay(0.1)
     mouse.click()
+    delay(0.1)
     mouse.release()
 
 def get_close_btn(x1 = 1000, y1= 0, x2 = 1600, y2 = 300):

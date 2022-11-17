@@ -20,21 +20,22 @@ def feed():
 
 def sellEgg():
     sell_1, sell_2 = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1000, 570, 1200, 700, .8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1300, 775, 1530, 850, .8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 800, 470, 1300, 700, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1300, 700, 1530, 850, .8, 3)).start(),
     ]
     sell_1 = sell_1.join()
     sell_2 = sell_2.join()
     sell = sell_1 if exists(sell_1) else sell_2
     if not exists(sell): return print('Sell btn not found')
-
+    
     moveAndClick(sell)
-    delay(.5)
+    delay(1)
     confirm_sell = getImagePositionRegion(C.BREED_CONFIRM_SELL_BTN, 800, 550, 1000, 700, 0.8, 3)
 
     if not exists(confirm_sell):
         return print('Confirm sell not found')
     moveAndClick(confirm_sell)
+    delay(1)
 
 
 def placeEgg():
@@ -60,7 +61,8 @@ def placeAndFeed():
     sellEgg()
 
 def hatchery(priority):
-    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 700, 1500, 850, 0.8, 3)
+    delay(1)
+    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 700, 1500, 850, 0.8, 10)
 
     if not exists(egg):
         check_if_not_ok()
@@ -94,6 +96,7 @@ def breed(fast=False):
         
 def startBreeding(priority='breed'):
     print('Start breeding')
+    # fast_breed(priority)
     tree_position = getImagePosition(C.BREED_TREE, 3)
 
     if not exists(tree_position):
@@ -108,10 +111,7 @@ def startBreeding(priority='breed'):
 def start():
     while (True):
         delay(1)
-        startBreeding('hatch')
-
-# start()
-
+        fast_breed('hatch')
 
 def fast_breed(priority='breed'):
     tree_position = getImagePosition(C.BREED_TREE, 3)
@@ -120,21 +120,23 @@ def fast_breed(priority='breed'):
     moveAndClick(tree_position)
     breed(fast=True)
     start = time.time()
+    delay(.5)
 
     if exists(rock):
         moveAndClick(rock)
         breed(fast=True)
-    end = time.time()  
-    diff = end - start
+    diff = 12 - (time.time() - start)
     start= time.time()
-    delay(0 if 12 > diff else diff)
+    delay(0 if 0 > diff else diff)
     moveAndClick(tree_position)
     hatchery(priority)
+    delay(.5)
     if exists(rock):
-        rock = getImagePositionRegion(C.BREED_ROCK, tree_position[0], tree_position[1] - 200, tree_position[0]+300, tree_position[1]+300, 0.8, 3)
-        end = time.time()  
-        diff = end - start
-        delay(0 if 12 > diff else diff)
+        rock = getImagePositionRegion(C.BREED_FINISH_BREED, tree_position[0]-200, tree_position[1]-200, 1600, 800, 0.8, 3)
+        diff = 12 - (time.time() - start)
+        delay(0 if 0 > diff else diff)
         moveAndClick(rock)
+        delay(.5)
         hatchery(priority)
     
+# start()

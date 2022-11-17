@@ -41,7 +41,7 @@ def doHeroicRace():
     for mission in missions:
         action = priorities[mission]
   
-        times = 15
+        times = 20
         while (times > 0):
             runAction(do_action(mission))
             times -= 1
@@ -54,7 +54,7 @@ def start():
     runAction(collectFood)
     runAction(startBattle)
     runAction(shop)
-    runAction(collectRewards)
+    # runAction(collectRewards)
     runAction(startBreeding)
     runAction(devin_tree)
     delay(.5)

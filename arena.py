@@ -6,6 +6,7 @@ from utils import (ThreadWithReturnValue, checkIfCanClaim,
                 exists,
                 getImagePositionRegion,
                 moveAndClick,
+                moveTo,
                 openChest)
 import constants as C
 
@@ -82,6 +83,7 @@ def arena():
     check_attack_report()
     check_if_can_fight()
     check_and_collect()
+    moveTo([800, 800])
     delay(1)
 
     fight = getImagePositionRegion(C.ARENA_FIGHT, 740, 730, 870, 800)
@@ -110,5 +112,6 @@ def arena():
     delay(3)
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 20)
     moveAndClick(claim_btn, 'No arena claim button')
+    moveTo([800, 800])
     delay(3)
     closePopup()
