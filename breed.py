@@ -62,7 +62,7 @@ def placeAndFeed():
 
 def hatchery(priority):
     delay(1)
-    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 700, 1500, 850, 0.8, 10)
+    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 600, 1500, 900, 0.8, 10)
 
     if not exists(egg):
         check_if_not_ok()
@@ -96,17 +96,17 @@ def breed(fast=False):
         
 def startBreeding(priority='breed'):
     print('Start breeding')
-    # fast_breed(priority)
-    tree_position = getImagePosition(C.BREED_TREE, 3)
+    fast_breed(priority)
+    # tree_position = getImagePosition(C.BREED_TREE, 3)
 
-    if not exists(tree_position):
-        return print('Tree not found')
+    # if not exists(tree_position):
+    #     return print('Tree not found')
 
-    moveAndClick(tree_position)
-    # here double check if the egg can be place, if not delete egg from hatchery
-    breed()
-    moveAndClick(tree_position)
-    hatchery(priority)
+    # moveAndClick(tree_position)
+    # # here double check if the egg can be place, if not delete egg from hatchery
+    # breed()
+    # moveAndClick(tree_position)
+    # hatchery(priority)
 
 def start():
     while (True):

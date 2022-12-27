@@ -25,9 +25,9 @@ def freeze_dragons(start_fighting):
     with Process.open_process(pid) as p:
         start_fighting()
         delay(1)
-        value = get_text()
-        print('Arena text is', value)
-        addrs = p.search_all_memory(ctypes.c_int32(value))
+        # value = get_text() # 247336
+        # print('Arena text is', value)
+        addrs = p.search_all_memory(ctypes.c_int32(247336))
         seal_values(p, addrs, 0)
         print(addrs)
         attack = getImagePositionRegion(FIGHT_PLAY, 50, 100, 110, 210,.8, 100)

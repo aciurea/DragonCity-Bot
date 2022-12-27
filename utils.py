@@ -11,19 +11,6 @@ from PIL import ImageGrab
 import numpy as nm
 import constants as C
 
-def type_on_keyboard(key, times = 1):
-    while(times > 0):
-        times -= 1
-        pyautogui.press(key)
-
-def type_combination(key1, key2):
-    print('Try to press ', key1, '+ ', key2)
-    keyboard = Controller()
-    keyboard.press(key1)
-    keyboard.press(key2)
-    keyboard.release(key2)
-    keyboard.release(key1)
-
 def get_path(path):
     return path+'.png'
 

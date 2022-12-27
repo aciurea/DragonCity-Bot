@@ -7,14 +7,29 @@ from utils import (ThreadWithReturnValue,
                     moveAndClick)
 import constants as C
 
+
+def get_farm_position():
+    farms = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FOOD_FARM_WINTER,  200, 200, 1000, 700, 0.8, 10)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FOOD_FARM,  200, 200, 1000, 700, 0.8, 10)).start(),
+    ]
+
+    for farm_pos in farms:
+        farm = farm_pos.join()
+        print(1)
+        if exists(farm): return farm
+    return [-1]
+
 def regrowFood():
-    farm = getImagePositionRegion(C.FOOD_FARM, 300, 200, 1000, 600)
+    farm = get_farm_position()
+
+    print('Farm positon is', farm)
 
     if not exists(farm):
         check_if_not_ok()
         return print('Farm not found')
 
-    moveAndClick(farm)
+    moveAndClick([farm[0] + 5, farm[1] + 5])
 
     regrow_all = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FOOD_REGROW_ALL,  900, 700, 1100, 900, 0.8, 3)).start()
     regrow_single = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FOOD_REGROW_SINGLE,  1000, 700, 1200, 900, 0.8, 3)).start()
