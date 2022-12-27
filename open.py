@@ -21,7 +21,7 @@ def open_app():
 def _close():
     closes = [
        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_GEMS_CLOSE, 1000, 0, 1400, 200, 0.8, 5)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_RED_CLOSE,  500, 0, 1400, 500, 0.8, 5)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_RED_CLOSE,  1000, 0, 1400, 200, 0.8, 5)).start(),
        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 5)).start(),
        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_LEGENDARY_CLOSE,  1000, 0, 1400, 200, 0.8, 5)).start(),
        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_MEGA_PACK_CLOSE,  1000, 0, 1400, 200, 0.8, 5)).start(),

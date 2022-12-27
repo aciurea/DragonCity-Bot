@@ -68,7 +68,10 @@ def collectRewards():
 
     if exists(tv):
         moveAndClick([tv[0] + 20, tv[1]])
-        openTv()
+        i = 10
+        while i >= 0:
+            openTv()
+            i -= 1
     else:
         print('No TV available')
     collectTreasure()

@@ -53,20 +53,17 @@ def start():
     print('hello')
     open_app()
     # runAction(doHeroicRace)
-    i = 5
-    while i > 0:
-        i -= 1
-        runAction(collectGold)
-        runAction(collectFood)
-        runAction(startBattle)
-        runAction(shop)
-        runAction(collectRewards)
-        runAction(startBreeding)
-        # runAction(devin_tree)
-        delay(.5)
-        check_if_not_ok()
+    runAction(collectGold)
+    runAction(collectFood)
+    runAction(startBattle)
+    runAction(shop)
+    runAction(collectRewards)
+    runAction(startBreeding)
+    # runAction(devin_tree)
+    delay(.5)
+    check_if_not_ok()
     close_app()
 
 while(True):
     start()
-    delay(60)
+    delay(60 * 30)

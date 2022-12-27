@@ -74,7 +74,8 @@ def goToLeague():
     goToFight()
     delay(1)
     print('Battle finished since I have no attacks, go and take the rewards')
-    return getRewards()
+    getRewards()
+    goToLeague()
 
 
 def openLeaguePanel():
@@ -87,11 +88,3 @@ def openLeaguePanel():
     moveAndClick(league)
     delay(1)
     goToLeague()
-
-def start():
-    while True:
-        goToFight()
-        print('fight finished')
-        delay(5)
-
-# start()

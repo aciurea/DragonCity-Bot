@@ -80,6 +80,9 @@ def arena():
     arena_btn = [1100, 400]; # We should calculate in percentages
     moveAndClick(arena_btn)
     delay(2)
+    inside_arena()
+   
+def inside_arena():
     check_attack_report()
     check_if_can_fight()
     check_and_collect()
@@ -114,4 +117,4 @@ def arena():
     moveAndClick(claim_btn, 'No arena claim button')
     moveTo([800, 800])
     delay(3)
-    closePopup()
+    return inside_arena()
