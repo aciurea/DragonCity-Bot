@@ -3,7 +3,7 @@ from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
-from divine_tree import devin_tree
+from divine_tree import tree_of_life
 from heroic import heroic_race
 from open import close_app, open_app
 from rewards import collectRewards
@@ -61,7 +61,7 @@ def start():
     runAction(shop)
     runAction(collectRewards)
     runAction(startBreeding)
-    # runAction(devin_tree)
+    runAction(tree_of_life)
     delay(.5)
     check_if_not_ok()
     close_app()

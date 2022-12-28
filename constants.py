@@ -11,6 +11,7 @@ _BASE_BREED = './img/breed/'
 _BASE_TV = './img/tv/'
 _BASE_HEROIC = './img/heroic/'
 _BASE_TOWERS = './img/towers/'
+_BASE_TREE = './img/tree/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -97,3 +98,24 @@ HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
 
 TOWERS_RESOURCESS_TOWER = get_path(_BASE_TOWERS + 'resources_tower')
 TOWERS_COLLECT_RESOURCES_BTN = get_path(_BASE_TOWERS + 'collect_resource_btn')
+
+
+TREE_OF_LIFE = get_path(_BASE_TREE + 'devine_tree')
+WINTER_TREE_OF_LIFE = get_path(_BASE_TREE + 'winter_devine_tree')
+TREE_TRADE = get_path(_BASE_TREE + 'trade')
+TREE_NEXT = get_path(_BASE_TREE + 'next')
+TREE_REFUND = get_path(_BASE_TREE + 'refund')
+TREE_TRADING_CLAIM = get_path(_BASE_TREE + 'trading_claim')
+TREE_UNAVAILABLE = get_path(_BASE_TREE + 'unavailable')
+TREE_TRADING_NEW = get_path(_BASE_TREE + 'trading_new')
+TREE_RARITY = get_path(_BASE_TREE + 'rarity')
+TREE_FINISH_RECALL = get_path(_BASE_TREE + 'finish_recall')
+TREE_NEW_DRAGON = get_path(_BASE_TREE + 'select_new_dragon')
+TREE_40 = get_path(_BASE_TREE + '40')
+TREE_RECALL_BTN = get_path(_BASE_TREE + 'recall_btn')
+TREE_YES = get_path(_BASE_TREE + 'yes')
+TREE_RARITY_COMMON = get_path(_BASE_TREE + 'common')
+TREE_RARITY_RARE = get_path(_BASE_TREE + 'rare')
+TREE_RARITY_VERY_RARE = get_path(_BASE_TREE + 'very_rare')
+TREE_RARITY_EPIC = get_path(_BASE_TREE + 'epic')
+TREE_RARITY_LEGENDARY = get_path(_BASE_TREE + 'legendary')
