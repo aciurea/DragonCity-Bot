@@ -8,6 +8,7 @@ from heroic import heroic_race
 from open import close_app, open_app
 from rewards import collectRewards
 from shop import shop
+from towers import collect_resources
 from utils import check_if_not_ok, delay, dragMapToCenter
 import win32gui
 import win32con
@@ -53,6 +54,7 @@ def start():
     print('hello')
     open_app()
     # runAction(doHeroicRace)
+    collect_resources(dragMapToCenter())
     runAction(collectGold)
     runAction(collectFood)
     runAction(startBattle)
@@ -66,4 +68,4 @@ def start():
 
 while(True):
     start()
-    delay(60 * 30)
+    delay(60 * 5)

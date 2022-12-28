@@ -15,7 +15,7 @@ def open_app():
     run("Dragon City")
     delay(1)
     moveAndClick([50, 300])
-    delay(15)
+    _check_if_app_started()
     _close_all_the_windows()
 
 def _close():
@@ -39,7 +39,7 @@ def _close():
             return _close()
     return [-1]
 
-def get_artifact():
+def _get_artifact():
     artifacts = [
          ThreadWithReturnValue(target=getImagePosition, args=('./img/utils/artifact.png', 5)).start(),
        ThreadWithReturnValue(target=getImagePosition, args=('./img/utils/artifact.png', 5)).start(),
@@ -51,7 +51,7 @@ def get_artifact():
             return artifact
     return [-1]
 
-def retry_to_open_app(start, retries):
+def _retry_to_open_app(start, retries):
     if retries > 10: close_app()
     if time.time() - start > 60:
         close_app()
@@ -61,9 +61,20 @@ def retry_to_open_app(start, retries):
 def _close_all_the_windows():
     start = time.time()
     tries = 0
-    while(not exists(get_artifact())):
-        retry_to_open_app(start, tries)
+    while(not exists(_get_artifact())):
+        _retry_to_open_app(start, tries)
         zoom_out()
         _close()
         tries += 1
+
+def _check_if_app_started():
+    times = 50
+    while(times > 0):
+        image = getImagePositionRegion(C.APP_START_STATIC, 0, 250, 200, 400, .8, 1)
+        
+        if exists(image):
+            return image
         delay(1)
+    times -= 1
+   
+    return [-1]

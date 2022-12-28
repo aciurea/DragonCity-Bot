@@ -11,21 +11,21 @@ from utils import (ThreadWithReturnValue, checkIfCanClaim,
 import constants as C
 
 def check_attack_report():
-    threads = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT, 780, 180, 940, 270, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1190, 180, 1270, 280, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)).start()
-    ]
-
-    repeal = ThreadWithReturnValue(target=getImagePositionRegion,args=(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)).start()
-    repeal = repeal.join()
+    repeal = getImagePositionRegion(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)
 
     if exists(repeal):
         moveAndClick(repeal)
         checkIfCanClaim()
         closeVideo()
         delay(1)
+        closePopup()
         return
+    
+    threads = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT, 780, 180, 940, 270, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1100, 160, 1320, 300, .8, 3)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)).start()
+    ]
     
     for thread in threads:
         img = thread.join()

@@ -10,6 +10,7 @@ _BASE_APP_START= './img/app_start/'
 _BASE_BREED = './img/breed/'
 _BASE_TV = './img/tv/'
 _BASE_HEROIC = './img/heroic/'
+_BASE_TOWERS = './img/towers/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -51,6 +52,7 @@ APP_START_PIGGY_CLOSE = get_path(_BASE_APP_START + 'piggy_close')
 APP_START_TWD_CLOSE = get_path(_BASE_APP_START + 'twd_close')
 APP_START_CLAIM_DAILY = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_NO = get_path(_BASE_APP_START + 'no')
+APP_START_STATIC = get_path(_BASE_APP_START + 'static_icon')
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
@@ -92,3 +94,6 @@ HEROIC_ARENA = get_path(_BASE_HEROIC + 'heroic_arena')
 HEROIC_FIGHT = get_path(_BASE_HEROIC + 'fight')
 HEROIC_NOT_READY = get_path(_BASE_HEROIC + 'not_ready_yet')
 HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
+
+TOWERS_RESOURCESS_TOWER = get_path(_BASE_TOWERS + 'resources_tower')
+TOWERS_COLLECT_RESOURCES_BTN = get_path(_BASE_TOWERS + 'collect_resource_btn')

@@ -22,9 +22,6 @@ def getRewards():
     claim_btn_league_finished = getImagePositionRegion('./img/battle/claim.png', 600, 600, 1000, 800, .8, 5)
     if exists(claim_btn_league_finished):
         moveAndClick(claim_btn_league_finished)
-    delay(1)
-    closePopup()
-
     
 def sortFirst(val): return val[0]
 
@@ -75,6 +72,7 @@ def goToLeague():
     delay(1)
     print('Battle finished since I have no attacks, go and take the rewards')
     getRewards()
+    delay(2)
     goToLeague()
 
 

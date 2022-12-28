@@ -90,13 +90,14 @@ def exists(value):
 
 def checkIfCanClaim():
     ## stop after 50, try 30 times * 3 = 90 seconds
-    times = 20
+    times = 50
     while(times > 0):
         image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 1)
         
         if exists(image):
             return image
         delay(1)
+    times -= 1
    
     return [-1]
 
