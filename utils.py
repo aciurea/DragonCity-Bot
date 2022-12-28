@@ -90,11 +90,12 @@ def exists(value):
 
 def checkIfCanClaim():
     ## stop after 50, try 30 times * 3 = 90 seconds
-    times = 50
+    times = 40
     while(times > 0):
         image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 1)
+        no_claim = getImagePositionRegion('./img/tv/out_of_offers.png', 400, 200, 1400, 800, 0.8, 1)
         
-        if exists(image):
+        if exists(image) or exists(no_claim):
             return image
         delay(1)
     times -= 1
@@ -137,6 +138,7 @@ def check_if_not_ok():
 
 
 def openChest():
+    # TODO fix it according to all the scenarios
     tap, close_btn = [
         ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800)).start(),
         ThreadWithReturnValue(target=get_close_btn).start(),
@@ -153,7 +155,7 @@ def openChest():
     if not exists(claim):
         delay(1)
         closePopup()
-
+ 
     moveAndClick(claim)
     delay(1)
   
@@ -253,23 +255,49 @@ def scroll(pos1, pos2):
 def get_text():
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    # TODO try to take 3 screenshots and compare them
-    # powerless dragon will be with 5 chars
-    # right now it's working for 6 chars
-    # it can be improved to 7 chars also
-    try:
-        cap_length_6 = ImageGrab.grab(bbox=(514, 127, 589, 161))
-        cap_length_6.save(path)
-        ref = cv2.imread(path)
-        ref = cv2.cvtColor(nm.array(ref), cv2.COLOR_BGR2GRAY)
-        text = pytesseract.image_to_string(ref, config='--psm 8')
-        text="".join(text.split())
-        if len(text) > 1 and text[len(text) -1] == ')':
-            text=text[:-1]
-        print('Text is ', text, len(text))
+    cap_length_6 = ImageGrab.grab(bbox=(514, 127, 589, 161))
+    cap_length_6.save(path)
+    ref = cv2.imread(path)
     
-        return int(text)
-    except: return 'error in reading the image'
+    txt_2 = _get_text_2(ref).replace(" ", "").rstrip()
+    txt_3 = _get_text_3(ref).replace(" ", "").rstrip()
+    txt_4 = _get_text_4(ref).replace(" ", "").rstrip()
+
+    try:
+        lst = [txt_2, txt_3, txt_4]
+        lst.sort()
+        lst = list(filter(lambda item: len(item) > 0, lst))
+        return int(lst[0])
+    except: return 247336 # value of strongest dragon
+    
+def _get_text_2(ref):
+    gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
+    thr = gry
+    bnt = cv2.bitwise_not(thr)
+
+    return pytesseract.image_to_string(bnt, config="--psm 6 digits")
+
+def _get_text_3(ref):
+    gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
+    (h, w) = gry.shape[:2]
+    gry = cv2.resize(gry, (w * 2, h * 2))
+    erd = cv2.erode(gry, None, iterations=1)
+    thr = cv2.threshold(erd, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    bnt = cv2.bitwise_not(thr)
+
+    return pytesseract.image_to_string(bnt, config="--psm 6 digits")
+
+def _get_text_4(ref):
+    gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
+    (h, w) = gry.shape[:2]
+    gry = cv2.resize(gry, (w * 2, h * 2))
+    erd = cv2.erode(gry, None, iterations=1)
+    thr = cv2.threshold(erd, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    bnt = cv2.bitwise_not(thr)
+
+    return pytesseract.image_to_string(bnt, config="--psm 6 digits")
+
+
 
 def get_in_progress():
     in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
