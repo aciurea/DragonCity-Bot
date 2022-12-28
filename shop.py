@@ -10,6 +10,7 @@ def buy():
         buy_times -= 1
         moveAndClick(gold)
         delay(.5)
+    return buy()
 
 
 def shop():
