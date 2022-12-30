@@ -4,11 +4,9 @@ import pyautogui
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
-from pynput.keyboard import Controller
 import cv2
 from pytesseract import pytesseract
 from PIL import ImageGrab
-import numpy as nm
 import constants as C
 
 def get_path(path):
@@ -126,7 +124,7 @@ def check_if_not_ok():
     back_btn = back_btn.join()
     close_btn = close_btn.join()
     no = no.join()
-    
+
     if exists(back_btn):
         moveAndClick(back_btn)
     if exists(close_btn):
@@ -228,7 +226,7 @@ def move_to_top():
     print('artifact is', artifact)
     if not exists(artifact): return [-1]
     print('move to top')
-    dragMap(artifact, [800, 600])
+    dragMap(artifact, [800, 700])
 
 def move_to_bottom():
     artifact = dragMapToCenter()

@@ -7,10 +7,11 @@ from utils import (
     get_in_progress,
     get_text,
     getImagePositionRegion,
-    moveAndClick
+    moveAndClick,
+    moveTo
     )
 
-_VALUE = 999999999
+_VALUE = 99999999
 
 def get_addresses(value):
     pid = Process.get_pid_by_name('DragonCity.exe')
@@ -28,16 +29,20 @@ def keep_frozen(p, list, i = 0):
 def freeze_dragons():
     pid = Process.get_pid_by_name('DragonCity.exe')
     addrs = []
+    delay(1)
     with Process.open_process(pid) as p:
         value = get_text()
         print('Arena text is', value)
-        addrs = p.search_all_memory(ctypes.c_int32(value))
-        seal_values(p, addrs, 0)
+        if value > 100000:
+            addrs = p.search_all_memory(ctypes.c_int32(value))
+            seal_values(p, addrs, 0)
 
         attack = getImagePositionRegion(FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
         moveAndClick(attack)
+        i = 50
         while exists(get_in_progress()):
-            # keep_frozen(p, addrs, 0)
+            i += 10
+            moveTo([i, i]) # move mouse because of long battle that can turn off the display and the game will stop
             delay(3)
 
 def seal_values(p, addrs, i = 0):

@@ -2,11 +2,11 @@ import subprocess
 from AppOpener import run
 import pyautogui
 import constants as C
-from utils import ThreadWithReturnValue, delay, exists, getImagePosition, getImagePositionRegion, moveAndClick
+from utils import ThreadWithReturnValue, delay, exists, getImagePosition, getImagePositionRegion, moveAndClick, openChest
 import time
 
 def close_app():
-    subprocess.call("TASKKILL /F /IM DragonCity.exe", shell=True)
+    subprocess.call("TASKKILL /F /IM DragonCity.exe", shell=False)
 
 def zoom_out():
     pyautogui.scroll(-5000)
@@ -65,15 +65,14 @@ def _close_all_the_windows():
         _retry_to_open_app(start, tries)
         zoom_out()
         _close()
+        openChest()
         tries += 1
 
 def _check_if_app_started():
     times = 50
     while(times > 0):
         image = getImagePositionRegion(C.APP_START_STATIC, 0, 250, 200, 400, .8, 1)
-        
-        if exists(image):
-            return image
+        if exists(image): return image
         delay(1)
     times -= 1
    

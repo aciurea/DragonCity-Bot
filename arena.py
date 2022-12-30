@@ -85,7 +85,7 @@ def _get_swap_btn():
     times = 0
     swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)
     while not exists(swap):
-        if (times >= 25): return [-1]
+        if (times >= 10): return [-1]
         times += 1
         delay(1)
         swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)
@@ -96,7 +96,7 @@ def _get_select_new_dragon_btn():
     select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 1)
 
     while not exists(select_new_dragon):
-        if (times >= 25): return [-1]
+        if (times >= 10): return [-1]
         times += 1
         delay(1)
         select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 1)
@@ -122,8 +122,8 @@ def inside_arena():
     moveAndClick(select_new_dragon_btn)
 
     freeze_dragons()
-    delay(3)
-    claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 20)
+    delay(1)
+    claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)
     moveAndClick(claim_btn, 'No arena claim button')
     moveTo([800, 800])
     delay(1)

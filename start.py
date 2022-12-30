@@ -68,4 +68,4 @@ def start():
 
 while(True):
     start()
-    delay(60 * 30)
+    delay(60 * 60)
