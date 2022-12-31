@@ -3,13 +3,16 @@ from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
 from collectGold import collectGold
-from divine_tree import devin_tree
+from divine_tree import tree_of_life
 from heroic import heroic_race
+from open import close_app, open_app
 from rewards import collectRewards
 from shop import shop
+from towers import collect_resources
 from utils import check_if_not_ok, delay, dragMapToCenter
 import win32gui
 import win32con
+
 HALF_AN_HOURS = 1800
 
 Minimize = win32gui.GetForegroundWindow()
@@ -41,37 +44,28 @@ def doHeroicRace():
     for mission in missions:
         action = priorities[mission]
   
-        times = 15
+        times = 20
         while (times > 0):
             runAction(do_action(mission))
             times -= 1
             delay(0.1)
 
 def start():
-    runAction(doHeroicRace)
-    print('start doing the rest of the actions....')
+    print('hello')
+    open_app()
+    # runAction(doHeroicRace)
+    collect_resources(dragMapToCenter())
     runAction(collectGold)
     runAction(collectFood)
     runAction(startBattle)
     runAction(shop)
     runAction(collectRewards)
     runAction(startBreeding)
-    runAction(devin_tree)
+    runAction(tree_of_life)
     delay(.5)
     check_if_not_ok()
+    close_app()
 
-
-def hatchAndCollect():
-    index = 10
-    collectFood()
-    while (index > 0):
-        startBreeding('hatch')
-        index -= 1
-    delay(30)
-
-def run():
-    while (True):
-        start()
-        # delay(5)
-
-run()
+while(True):
+    start()
+    delay(60 * 60)

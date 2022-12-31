@@ -11,7 +11,7 @@ def exit_heroic():
 # TODO optimize the position to have fast searches
 def fight_heroic(fight):
     moveAndClick(fight)
-    select = getImagePosition(C.HEROIC_SELECT_BTN)
+    select = getImagePositionRegion(C.HEROIC_SELECT_BTN, 0, 0, 700, 700, 0.8)
     moveAndClick(select)
     dragon = getImagePosition(C.HEROIC_DRAGON)
     moveAndClick(dragon)

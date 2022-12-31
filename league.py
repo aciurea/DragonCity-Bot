@@ -3,28 +3,25 @@ import constants as C
 
 def getRewards():
     ## TODO update the starting position
-    thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800)).start()
+    # thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800)).start()
     thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800)).start()
-    video = thread1.join()
+    # video = thread1.join()
     greenClaim = thread2.join()
-    if not exists(video):
-        return print('Video not found ')
+    # if not exists(video):
+    #     return print('Video not found ')
 
-    moveAndClick(video)
-    delay(1)
-    if not exists(video_error()): 
-        moveAndClick([802, 352]) # position to play the video
-        checkIfCanClaim()
-        closeVideo()
-    else: 
-        delay(1)
-        moveAndClick(greenClaim, 'Claim button for rewards after battle not found')
+    # moveAndClick(video)
+    # delay(1)
+    # if not exists(video_error()): 
+    #     moveAndClick([802, 352]) # position to play the video
+    #     checkIfCanClaim()
+    #     closeVideo()
+    # else: 
+    #     delay(1)
+    moveAndClick(greenClaim, 'Claim button for rewards after battle not found')
     claim_btn_league_finished = getImagePositionRegion('./img/battle/claim.png', 600, 600, 1000, 800, .8, 5)
     if exists(claim_btn_league_finished):
         moveAndClick(claim_btn_league_finished)
-    delay(1)
-    closePopup()
-
     
 def sortFirst(val): return val[0]
 
@@ -74,7 +71,9 @@ def goToLeague():
     goToFight()
     delay(1)
     print('Battle finished since I have no attacks, go and take the rewards')
-    return getRewards()
+    getRewards()
+    delay(2)
+    goToLeague()
 
 
 def openLeaguePanel():
@@ -87,11 +86,3 @@ def openLeaguePanel():
     moveAndClick(league)
     delay(1)
     goToLeague()
-
-def start():
-    while True:
-        goToFight()
-        print('fight finished')
-        delay(5)
-
-# start()
