@@ -13,7 +13,7 @@ from utils import check_if_not_ok, delay, dragMapToCenter
 import win32gui
 import win32con
 
-HALF_AN_HOURS = 1800
+HALF_AN_HOUR = 1800
 
 Minimize = win32gui.GetForegroundWindow()
 win32gui.ShowWindow(Minimize, win32con.SW_MINIMIZE)
@@ -68,4 +68,4 @@ def start():
 
 while(True):
     start()
-    delay(60 * 60)
+    delay(HALF_AN_HOUR * 3)
