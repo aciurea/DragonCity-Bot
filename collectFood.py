@@ -48,7 +48,7 @@ def collectFood(priority = False):
     def inner_collect():
         start = time.time()
 
-        while((time.time() - start) < 25): 
+        while((time.time() - start) < 15): 
             food = getImagePositionRegion(C.FOOD_IMG, 300, 100, 1500, 900, 0.8, 1)
 
             if exists(food):

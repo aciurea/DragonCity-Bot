@@ -99,7 +99,11 @@ HEROIC_NOT_READY = get_path(_BASE_HEROIC + 'not_ready_yet')
 HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
 
 TOWERS_RESOURCESS_TOWER = get_path(_BASE_TOWERS + 'resources_tower')
+TOWERS_BOOST_GOLD_TOWER = get_path(_BASE_TOWERS + 'gold_tower')
+TOWERS_GEMS_TOWER = get_path(_BASE_TOWERS + 'gems_tower')
 TOWERS_COLLECT_RESOURCES_BTN = get_path(_BASE_TOWERS + 'collect_resource_btn')
+TOWERS_BOOST_GOLD_BTN = get_path(_BASE_TOWERS + 'boost_gold')
+TOWERS_GEMS_BTN = get_path(_BASE_TOWERS + 'gems')
 
 
 TREE_OF_LIFE = get_path(_BASE_TREE + 'devine_tree')

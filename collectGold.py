@@ -16,7 +16,7 @@ def _get_gold_position():
 def _inner_collect():
     start = time.time()
 
-    while(time.time() - start < 30):
+    while(time.time() - start < 25):
         gold = _get_gold_position()
         if exists(gold): moveAndClick(gold)
     check_if_not_ok()
