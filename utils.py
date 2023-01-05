@@ -81,6 +81,8 @@ def commonClaim():
     print('Claimed rewards')
 
 def delay(seconds):
+    if seconds < 0:
+        seconds = 0
     time.sleep(seconds)
 
 def exists(value):
