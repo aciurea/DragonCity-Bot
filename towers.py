@@ -27,7 +27,8 @@ def boost_gold(artifact):
 
 def collect_gems(artifact):
     print(artifact)
-    dragMap(artifact, [artifact[0], artifact[1]+50])
+    if exists(artifact):
+        dragMap(artifact, [artifact[0], artifact[1]+50])
     gems_tower = getImagePositionRegion(C.TOWERS_GEMS_TOWER, 1120, 10, 1400, 300, 0.8, 3)
     if not exists(gems_tower): return [-1]
     moveAndClick(gems_tower)
