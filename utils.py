@@ -81,6 +81,8 @@ def commonClaim():
     print('Claimed rewards')
 
 def delay(seconds):
+    if seconds < 0:
+        seconds = 0
     time.sleep(seconds)
 
 def exists(value):
@@ -250,20 +252,29 @@ def scroll(pos1, pos2):
     delay(.5)
     mouse.release()
    
-def get_text():
+def get_text(x = 410):
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    cap_length_6 = ImageGrab.grab(bbox=(514, 127, 589, 161))
+    cap_length_6 = ImageGrab.grab(bbox=(x, 127, 491, 161))
     cap_length_6.save(path)
     ref = cv2.imread(path)
     
-    txt_2 = _get_text_2(ref).replace(" ", "").rstrip()
-    txt_3 = _get_text_3(ref).replace(" ", "").rstrip()
-    txt_4 = _get_text_4(ref).replace(" ", "").rstrip()
+    lst = [
+        _get_text_2(ref).replace(" ", "").replace(".","").rstrip(),
+        _get_text_3(ref).replace(" ", "").replace(".","").rstrip(),
+        _get_text_4(ref).replace(" ", "").replace(".","").rstrip()
+    ]
+
+    i = 0
+    while (i < len(lst)):
+        if len(lst[i]) > 6:
+            lst[i] = lst[i][1:]
+        i+=1
+
 
     try:
-        lst = [txt_2, txt_3, txt_4]
-        lst.sort()
+        print('list is ', lst)
+        lst.sort(reverse=True)
         lst = list(filter(lambda item: len(item) > 0, lst))
         return int(lst[0])
     except: return 247336 # value of strongest dragon

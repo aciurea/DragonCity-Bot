@@ -81,26 +81,38 @@ def arena():
     delay(2)
     inside_arena()
 
+def _is_fight_ready():
+    while(not exists(getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 1))):
+        delay(.5)
+
 def _get_swap_btn():
+    delay(1)
     times = 0
     swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)
     while not exists(swap):
-        if (times >= 10): return [-1]
+        if (times >= 8): return [-1]
         times += 1
-        delay(1)
+        delay(.5)
         swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)
     return swap
 
-def _get_select_new_dragon_btn():
+def  _get_select_new_dragon_btn():
     times = 0
     select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 1)
 
     while not exists(select_new_dragon):
-        if (times >= 10): return [-1]
+        if (times >= 5): return [-1]
         times += 1
         delay(1)
         select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 1)
     return select_new_dragon
+
+def _prepare_dragons_for_fight():
+    # it is possible that first dragon to be very week and be destroyed, thus we wait to  much for swap_btn
+    swap_btn = _get_swap_btn()
+    moveAndClick(swap_btn)
+    select_new_dragon_btn = _get_select_new_dragon_btn()
+    moveAndClick(select_new_dragon_btn)
 
 def inside_arena():
     check_attack_report()
@@ -116,11 +128,9 @@ def inside_arena():
         return print('No fight button found')
     moveAndClick(fight)
 
-    swap_btn = _get_swap_btn()
-    moveAndClick(swap_btn)
-    select_new_dragon_btn = _get_select_new_dragon_btn()
-    moveAndClick(select_new_dragon_btn)
-
+    _is_fight_ready()
+    _prepare_dragons_for_fight()
+    delay(1)
     freeze_dragons()
     delay(1)
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)

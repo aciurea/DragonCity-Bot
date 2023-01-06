@@ -6,6 +6,7 @@ from utils import (ThreadWithReturnValue,
                     move_to_bottom,
                     moveAndClick)
 import constants as C
+import time
 
 
 def get_farm_position():
@@ -44,22 +45,20 @@ def regrowFood():
     check_if_not_ok()
 
 def collectFood(priority = False):
-    def inner_collect(times = 0):
-        if times > 10:
-            return print('Too many farms to collect. Safe exit')
-        food = getImagePosition(C.FOOD_IMG, 2, 0.8, 0.1)
+    def inner_collect():
+        start = time.time()
 
-        if exists(food):
-            print('Food position is ', food)
-            moveAndClick(food)
-            return inner_collect(times +1)
+        while((time.time() - start) < 15): 
+            food = getImagePositionRegion(C.FOOD_IMG, 300, 100, 1500, 900, 0.8, 1)
 
-        print('Food not ready yet or not found')
+            if exists(food):
+                print('Food position is ', food)
+                moveAndClick(food)
         check_if_not_ok()
       
     inner_collect()
     move_to_bottom()
-    inner_collect(5)
+    inner_collect()
     regrowFood()
 
     if priority != False: # it is in heroic race so delay a little bit to collect the food again
