@@ -20,15 +20,16 @@ def open_app():
 
 def _close():
     closes = [
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_GEMS_CLOSE, 1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_RED_CLOSE,  1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_LEGENDARY_CLOSE,  1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_MEGA_PACK_CLOSE,  1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_PIGGY_CLOSE,  1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_TWD_CLOSE,  1000, 0, 1400, 200, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_CLAIM_DAILY,  500, 650, 1000, 850, 0.8, 3)).start(),
-       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_NO,  600, 0, 1400, 600, 0.8, 3)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_GEMS_CLOSE, 1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_RED_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_LEGENDARY_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_LEGENDARY_2_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_MEGA_PACK_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_PIGGY_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_TWD_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_CLAIM_DAILY,  500, 650, 1000, 850, 0.8, 2)).start(),
+       ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_NO,  600, 0, 1400, 600, 0.8, 2)).start(),
     ]
 
     for close in closes:
@@ -41,8 +42,8 @@ def _close():
 
 def _get_artifact():
     artifacts = [
-         ThreadWithReturnValue(target=getImagePosition, args=('./img/utils/artifact.png', 5)).start(),
-       ThreadWithReturnValue(target=getImagePosition, args=('./img/utils/artifact.png', 5)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/artifact.png', 370, 290, 1350, 830, 0.8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/artifact_2.png', 370, 290, 1350, 830, 0.8, 2)).start(),
     ]
 
     for artifact in artifacts:
@@ -69,11 +70,10 @@ def _close_all_the_windows():
         tries += 1
 
 def _check_if_app_started():
-    times = 50
-    while(times > 0):
-        image = getImagePositionRegion(C.APP_START_STATIC, 0, 250, 200, 400, .8, 1)
+    st = time.time()
+    time_limit = 50
+    while((time.time() - st) < time_limit):
+        image = getImagePositionRegion(C.APP_START_STATIC, 0, 380, 120, 530, .8, 1)
         if exists(image): return image
         delay(1)
-    times -= 1
-   
     return [-1]

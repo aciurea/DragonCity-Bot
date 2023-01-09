@@ -9,6 +9,7 @@ from utils import (ThreadWithReturnValue, checkIfCanClaim,
                 moveTo,
                 openChest)
 import constants as C
+import random
 
 def check_attack_report():
     repeal = getImagePositionRegion(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)
@@ -18,7 +19,9 @@ def check_attack_report():
         checkIfCanClaim()
         closeVideo()
         delay(1)
-        closePopup()
+        accept = getImagePositionRegion(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)
+        if exists(accept): moveAndClick(accept)
+        else: closePopup()
     
     threads = [
         ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1100, 160, 1320, 300, .8, 3)).start(),
@@ -81,24 +84,9 @@ def arena():
     delay(2)
     inside_arena()
 
-def _is_fight_ready():
-    while(not exists(getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 1))):
-        delay(.5)
-
-def _get_swap_btn():
-    delay(1)
-    times = 0
-    swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)
-    while not exists(swap):
-        if (times >= 8): return [-1]
-        times += 1
-        delay(.5)
-        swap = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)
-    return swap
-
 def  _get_select_new_dragon_btn():
     times = 0
-    select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 1)
+    select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 1600, 830, .8, 1)
 
     while not exists(select_new_dragon):
         if (times >= 5): return [-1]
@@ -107,30 +95,40 @@ def  _get_select_new_dragon_btn():
         select_new_dragon = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 640, 740, 930, 830, .8, 1)
     return select_new_dragon
 
-def _prepare_dragons_for_fight():
-    # it is possible that first dragon to be very week and be destroyed, thus we wait to  much for swap_btn
-    swap_btn = _get_swap_btn()
-    moveAndClick(swap_btn)
-    select_new_dragon_btn = _get_select_new_dragon_btn()
-    moveAndClick(select_new_dragon_btn)
+##mouse pos (1003, 139)
+##mouse pos (1087, 143)
 
+def _prepare_dragons_for_fight():
+    swap_btn, select_new_dragon_btn = [
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1)).start(),
+    ]
+    swap_btn = swap_btn.join()
+    select_new_dragon_btn = select_new_dragon_btn.join()
+    moveTo([random.randrange(100, 1500), random.randrange(100, 700)])
+    if exists(swap_btn):
+        moveAndClick(swap_btn)
+        moveAndClick(_get_select_new_dragon_btn())
+        return
+    if exists(select_new_dragon_btn):
+        moveAndClick(select_new_dragon_btn)
+        return
+    delay(.5)
+    return _prepare_dragons_for_fight()
+    
 def inside_arena():
     check_attack_report()
     check_if_can_fight()
     check_and_collect()
-    moveTo([800, 800])
-    delay(1)
+    moveTo([random.randrange(100, 1500), random.randrange(100, 700)])
 
-    fight = getImagePositionRegion(C.ARENA_FIGHT, 740, 730, 870, 800)
+    fight = getImagePositionRegion(C.ARENA_FIGHT, 740, 730, 870, 800, 0.8, 20)
 
     if not exists(fight): 
         closePopup()
         return print('No fight button found')
     moveAndClick(fight)
-
-    _is_fight_ready()
     _prepare_dragons_for_fight()
-    delay(1)
     freeze_dragons()
     delay(1)
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)

@@ -45,13 +45,14 @@ def _is_dtv():
     return exists(dtv)
 
 def _claim():
-    print('Go to claim')
     claim_btn = _get_claim_btn()
+    print('Go to claim', claim_btn)
 
     if exists(claim_btn):
         moveAndClick(claim_btn)
+        delay(.5)
         openChest()
-        if _is_dtv: closePopup()
+        if _is_dtv(): closePopup()
         return claim_btn
     return [-1]
 
@@ -63,19 +64,27 @@ def _get_watch_video_btn():
 
     for btn in btns:
         btn = btn.join()
-        if exists(btn):
-            return btn
+        if exists(btn): return btn
+            
     return [-1]
+
+def _check_last_claim_from_video():
+    delay(1)
+    claim_btn = getImagePositionRegion(C.TV_GREEN_CLAIM, 660, 550, 920, 700, 0.8, 10)
+    if exists(claim_btn):
+        moveAndClick(claim_btn)
+        delay(1)
+        openChest()
 
 def _watch_videos():
     print('Watching videos...')
-    if not exists(video_error()):
+    while not exists(video_error()):
         moveAndClick( [802, 352]) # play videos btn
         checkIfCanClaim()
         closeVideo()
-        claim = _claim()
-        if exists(claim): return _watch_videos()
-    
+        if exists(_claim()): continue
+        else: return _check_last_claim_from_video()
+            
 def openTv():
     delay(1)
     btn = _get_watch_video_btn()

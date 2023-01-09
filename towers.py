@@ -4,7 +4,8 @@ import constants as C
 
 def collect_resources(artifact):
     print(artifact)
-    dragMap(artifact, [artifact[0], artifact[1]-150])
+    if exists(artifact):
+        dragMap(artifact, [artifact[0], artifact[1]-150])
     resources_tower = getImagePositionRegion(C.TOWERS_RESOURCESS_TOWER, 950, 500, 1250, 800, 0.8, 5)
 
     if not exists(resources_tower): return [-1]

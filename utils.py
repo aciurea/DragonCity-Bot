@@ -8,6 +8,8 @@ import cv2
 from pytesseract import pytesseract
 from PIL import ImageGrab
 import constants as C
+import random
+import time
 
 def get_path(path):
     return path+'.png'
@@ -89,16 +91,18 @@ def exists(value):
     return value[0] != -1;
 
 def checkIfCanClaim():
-    ## stop after 50, try 30 times * 3 = 90 seconds
-    times = 40
-    while(times > 0):
-        image = getImagePositionRegion('./img/utils/ready_to_claim.png', 570, 120, 1020, 170, .8, 1)
-        no_claim = getImagePositionRegion('./img/tv/out_of_offers.png', 400, 200, 1400, 800, 0.8, 1)
-        
-        if exists(image) or exists(no_claim):
-            return image
+    st = time.time()
+    limit = 60
+    while((time.time() - st) < limit):
+        lst = [
+            ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_READY_TO_CLAIM, 570, 120, 1020, 170, .8, 1)).start(),
+            ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_OUT_OF_OFFERS, 400, 200, 1400, 800, 0.8, 1)).start(),
+        ]
+        for l in lst:
+            l = l.join()
+            if exists(l): return l
+        moveTo([random.randrange(200, 1400), random.randrange(200, 800)])
         delay(1)
-    times -= 1
    
     return [-1]
 
@@ -118,24 +122,19 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
-    back_btn, close_btn, no = [
+    btns = [
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
         ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/no.png', 610, 635, 800, 735 , .8, 2)).start(),
+        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
     ]
-    back_btn = back_btn.join()
-    close_btn = close_btn.join()
-    no = no.join()
 
-    if exists(back_btn):
-        moveAndClick(back_btn)
-    if exists(close_btn):
-        moveAndClick(close_btn)
-    if exists(no):
-        moveAndClick(no)
-        delay(1)
-        closePopup()
-
+    for btn in btns:
+        btn = btn.join()
+        if exists(btn):
+            moveAndClick(btn)
+            delay(1)
+            return closePopup()
 
 def openChest():
     # TODO fix it according to all the scenarios
@@ -181,7 +180,7 @@ def get_close_btn(x1 = 1000, y1= 0, x2 = 1600, y2 = 300):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2, .8, 3)
 
 def closePopup(btn = [-1]):
-    if exists(btn): 
+    if exists(btn):  
         delay(1)
         moveAndClick(btn) 
     else: moveAndClick(get_close_btn(), 'no close button')
