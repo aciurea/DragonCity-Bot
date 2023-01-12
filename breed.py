@@ -1,13 +1,13 @@
-from utils import ( ThreadWithReturnValue, check_if_not_ok,
+from utils import ( ThreadWithValue, check_if_not_ok,
                     closePopup,
                     delay, dragMapToCenter,
                     exists,
-                    getImagePosition,
                     getImagePositionRegion,
                     moveAndClick)
 import constants as C
 import time
 import math
+import concurrent.futures
 
 def feed():
     feedBtn = getImagePositionRegion(C.BREED_FEED_BTN, 300, 700, 600, 850, 0.8, 3)
@@ -21,8 +21,8 @@ def feed():
 
 def sellEgg():
     sell_1, sell_2 = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 800, 470, 1300, 700, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1300, 700, 1530, 850, .8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 800, 470, 1300, 700, .8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1300, 700, 1530, 850, .8, 3)).start(),
     ]
     sell_1 = sell_1.join()
     sell_2 = sell_2.join()
@@ -107,8 +107,8 @@ def start():
 def _get_breeding_tree_pos():
     dragMapToCenter()
     lst = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_TREE, 400, 400, 550, 700, 0.8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_WINTER_TREE, 400, 400, 550, 700, 0.8, 2)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_TREE, 400, 400, 550, 700, 0.8, 2)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_WINTER_TREE, 400, 400, 550, 700, 0.8, 2)).start()
     ]
 
     for tree_pos in lst:
@@ -119,8 +119,8 @@ def _get_breeding_tree_pos():
 def _get_breeding_rock_pos():
     dragMapToCenter()
     summer, winter = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_ROCK, 100, 100, 1200, 700, 0.8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BREED_WINTER_ROCK, 100, 100, 1200, 700, 0.8, 2)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_ROCK, 100, 100, 1200, 700, 0.8, 2)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_WINTER_ROCK, 100, 100, 1200, 700, 0.8, 2)).start()
     ]
     summer = summer.join()
     winter = winter.join()
@@ -206,16 +206,16 @@ def handle_full_hatchery():
         print('terra egg found')
         delay(.3)
     
-    for egg_position in _get_all_egg_positions():
-        moveAndClick(egg_position)
-        place = getImagePositionRegion(C.BREED_PLACE_BTN, 700, 550, 1000, 650, 0.8, 2)
-        if not exists(place):
-            print('Place btn not found')
-            closePopup()
-            delay(1)
-            continue
-        moveAndClick(place)
-        _place_egg_in_dragonarium()
+    # for egg_position in _get_all_egg_positions():
+    #     moveAndClick(egg_position)
+    #     place = getImagePositionRegion(C.BREED_PLACE_BTN, 700, 550, 1000, 650, 0.8, 2)
+    #     if not exists(place):
+    #         print('Place btn not found')
+    #         closePopup()
+    #         delay(1)
+    #         continue
+    #     moveAndClick(place)
+    #     _place_egg_in_dragonarium()
       
 def fast_breed(priority='breed'):
     # terra_egg breed takes 12s

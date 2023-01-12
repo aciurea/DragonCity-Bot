@@ -1,5 +1,6 @@
 from freeze import freeze_dragons
-from utils import (ThreadWithReturnValue, checkIfCanClaim,
+from open import open_app
+from utils import (ThreadWithValue, checkIfCanClaim,
                 closePopup,
                 closeVideo, 
                 delay,
@@ -10,6 +11,8 @@ from utils import (ThreadWithReturnValue, checkIfCanClaim,
                 openChest)
 import constants as C
 import random
+import time
+from ahk import AHK
 
 def check_attack_report():
     repeal = getImagePositionRegion(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)
@@ -24,8 +27,8 @@ def check_attack_report():
         else: closePopup()
     
     threads = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1100, 160, 1320, 300, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1100, 160, 1320, 300, .8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)).start()
     ]
     
     for thread in threads:
@@ -48,9 +51,9 @@ def check_if_can_fight():
     
     # try 3 times for 3 dragons
     list = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 280, 620, 680, 720, .8, 20)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 800, 620, 1020, 720, .8, 20)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 1300, 620, 1530, 720, .8, 20)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 280, 620, 680, 720, .8, 20)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 800, 620, 1020, 720, .8, 20)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 1300, 620, 1530, 720, .8, 20)).start(),
     ]
 
     for item in list:
@@ -99,22 +102,22 @@ def  _get_select_new_dragon_btn():
 ##mouse pos (1087, 143)
 
 def _prepare_dragons_for_fight():
-    swap_btn, select_new_dragon_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1)).start(),
-    ]
-    swap_btn = swap_btn.join()
-    select_new_dragon_btn = select_new_dragon_btn.join()
-    moveTo([random.randrange(100, 1500), random.randrange(100, 700)])
-    if exists(swap_btn):
-        moveAndClick(swap_btn)
-        moveAndClick(_get_select_new_dragon_btn())
-        return
-    if exists(select_new_dragon_btn):
-        moveAndClick(select_new_dragon_btn)
-        return
-    delay(.5)
-    return _prepare_dragons_for_fight()
+    start = time.time()
+
+    while (time.time() - start < 30):
+        swap_btn, select_new_dragon_btn = [
+            ThreadWithValue(target=getImagePositionRegion, args=(C.FIGHT_SWAP_DRAGON, 80, 650, 305, 740, .8, 1)).start(),
+            ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1)).start(),
+        ]
+        swap_btn = swap_btn.join()
+        select_new_dragon_btn = select_new_dragon_btn.join()
+        moveTo([random.randrange(100, 1500), random.randrange(100, 700)])
+        if exists(swap_btn):
+            moveAndClick(swap_btn)
+            return moveAndClick(_get_select_new_dragon_btn())
+        if exists(select_new_dragon_btn):
+            return moveAndClick(select_new_dragon_btn)
+        delay(.5)
     
 def inside_arena():
     check_attack_report()
@@ -133,6 +136,14 @@ def inside_arena():
     delay(1)
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)
     moveAndClick(claim_btn, 'No arena claim button')
+    if is_application_crashed():
+        return open_app()
     moveTo([800, 800])
     delay(1)
     return inside_arena()
+
+def is_application_crashed():
+    ahk = AHK()
+
+    win = ahk.win_get(title='Dragon City')
+    return win is None

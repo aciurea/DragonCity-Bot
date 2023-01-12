@@ -14,7 +14,7 @@ import time
 def get_path(path):
     return path+'.png'
 
-class ThreadWithReturnValue(Thread):
+class ThreadWithValue(Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, Verbose=None):
         Thread.__init__(self, group, target, name, args, kwargs)
@@ -35,8 +35,8 @@ class ThreadWithReturnValue(Thread):
 
 def video_error():
     video_error, close_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_VIDEO_ERROR, 200, 50, 1600, 800, 0.8, 12)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 5)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=(C.TV_VIDEO_ERROR, 200, 50, 1600, 800, 0.8, 12)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 5)).start()
     ]
     close_btn = close_btn.join()
     if exists(close_btn):
@@ -95,8 +95,8 @@ def checkIfCanClaim():
     limit = 60
     while((time.time() - st) < limit):
         lst = [
-            ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_READY_TO_CLAIM, 570, 120, 1020, 170, .8, 1)).start(),
-            ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_OUT_OF_OFFERS, 400, 200, 1400, 800, 0.8, 1)).start(),
+            ThreadWithValue(target=getImagePositionRegion, args=(C.TV_READY_TO_CLAIM, 570, 120, 1020, 170, .8, 1)).start(),
+            ThreadWithValue(target=getImagePositionRegion, args=(C.TV_OUT_OF_OFFERS, 400, 200, 1400, 800, 0.8, 1)).start(),
         ]
         for l in lst:
             l = l.join()
@@ -123,10 +123,10 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 def check_if_not_ok():
     btns = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/app_start/no.png', 610, 635, 800, 735 , .8, 2)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/app_start/no.png', 610, 635, 800, 735 , .8, 2)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
     ]
 
     for btn in btns:
@@ -139,8 +139,8 @@ def check_if_not_ok():
 def openChest():
     # TODO fix it according to all the scenarios
     tap, close_btn = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800)).start(),
-        ThreadWithReturnValue(target=get_close_btn).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800)).start(),
+        ThreadWithValue(target=get_close_btn).start(),
     ]
     tap = tap.join()
     close_btn = close_btn.join()
@@ -187,8 +187,8 @@ def closePopup(btn = [-1]):
 
 def closeVideo():
     threads = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video.png', 900, 0, 1600, 350, 0.8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 3)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close_video.png', 900, 0, 1600, 350, 0.8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 3)).start()
     ]
 
     for thread in threads:
@@ -308,8 +308,8 @@ def _get_text_4(ref):
 
 
 def get_in_progress():
-    in_progress2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
-    in_progress = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 3)).start()
+    in_progress2 = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
+    in_progress = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 3)).start()
     in_progress = in_progress.join()
     in_progress2 = in_progress2.join()
 
@@ -320,3 +320,8 @@ def get_window_size():
     default_size = [1600, 900]
   
     return default_size  if (window_handle != None) else GetWindowRect(window_handle)
+
+def run_for(fnToRun, limit=60):
+    st = time.time()
+    while (time.time() - st < limit):
+        fnToRun()

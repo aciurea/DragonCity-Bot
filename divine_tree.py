@@ -1,4 +1,4 @@
-from utils import ThreadWithReturnValue, closePopup, exists, getImagePositionRegion, moveAndClick, delay, scroll
+from utils import ThreadWithValue, closePopup, exists, getImagePositionRegion, moveAndClick, delay, scroll
 import constants as C
 
 RARITY_PATHS = [
@@ -58,8 +58,8 @@ def _empower():
     print('TODO empower ')
     
 def _trading_hub():
-    refund = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TREE_REFUND, 1000, 600, 1500, 850, .8, 3)).start()
-    claim = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TREE_TRADING_CLAIM, 1000, 700, 1400, 850, .8, 3)).start()
+    refund = ThreadWithValue(target=getImagePositionRegion, args=(C.TREE_REFUND, 1000, 600, 1500, 850, .8, 3)).start()
+    claim = ThreadWithValue(target=getImagePositionRegion, args=(C.TREE_TRADING_CLAIM, 1000, 700, 1400, 850, .8, 3)).start()
     claim = claim.join()
     refund = refund.join()
 
@@ -102,8 +102,8 @@ def _inside_devine_tree():
   
 def _get_tree():
     trees = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.TREE_OF_LIFE,300, 100, 800, 400,.8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.WINTER_TREE_OF_LIFE ,300, 100, 800, 400,.8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.TREE_OF_LIFE,300, 100, 800, 400,.8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.WINTER_TREE_OF_LIFE ,300, 100, 800, 400,.8, 3)).start(),
     ]
 
     for tree in trees:
