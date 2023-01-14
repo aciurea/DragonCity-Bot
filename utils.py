@@ -1,4 +1,4 @@
-from threading import Thread
+from threading import Thread, Event
 from win32gui import FindWindow, GetWindowRect
 import pyautogui
 import time
@@ -322,6 +322,11 @@ def get_window_size():
     return default_size  if (window_handle != None) else GetWindowRect(window_handle)
 
 def run_for(fnToRun, limit=60):
-    st = time.time()
-    while (time.time() - st < limit):
-        fnToRun()
+    e = Event()
+    thread = Thread(target=fnToRun)
+    thread.start()
+    thread.join(timeout=limit)
+    if(thread.is_alive()):
+        print("Thread is not done, stop it")
+        e.set()
+    else: print("Thread successfully finished")

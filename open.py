@@ -15,6 +15,7 @@ def zoom_out():
 def open_app():
     run("Dragon City")
     _check_if_app_started()
+    moveAndClick([10, 50])
     _close_all_the_windows()
 
 def _get_close_btn():
