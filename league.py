@@ -1,10 +1,10 @@
-from utils import ThreadWithReturnValue, checkIfCanClaim, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
+from utils import ThreadWithValue, checkIfCanClaim, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
 import constants as C
 
 def getRewards():
     ## TODO update the starting position
     # thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800)).start()
-    thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800)).start()
+    thread2 = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800)).start()
     # video = thread1.join()
     greenClaim = thread2.join()
     # if not exists(video):
@@ -49,11 +49,11 @@ def goToFight():
 def goToLeague():
     # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped
     list = [ 
-        ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/no_new_combats.png', 1200, 100, 1600, 300)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion,args=('./img/battle/refill.png', 1100, 100, 1600, 400)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/no_new_combats.png', 1200, 100, 1600, 300)).start(),
+        ThreadWithValue(target=getImagePositionRegion,args=('./img/battle/refill.png', 1100, 100, 1600, 400)).start(),
     ]
 
-    thread2 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/league_oponent.png', 0, 300, 1600, 800)).start()
+    thread2 = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/league_oponent.png', 0, 300, 1600, 800)).start()
     
     for thread in list:
         noMoreBattles = thread.join()

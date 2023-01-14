@@ -1,11 +1,11 @@
-from utils import ThreadWithReturnValue, check_if_not_ok, exists, getImagePositionRegion, move_to_top, moveAndClick
+from utils import ThreadWithValue, check_if_not_ok, exists, getImagePositionRegion, move_to_top, moveAndClick
 import constants as C
 import time
 
 def _get_gold_position():
     list = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.GOLD_1, 50, 50, 1500, 900, .8, 1)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.GOLD_2, 50, 50, 1500, 900, .8, 1)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=(C.GOLD_1, 50, 50, 1500, 900, .8, 1)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.GOLD_2, 50, 50, 1500, 900, .8, 1)).start()
     ]
     for thread in list:
         img = thread.join()

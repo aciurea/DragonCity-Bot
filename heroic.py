@@ -1,5 +1,5 @@
 from league import goToFight
-from utils import ThreadWithReturnValue, closePopup, delay, exists, getImagePositionRegion, go_back, moveAndClick, getImagePosition, openChest
+from utils import ThreadWithValue, closePopup, delay, exists, getImagePositionRegion, go_back, moveAndClick, getImagePosition, openChest
 
 import constants as C
 
@@ -23,13 +23,13 @@ def fight_heroic(fight):
 
 def find_missions():
     threads = [
-        [ThreadWithReturnValue(target=getImagePositionRegion, 
+        [ThreadWithValue(target=getImagePositionRegion, 
         args=(C.HEROIC_FOOD, 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
-        [ThreadWithReturnValue(target=getImagePositionRegion, 
+        [ThreadWithValue(target=getImagePositionRegion, 
         args=(C.HEROIC_BREED, 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
-        [ThreadWithReturnValue(target=getImagePositionRegion, 
+        [ThreadWithValue(target=getImagePositionRegion, 
         args=(C.HEROIC_HATCH, 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
-        [ThreadWithReturnValue(target=getImagePositionRegion,args=(C.HEROIC_FEED, 1090, 225, 1270, 725, .8, 3)).start(), 'feed']
+        [ThreadWithValue(target=getImagePositionRegion,args=(C.HEROIC_FEED, 1090, 225, 1270, 725, .8, 3)).start(), 'feed']
         ]
 
     missions = []
@@ -43,8 +43,8 @@ def find_missions():
 
 def check_if_can_claim():
     no_claim_threads = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_NO_CLAIM_BTN_2, 1100,690, 1430, 760, 0.8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_NO_CLAIM_BTN_1, 1100,690, 1430, 760, 0.8, 3)).start()
+        ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_NO_CLAIM_BTN_2, 1100,690, 1430, 760, 0.8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_NO_CLAIM_BTN_1, 1100,690, 1430, 760, 0.8, 3)).start()
     ]
 
     for thread in no_claim_threads:
@@ -59,7 +59,7 @@ def check_if_can_claim():
 
 def heroic_race():
     island = getImagePosition(C.HEROIC_ARENA, 3)
-    enter_fight_thread = ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 285, 1435, 735, .8, 3)).start()
+    enter_fight_thread = ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 285, 1435, 735, .8, 3)).start()
 
     if not exists(island):
         print('No Heroic Island found')
@@ -80,8 +80,8 @@ def heroic_race():
     moveAndClick(enter_fight)
     delay(1)
     no_fight, start_fight = [
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_NOT_READY, 0, 580, 1600, 740, .8, 3)).start(),
-        ThreadWithReturnValue(target=getImagePositionRegion, args=(C.HEROIC_START_FIGHT_BTN, 0, 640, 1600, 760, .8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_NOT_READY, 0, 580, 1600, 740, .8, 3)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_START_FIGHT_BTN, 0, 640, 1600, 760, .8, 3)).start(),
         ]
 
     no_fight = no_fight.join()

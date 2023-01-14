@@ -1,6 +1,6 @@
 from league import goToFight
 from rewards import openChest
-from utils import ThreadWithReturnValue, closePopup, delay, exists, go_back, moveAndClick, getImagePositionRegion, scroll
+from utils import ThreadWithValue, closePopup, delay, exists, go_back, moveAndClick, getImagePositionRegion, scroll
 import constants as C
 
 def getQuests():
@@ -9,7 +9,7 @@ def getQuests():
     step_px = 500
     for i in range(3):
         start, end = [i * step_px, i * step_px + step_px]
-        list.append(ThreadWithReturnValue(target=getImagePositionRegion, args=(C.BATTLE_NEXT_QUEST, start, 600, end, 800, .8, 2)).start())
+        list.append(ThreadWithValue(target=getImagePositionRegion, args=(C.BATTLE_NEXT_QUEST, start, 600, end, 800, .8, 2)).start())
 
     for thread in list:
         quest = thread.join()
