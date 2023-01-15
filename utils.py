@@ -156,8 +156,6 @@ def openChest():
         closePopup()
  
     moveAndClick(claim)
-    delay(1)
-  
 
 def backFn(): return imagesearcharea('./img/app_start/back.png', 0, 0, 500, 150)
 def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)
@@ -251,10 +249,10 @@ def scroll(pos1, pos2):
     delay(.5)
     mouse.release()
    
-def get_text(x = 410):
+def get_text(x1 = 410, x2=491):
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    cap_length_6 = ImageGrab.grab(bbox=(x, 127, 491, 161))
+    cap_length_6 = ImageGrab.grab(bbox=(x1, 127, x2, 161))
     cap_length_6.save(path)
     ref = cv2.imread(path)
     
@@ -272,9 +270,9 @@ def get_text(x = 410):
 
 
     try:
-        print('list is ', lst)
         lst.sort(reverse=True)
         lst = list(filter(lambda item: len(item) > 0, lst))
+        print('list is ', lst)
         return int(lst[0])
     except: return 247336 # value of strongest dragon
     
