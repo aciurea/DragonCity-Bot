@@ -1,5 +1,5 @@
 import subprocess
-from AppOpener import run
+from AppOpener import open
 import pyautogui
 import constants as C
 from utils import delay, exists, getImagePositionRegion, moveAndClick, openChest
@@ -13,7 +13,8 @@ def zoom_out():
     pyautogui.scroll(-5000)
 
 def open_app():
-    run("Dragon City")
+    open("Dragon City")
+    delay(5)
     _check_if_app_started()
     moveAndClick([10, 50])
     _close_all_the_windows()

@@ -143,7 +143,7 @@ def inside_arena():
     return inside_arena()
 
 def is_application_crashed():
-    ahk = AHK()
+    ahk = AHK(executable_path="C:\\AutoHotkey\\AutoHotkeyU64.exe")
 
     win = ahk.win_get(title='Dragon City')
     return win is None
