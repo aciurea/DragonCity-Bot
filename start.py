@@ -9,11 +9,12 @@ from open import close_app, open_app
 from rewards import collectRewards
 from shop import shop
 from towers import boost_gold, collect_gems, collect_resources
-from utils import check_if_not_ok, delay, dragMapToCenter, exists
+from utils import check_if_not_ok, delay, dragMapToCenter, exists, getImagePosition
 import win32gui
 import win32con
 import datetime
 import time
+import constants as C
 
 HALF_AN_HOUR = 1800
 
@@ -29,6 +30,7 @@ def runAction(action):
     check_if_can_close_divine_offer()
 
 def doHeroicRace():
+    if not exists(getImagePosition(C.HEROIC_ARENA, 2)): return
     priorities = { 'breed': startBreeding,
                   'feed': startBreeding,
                   'hatch': startBreeding,
@@ -55,12 +57,11 @@ def doHeroicRace():
 def start():
     st = time.time()   
     open_app()
-    # runAction(doHeroicRace)
+    runAction(startBattle)
     if not exists(collect_resources(dragMapToCenter())):
         runAction(collectGold)
         runAction(collectFood)
-
-    runAction(startBattle)
+    runAction(doHeroicRace)
     runAction(shop)
     runAction(collectRewards)
     runAction(startBreeding)
@@ -70,6 +71,7 @@ def start():
     runAction(collectGold)
     boost_gold(dragMapToCenter())
     collect_gems(dragMapToCenter())
+    if exists(getImagePosition(C.HEROIC_ARENA, 2)): runAction(startBattle)
     print('Operation took: '+ str(((time.time() - st) / 60)) + ' minutes')
     print('End At: ' + datetime.datetime.now().strftime("%X"))
     close_app()

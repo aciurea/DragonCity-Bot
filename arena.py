@@ -113,11 +113,11 @@ def _prepare_dragons_for_fight():
         select_new_dragon_btn = select_new_dragon_btn.join()
         moveTo([random.randrange(100, 1500), random.randrange(100, 700)])
         if exists(swap_btn):
-            moveAndClick(swap_btn)
-            return moveAndClick(_get_select_new_dragon_btn())
+            return
+            # moveAndClick(swap_btn)
+            # return moveAndClick(_get_select_new_dragon_btn())
         if exists(select_new_dragon_btn):
             return moveAndClick(select_new_dragon_btn)
-        delay(.5)
     
 def inside_arena():
     check_attack_report()
@@ -133,13 +133,10 @@ def inside_arena():
     moveAndClick(fight)
     _prepare_dragons_for_fight()
     freeze_dragons()
-    delay(1)
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)
     moveAndClick(claim_btn, 'No arena claim button')
     if is_application_crashed():
         return open_app()
-    moveTo([800, 800])
-    delay(1)
     return inside_arena()
 
 def is_application_crashed():

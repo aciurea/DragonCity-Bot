@@ -308,12 +308,7 @@ def _get_text_4(ref):
 
 
 def get_in_progress():
-    in_progress2 = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress_2.png', 0, 100, 190, 300, .8, 3)).start()
-    in_progress = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 3)).start()
-    in_progress = in_progress.join()
-    in_progress2 = in_progress2.join()
-
-    return in_progress if exists(in_progress) else in_progress2
+    return getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 2)
 
 def get_window_size():
     window_handle = FindWindow(None, "DragonCity")

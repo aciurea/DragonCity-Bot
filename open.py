@@ -41,9 +41,10 @@ def _get_close_btn():
    
 def _close():
     close_btn = _get_close_btn()
-    if exists(close_btn):
-        print('Found a close btn')
+    while(exists(close_btn)):
         moveAndClick(close_btn)
+        delay(.5)
+        close_btn = _get_close_btn()
     return close_btn
 
 def _get_artifact():
@@ -71,6 +72,7 @@ def _close_all_the_windows():
         zoom_out()
         if not exists(_close()):
             openChest()
+        delay(.5)
 
 def _check_if_app_started():
     start = time.time()

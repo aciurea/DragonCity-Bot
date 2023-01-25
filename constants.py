@@ -26,8 +26,9 @@ ARENA_FIGHT = get_path(_BASE_ARENA + 'fight')
 ARENA_SELECT_NEW_DRAGON_BTN = get_path(_BASE_ARENA + 'new_dragon')
 ARENA_CLAIM_BTN = get_path(_BASE_ARENA + 'claim')
 
-FIGHT_SWAP_DRAGON = get_path(_BASE_BATTLE + 'swap')
-FIGHT_PLAY = get_path(_BASE_BATTLE+'play')
+FIGHT_SWAP_DRAGON = get_path(f'{_BASE_BATTLE}swap')
+FIGHT_PLAY = get_path(f'{_BASE_BATTLE}play')
+FIGHT_IN_PROGRESS = get_path(f'{_BASE_BATTLE}fight_in_progress')
 
 GOLD_1 = get_path(_BASE_GOLD+'gold')
 GOLD_2 = get_path(_BASE_GOLD+'gold_2')

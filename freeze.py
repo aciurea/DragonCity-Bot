@@ -13,7 +13,6 @@ from utils import (
 import random
 
 def has_the_opponent_attacked():
-    delay(1)
     print('check if the opponent attacked')
     while(not exists(getImagePositionRegion(BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
         delay(.5)
@@ -46,5 +45,5 @@ def _prevent_sleep():
     while exists(get_in_progress()):
         # move mouse because of long battle that can turn off the display and the game will stop
         moveTo([random.randrange(100, 1600), random.randrange(0, 500)])
-        delay(5)
+        delay(2)
 
