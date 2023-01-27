@@ -13,28 +13,26 @@ def zoom_out():
     pyautogui.scroll(-5000)
 
 def open_app():
+    close_app()
     run("Dragon City")
     _check_if_app_started()
     moveAndClick([10, 50])
+    delay(3)
     _close_all_the_windows()
 
 def _get_close_btn():
+    buy_now_close_pos = [1270, 84]
     close_params = [
-        [C.APP_START_GEMS_CLOSE, 1000, 0, 1400, 200, 0.8, 2],
+        [C.APP_START_BUY_NOW, 670, 720, 900, 820, 0.8, 2],
         [C.APP_START_RED_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_LEGENDARY_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_LEGENDARY_2_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_MEGA_PACK_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_PIGGY_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_TWD_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
         [C.APP_START_BIG_CLOSE,  1400, 0, 1550, 50, 0.8, 2],
         [C.APP_START_CLAIM_DAILY,  500, 650, 1000, 850, 0.8, 2],
         [C.APP_START_NO,  600, 0, 1400, 600, 0.8, 2],
     ]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        result_list = executor.map(lambda args: getImagePositionRegion(*args), close_params)
+        buy_now_btn, *result_list = executor.map(lambda args: getImagePositionRegion(*args), close_params)
+        if exists(buy_now_btn):  return buy_now_close_pos
         for close_btn in result_list:
             if exists(close_btn): return close_btn
         return [-1]
@@ -60,9 +58,9 @@ def _get_artifact():
         return [-1]
 
 def _retry_to_open_app(start_time):
-    if (time.time() - start_time > 60):
+    if (time.time() - start_time > 50):
         close_app()
-        delay(10)
+        delay(5)
         open_app()
 
 def _close_all_the_windows():

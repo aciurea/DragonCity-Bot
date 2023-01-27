@@ -139,7 +139,7 @@ def check_if_not_ok():
 def openChest():
     # TODO fix it according to all the scenarios
     tap, close_btn = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800)).start(),
+        ThreadWithValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800, 0.8, 2)).start(),
         ThreadWithValue(target=get_close_btn).start(),
     ]
     tap = tap.join()

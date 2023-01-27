@@ -47,22 +47,21 @@ def regrowFood():
         return print('Regrow successful!')
     check_if_not_ok()
 
-def collectFood(priority = False):
+def collectFood(priority = False, regrow = regrowFood):
     def inner_collect():
+        args = [300, 100, 1500, 900, 0.8, 1]
         start = time.time()
-
-        while((time.time() - start) < 10): 
-            food = getImagePositionRegion(C.FOOD_IMG, 300, 100, 1500, 900, 0.8, 1)
-
-            if exists(food):
-                print('Food position is ', food)
-                moveAndClick(food)
+        food = getImagePositionRegion(C.FOOD_IMG, *args)
+        while(exists(food) and (time.time() - start) < 10): 
+            print('Food position is ', food)
+            moveAndClick(food)
+            food = getImagePositionRegion(C.FOOD_IMG, *args)
         check_if_not_ok()
       
     inner_collect()
     move_to_bottom()
     inner_collect()
-    regrowFood()
+    regrow()
 
     if priority != False: # it is in heroic race so delay a little bit to collect the food again
         time_to_collect = 25

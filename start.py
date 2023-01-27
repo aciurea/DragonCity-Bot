@@ -47,12 +47,13 @@ def doHeroicRace():
 
     for mission in missions:
         action = priorities[mission]
+        if mission != 'food':
+            collectFood(False, lambda: None)
   
         times = 20
         while (times > 0):
             runAction(do_action(mission))
             times -= 1
-            delay(0.1)
 
 def start():
     st = time.time()   
@@ -78,4 +79,4 @@ def start():
 
 while(True):
     start()
-    delay(HALF_AN_HOUR * 3)
+    delay(HALF_AN_HOUR * 1.5)
