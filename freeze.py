@@ -57,24 +57,25 @@ def _prepare_best_dragon():
 
 def freeze_dragons():
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
-    text = _prepare_best_dragon()
-    _freeze_dragons(777_777, text)
+    _prepare_best_dragon()
+    _freeze_dragons(777_777)
     moveAndClick(attack) # start the fight
     delay(.2)
     moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
     has_the_opponent_attacked()
-    _freeze_dragons(99_999_999, text)
+    _freeze_dragons(99_999_999)
     moveAndClick(attack) # resume fight
     _prevent_sleep()
 
 
-def _freeze_dragons(lock_value, value):
+def _freeze_dragons(lock_value):
+    value = get_text()
     pid = Process.get_pid_by_name('DragonCity.exe')
     with Process.open_process(pid) as p:
         addrs = p.search_all_memory(ctypes.c_int32(value))
+        print(f'for dragon:[{value}] found [{len(addrs)}]')
         for addr in addrs:
             p.write_memory(addr, ctypes.c_int32(lock_value))
-        p.close()
 
 def _prevent_sleep():
     while exists(get_in_progress()):

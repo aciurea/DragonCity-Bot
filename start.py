@@ -80,4 +80,4 @@ def start():
 
 while(True):
     start()
-    delay(HALF_AN_HOUR * 3)
+    delay(HALF_AN_HOUR * 4)
