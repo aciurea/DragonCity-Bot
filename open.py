@@ -7,14 +7,18 @@ import time
 import concurrent.futures
 
 def close_app():
-    subprocess.call("TASKKILL /F /IM DragonCity.exe", shell=False)
+    try:
+        subprocess.call("TASKKILL /F /IM DragonCity.exe", shell=False)
+    except: print('Cannot kill the application')
 
 def zoom_out():
     pyautogui.scroll(-5000)
 
 def open_app():
     close_app()
-    run("Dragon City")
+    try:
+        run("Dragon City")
+    except: open_app()
     _check_if_app_started()
     moveAndClick([10, 50])
     delay(3)
@@ -24,6 +28,7 @@ def _get_close_btn():
     buy_now_close_pos = [1270, 84]
     close_params = [
         [C.APP_START_BUY_NOW, 670, 720, 900, 820, 0.8, 2],
+        [C.APP_START_BUY_NOW_2, 670, 720, 900, 820, 0.8, 2],
         [C.APP_START_RED_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
         [C.APP_START_BIG_CLOSE,  1400, 0, 1550, 50, 0.8, 2],
         [C.APP_START_CLAIM_DAILY,  500, 650, 1000, 850, 0.8, 2],
@@ -31,14 +36,17 @@ def _get_close_btn():
     ]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        buy_now_btn, *result_list = executor.map(lambda args: getImagePositionRegion(*args), close_params)
-        if exists(buy_now_btn):  return buy_now_close_pos
+        buy_now_btn1, buy_now_btn2, *result_list = executor.map(lambda args: getImagePositionRegion(*args), close_params)
+        if exists(buy_now_btn1) or exists(buy_now_btn2):
+            print('Buy now found') 
+            return buy_now_close_pos
         for close_btn in result_list:
             if exists(close_btn): return close_btn
         return [-1]
    
 def _close():
     close_btn = _get_close_btn()
+    moveAndClick([1270, 84])
     while(exists(close_btn)):
         moveAndClick(close_btn)
         delay(.5)

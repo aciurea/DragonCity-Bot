@@ -59,7 +59,6 @@ def check_if_can_claim():
 
 def heroic_race():
     island = getImagePosition(C.HEROIC_ARENA, 3)
-    enter_fight_thread = ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 285, 1435, 735, .8, 3)).start()
 
     if not exists(island):
         print('No Heroic Island found')
@@ -68,8 +67,8 @@ def heroic_race():
     delay(.5)
     moveAndClick(island)
     check_if_can_claim()
+    enter_fight_thread = ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 250, 1450, 735, .8, 3)).start()
     missions = find_missions()
-
     enter_fight = enter_fight_thread.join()
 
     if not exists(enter_fight):
