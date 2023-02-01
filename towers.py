@@ -1,9 +1,16 @@
-from utils import dragMap, exists, getImagePositionRegion, moveAndClick
+from utils import delay, dragMap, dragMapToCenter, exists, getImagePositionRegion, moveAndClick
 import constants as C
+import time
 
+def _wait_for_artifact_to_be_visible():
+    st = time.time()
 
-def collect_resources(artifact):
-    print(artifact)
+    while(st - time.time() < 10 and not exists(dragMapToCenter())):
+        delay(.5)
+
+def collect_resources():
+    _wait_for_artifact_to_be_visible()
+    artifact = dragMapToCenter()
     if exists(artifact):
         dragMap(artifact, [artifact[0], artifact[1]-150])
     resources_tower = getImagePositionRegion(C.TOWERS_RESOURCESS_TOWER, 950, 500, 1250, 800, 0.8, 5)

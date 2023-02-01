@@ -12,14 +12,23 @@ from utils import (
     moveTo,
     )
 import random
+import time
+import datetime
 
-def _is_dragon_ready(): 
-    while(not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
-        delay(.1)
+def _log_to_file(messages):
+    try:
+        f = open("temp/arena.txt", "a")
+        for message in messages:
+            f.write(f'{message} \n')
+        f.close()
+    except: print('Failed to write to file')
 
 def has_the_opponent_attacked():
+    st = time.time()
     print('check if the opponent attacked')
-    while(not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
+    while(st - time.time() < 10 and
+        not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
+
         new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1)
         if exists(new_dragon_btn): return moveAndClick(new_dragon_btn)
         delay(.5)
@@ -47,6 +56,10 @@ def _prepare_best_dragon():
             best_values.append({"value": get_text(), "pos": item})
 
         best_values.sort(reverse=True,key=lambda item: item["value"])
+        _log_to_file([
+            f'At: {datetime.datetime.now().strftime("%X")}',
+            f'Dragon values are: {repr(best_values)} \n'
+        ])
         moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1))
         _new_dragon_btn = _get_new_dragon_btn(*best_values[0]["pos"])
         if not exists(_new_dragon_btn): closePopup()
@@ -57,8 +70,8 @@ def _prepare_best_dragon():
 
 def freeze_dragons():
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
-    _prepare_best_dragon()
-    _freeze_dragons(777_777)
+    text = _prepare_best_dragon()
+    _freeze_dragons(777_777, text)
     moveAndClick(attack) # start the fight
     delay(.2)
     moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
@@ -68,8 +81,8 @@ def freeze_dragons():
     _prevent_sleep()
 
 
-def _freeze_dragons(lock_value):
-    value = get_text()
+def _freeze_dragons(lock_value, text = None):
+    value = get_text() if text == None else text
     pid = Process.get_pid_by_name('DragonCity.exe')
     with Process.open_process(pid) as p:
         addrs = p.search_all_memory(ctypes.c_int32(value))

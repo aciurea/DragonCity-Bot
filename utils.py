@@ -209,7 +209,6 @@ def dragMap(artifact, next=[800, 450]):
 
 
 def dragMapToCenter():
-    print('Drag map to center')
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
     if(artifact[0] == 800 and artifact[1] == 450):
         moveAndClick(artifact)

@@ -14,7 +14,7 @@ def chooseBattle():
     moveAndClick(battleBtn)
 
 def startBattle():
-    for action in [openQuestPanel, openLeaguePanel]:
+    for action in [openQuestPanel, openQuestPanel, openLeaguePanel]:
         chooseBattle()
         action()
     arena()

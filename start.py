@@ -59,7 +59,7 @@ def doHeroicRace():
 def start():
     st = time.time()   
     open_app()
-    if not exists(collect_resources(dragMapToCenter())):
+    if not exists(collect_resources()):
         runAction(collectGold)
         runAction(collectFood)
     runAction(startBattle)

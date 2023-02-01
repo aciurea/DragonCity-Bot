@@ -113,7 +113,6 @@ def inside_arena():
         return print('No fight button found')
     moveAndClick(fight)
     _ready_for_battle()
-    delay(3)
     freeze_dragons()
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)
     moveAndClick(claim_btn, 'No arena claim button')
