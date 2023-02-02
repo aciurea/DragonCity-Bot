@@ -15,10 +15,10 @@ import random
 import time
 import datetime
 
-def _log_to_file(messages):
+def log_arena_fights(messages, fileName = "arena"):
     try:
-        f = open("temp/arena.txt", "a")
-        for message in messages:
+        f = open(f"temp/{fileName}.txt", "a")
+        for message in [f'At: {datetime.datetime.now().strftime("%X")}', *messages]:
             f.write(f'{message} \n')
         f.close()
     except: print('Failed to write to file')
@@ -38,7 +38,7 @@ def _get_new_dragon_btn(x1 = 640, x2 = 1440):
     return getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, x1, 740, x2, 810, .8, 5)
 
 def _prepare_best_dragon():
-    pos = [[650, 920], [1170, 1440]]
+    pos = [[640, 920], [1170, 1440]]
     best_values = []
 
     try:
@@ -50,14 +50,13 @@ def _prepare_best_dragon():
             moveAndClick(swap_btn, 'Swap button not available')
             delay(.2)
             new_dragon_btn = _get_new_dragon_btn(*item)
-            if not exists(new_dragon_btn): return None
+            if not exists(new_dragon_btn): continue
             moveAndClick(new_dragon_btn)
             delay(2)
             best_values.append({"value": get_text(), "pos": item})
 
         best_values.sort(reverse=True,key=lambda item: item["value"])
-        _log_to_file([
-            f'At: {datetime.datetime.now().strftime("%X")}',
+        log_arena_fights([
             f'Dragon values are: {repr(best_values)} \n'
         ])
         moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1))
@@ -68,10 +67,17 @@ def _prepare_best_dragon():
         return best_values[0]["value"]
     except: return None
 
+def _swap_dragon():
+    moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1), 'Swap button not available')
+    moveAndClick(_get_new_dragon_btn(0, 1600), 'New Dragon button not available')
+
 def freeze_dragons():
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
     text = _prepare_best_dragon()
     _freeze_dragons(777_777, text)
+    # Some dragons don't do damage and the value doesn't get updated.
+    _swap_dragon() 
+    _prepare_best_dragon()
     moveAndClick(attack) # start the fight
     delay(.2)
     moveAndClick(attack) # pause the fight in order to give the change to opponent to hit

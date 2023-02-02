@@ -78,7 +78,7 @@ def _close_all_the_windows():
         zoom_out()
         if not exists(_close()):
             openChest()
-        delay(.5)
+        delay(1.5)
 
 def _check_if_app_started():
     start = time.time()

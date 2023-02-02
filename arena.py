@@ -1,4 +1,4 @@
-from freeze import freeze_dragons
+from freeze import log_arena_fights, freeze_dragons
 from open import open_app
 from utils import (ThreadWithValue,
                 checkIfCanClaim,
@@ -52,15 +52,18 @@ def _check_if_can_fight():
     moveAndClick(change)
     
     # try 3 times for 3 dragons
-    list = [
+    btns = [
         ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 280, 620, 680, 720, .8, 20)).start(),
         ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 800, 620, 1020, 720, .8, 20)).start(),
         ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED_UP, 1300, 620, 1530, 720, .8, 20)).start(),
     ]
 
-    for item in list:
+    index = 0
+    for item in btns:
         speed_up_btn = item.join()
-        if not exists(speed_up_btn): continue
+        if not exists(speed_up_btn): 
+            index += 1
+            continue
         moveAndClick([speed_up_btn[0] - 175, speed_up_btn[1]])
         delay(1)
         left_arrow = [1084, 760]
@@ -69,6 +72,8 @@ def _check_if_can_fight():
         dragon = [660, 330]
         moveAndClick(dragon)
         delay(2)
+    if index == len(btns):
+        log_arena_fights(['\n [Lost all dragons... \n BATTLE LOST] \n', "lost_fights"])
     closePopup()
 
 def _check_and_collect():
@@ -89,7 +94,7 @@ def _ready_for_battle():
     start = time.time()
     to_execute = [
         [C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1],
-        [C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1]
+        [C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 600, 1600, 850, .8, 1]
     ]
 
     while (time.time() - start < 20):
