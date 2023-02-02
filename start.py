@@ -1,4 +1,5 @@
 from app_start import check_if_can_claim_daily, check_if_can_close_divine_offer
+from arena import arena
 from battle import startBattle
 from breed import startBreeding
 from collectFood import collectFood
@@ -58,10 +59,10 @@ def doHeroicRace():
 def start():
     st = time.time()   
     open_app()
-    runAction(startBattle)
-    if not exists(collect_resources(dragMapToCenter())):
+    if not exists(collect_resources()):
         runAction(collectGold)
         runAction(collectFood)
+    runAction(startBattle)
     runAction(doHeroicRace)
     runAction(shop)
     runAction(collectRewards)
@@ -72,11 +73,11 @@ def start():
     runAction(collectGold)
     boost_gold(dragMapToCenter())
     collect_gems(dragMapToCenter())
-    if exists(getImagePosition(C.HEROIC_ARENA, 2)): runAction(startBattle)
+    runAction(arena) # run it again since it might failed on first run
     print('Operation took: '+ str(((time.time() - st) / 60)) + ' minutes')
     print('End At: ' + datetime.datetime.now().strftime("%X"))
     close_app()
 
 while(True):
     start()
-    delay(HALF_AN_HOUR * 1.5)
+    delay(HALF_AN_HOUR * 4)

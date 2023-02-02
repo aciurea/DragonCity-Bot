@@ -14,10 +14,10 @@ def chooseBattle():
     moveAndClick(battleBtn)
 
 def startBattle():
-    for action in [openQuestPanel, openLeaguePanel, arena]:
+    for action in [openQuestPanel, openQuestPanel, openLeaguePanel]:
         chooseBattle()
-       
         action()
+    arena()
     return print('Finishe battles')
 
 

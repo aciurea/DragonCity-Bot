@@ -12,6 +12,7 @@ _BASE_TV = './img/tv/'
 _BASE_HEROIC = './img/heroic/'
 _BASE_TOWERS = './img/towers/'
 _BASE_TREE = './img/tree/'
+_BASE_UTILS = './img/utils/'
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -52,6 +53,7 @@ APP_START_CLAIM_DAILY = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_NO = get_path(_BASE_APP_START + 'no')
 APP_START_STATIC = get_path(_BASE_APP_START + 'static_icon')
 APP_START_BUY_NOW = get_path(f'{_BASE_APP_START}buy_now')
+APP_START_BUY_NOW_2 = get_path(f'{_BASE_APP_START}buy_now2')
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
@@ -66,7 +68,6 @@ BREED_RE_BREED_BTN = get_path(_BASE_BREED + 're-breed')
 BREED_BREED_BTN = get_path(_BASE_BREED + 'breed_btn') 
 BREED_ROCK = get_path(_BASE_BREED + 'rock') 
 BREED_WINTER_ROCK = get_path(_BASE_BREED + 'winter_rock')
-BREED_FINISH_BREED = get_path(_BASE_BREED + 'finish_breed') 
 BREED_HATCHERY_FULL = get_path(_BASE_BREED + 'hatchery_full') 
 BREED_HATCHERY = get_path(_BASE_BREED + 'hatchery') 
 BREED_EGG = get_path(_BASE_BREED + 'egg') 
@@ -133,3 +134,6 @@ TREE_RARITY_RARE = get_path(_BASE_TREE + 'rare')
 TREE_RARITY_VERY_RARE = get_path(_BASE_TREE + 'very_rare')
 TREE_RARITY_EPIC = get_path(_BASE_TREE + 'epic')
 TREE_RARITY_LEGENDARY = get_path(_BASE_TREE + 'legendary')
+
+
+UTILS_CLOSE_BTN = get_path(f'{_BASE_UTILS}close')

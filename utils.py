@@ -60,13 +60,13 @@ def go_back():
     moveAndClick(back_btn)
 
 # It retries 10 times which means 5 seconds for the image to appear
-def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10):
+def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10, speed=0.5):
     image = imagesearcharea(path, x1, y1, x2, y2, precision)
     while not exists(image):
         image = imagesearcharea(path, x1, y1, x2, y2, precision)
         if retries == 0: return [image[0] + x1, image[1] + y1] if exists(image) else [-1]
         retries -=1
-        delay(0.5)
+        delay(speed)
     return [image[0] + x1, image[1] + y1]
 
 
@@ -209,7 +209,6 @@ def dragMap(artifact, next=[800, 450]):
 
 
 def dragMapToCenter():
-    print('Drag map to center')
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
     if(artifact[0] == 800 and artifact[1] == 450):
         moveAndClick(artifact)
@@ -272,7 +271,6 @@ def get_text(x = 410):
 
 
     try:
-        print('list is ', lst)
         lst.sort(reverse=True)
         lst = list(filter(lambda item: len(item) > 0, lst))
         return int(lst[0])

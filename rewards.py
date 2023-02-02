@@ -59,7 +59,7 @@ def _claim():
 def _get_watch_video_btn():
     btns = [
         ThreadWithValue(target=getImagePositionRegion,args=(C.TV_GET_REWARDS_BTN, 200, 700, 500, 830, 0.8, 3)).start(),
-        ThreadWithValue(target=getImagePositionRegion,args=(C.TV_PRIZES, 630, 700, 760, 830, 0.8, 3)).start()
+        ThreadWithValue(target=getImagePositionRegion,args=(C.TV_PRIZES, 630, 700, 900, 820, 0.8, 3)).start()
     ]
 
     for btn in btns:

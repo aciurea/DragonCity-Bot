@@ -1,26 +1,83 @@
 import ctypes
 from mem_edit import Process
-from constants import FIGHT_PLAY, BATTLE_ATTACK_IS_AVAILABLE
+import constants as C
 from utils import (
+    closePopup,
     delay,
     exists,
     get_in_progress,
     get_text,
     getImagePositionRegion,
     moveAndClick,
-    moveTo
+    moveTo,
     )
 import random
+import time
+import datetime
+
+def log_arena_fights(messages, fileName = "arena"):
+    try:
+        f = open(f"temp/{fileName}.txt", "a")
+        for message in [f'At: {datetime.datetime.now().strftime("%X")}', *messages]:
+            f.write(f'{message} \n')
+        f.close()
+    except: print('Failed to write to file')
 
 def has_the_opponent_attacked():
+    st = time.time()
     print('check if the opponent attacked')
-    while(not exists(getImagePositionRegion(BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
-        delay(.5)
+    while(st - time.time() < 10 and
+        not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
 
+        new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1)
+        if exists(new_dragon_btn): return moveAndClick(new_dragon_btn)
+        delay(.5)
+    print('The oponent finished attacking..')
+
+def _get_new_dragon_btn(x1 = 640, x2 = 1440):
+    return getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, x1, 740, x2, 810, .8, 5)
+
+def _prepare_best_dragon():
+    pos = [[640, 920], [1170, 1440]]
+    best_values = []
+
+    try:
+        if(not exists(_get_new_dragon_btn())):
+            best_values.append({"value":  get_text(), "pos": [140, 380]}) # first dragon
+        
+        for item in pos:
+            swap_btn = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1)
+            moveAndClick(swap_btn, 'Swap button not available')
+            delay(.2)
+            new_dragon_btn = _get_new_dragon_btn(*item)
+            if not exists(new_dragon_btn): continue
+            moveAndClick(new_dragon_btn)
+            delay(2)
+            best_values.append({"value": get_text(), "pos": item})
+
+        best_values.sort(reverse=True,key=lambda item: item["value"])
+        log_arena_fights([
+            f'Dragon values are: {repr(best_values)} \n'
+        ])
+        moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1))
+        _new_dragon_btn = _get_new_dragon_btn(*best_values[0]["pos"])
+        if not exists(_new_dragon_btn): closePopup()
+        else: moveAndClick(_new_dragon_btn)
+    
+        return best_values[0]["value"]
+    except: return None
+
+def _swap_dragon():
+    moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1), 'Swap button not available')
+    moveAndClick(_get_new_dragon_btn(0, 1600), 'New Dragon button not available')
 
 def freeze_dragons():
-    attack = getImagePositionRegion(FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
-    _freeze_dragons(999_999)
+    attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
+    text = _prepare_best_dragon()
+    _freeze_dragons(777_777, text)
+    # Some dragons don't do damage and the value doesn't get updated.
+    _swap_dragon() 
+    _prepare_best_dragon()
     moveAndClick(attack) # start the fight
     delay(.2)
     moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
@@ -30,20 +87,18 @@ def freeze_dragons():
     _prevent_sleep()
 
 
-def _freeze_dragons(lock_value):
+def _freeze_dragons(lock_value, text = None):
+    value = get_text() if text == None else text
     pid = Process.get_pid_by_name('DragonCity.exe')
     with Process.open_process(pid) as p:
-        delay(1)
-        value = get_text()
-        print('Arena text is::', value)
         addrs = p.search_all_memory(ctypes.c_int32(value))
+        print(f'for dragon:[{value}] found [{len(addrs)}]')
         for addr in addrs:
             p.write_memory(addr, ctypes.c_int32(lock_value))
-        p.close()
 
 def _prevent_sleep():
     while exists(get_in_progress()):
         # move mouse because of long battle that can turn off the display and the game will stop
         moveTo([random.randrange(100, 1600), random.randrange(0, 500)])
-        delay(2)
+        delay(10)
 

@@ -37,13 +37,9 @@ def getStrongAttacks(avoid, attacks):
     return newAttacks
 
 def goToFight():
-    attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210,.8, 100)
+    attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 10)
     moveAndClick(attack)
- 
-    in_progress = get_in_progress()
-    while exists(in_progress):
-        print('Fight in progress')
-        in_progress = get_in_progress()
+    while exists(get_in_progress()):
         delay(.5)
 
 def goToLeague():

@@ -1,4 +1,4 @@
-from utils import ( ThreadWithValue, check_if_not_ok,
+from utils import (check_if_not_ok,
                     closePopup,
                     delay, dragMapToCenter,
                     exists,
@@ -20,23 +20,11 @@ def feed():
            
 
 def sellEgg():
-    sell_1, sell_2 = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 800, 470, 1300, 700, .8, 3)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_SELL_BTN, 1300, 700, 1530, 850, .8, 3)).start(),
-    ]
-    sell_1 = sell_1.join()
-    sell_2 = sell_2.join()
-    sell = sell_1 if exists(sell_1) else sell_2
-    if not exists(sell): return print('Sell btn not found')
-    
-    moveAndClick(sell)
-    delay(1)
-    confirm_sell = getImagePositionRegion(C.BREED_CONFIRM_SELL_BTN, 800, 550, 1000, 700, 0.8, 3)
-
-    if not exists(confirm_sell):
-        return print('Confirm sell not found')
-    moveAndClick(confirm_sell)
-    delay(1)
+    sell_btn =  getImagePositionRegion(C.BREED_SELL_BTN, 970, 570, 1170, 660, .8, 10, 0.2)
+    if not exists(sell_btn): return print('Sell btn not found')
+    moveAndClick(sell_btn)
+    confirm_sell = getImagePositionRegion(C.BREED_CONFIRM_SELL_BTN, 800, 570, 1000, 700, 0.8, 10, 0.2)
+    moveAndClick(confirm_sell, 'Confirm sell not found')
 
 def _place_egg():
     place = getImagePositionRegion(C.BREED_PLACE_BTN, 700, 550, 1000, 650, 0.8, 2)
@@ -62,8 +50,7 @@ def placeAndFeed():
     sellEgg()
 
 def _hatch_terra_egg(priority='breed'):
-    delay(.5)
-    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 600, 1500, 900, 0.8, 3)
+    egg = getImagePositionRegion(C.BREED_TERRA_EGG, 100, 600, 1500, 900, 0.8, 10, 0.2)
 
     if not exists(egg):
         check_if_not_ok()
@@ -82,19 +69,23 @@ def _hatch_terra_egg(priority='breed'):
     return [1]
 
 def _re_breed():
-    re_breed_btn = getImagePositionRegion(C.BREED_RE_BREED_BTN, 1100, 700, 1400, 900, .8, 3)
-
+    re_breed_btn = getImagePositionRegion(C.BREED_RE_BREED_BTN, 1100, 700, 1400, 900, .8, 5)
     if not exists(re_breed_btn): return [-1]
+    moveAndClick(re_breed_btn)
+    rebreed_lst = [
+        [C.BREED_BREED_BTN, 700, 600, 900, 750, .8, 5],
+        [C.UTILS_CLOSE_BTN, 1400, 0, 1600, 150, 0.8, 5]
+    ]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        lst = executor.map(lambda args: getImagePositionRegion(*args), rebreed_lst)
+        ok = False
+        for btn in lst:
+            if exists(btn): 
+                moveAndClick(btn)
+                ok = True
+        print('Finished breeding')
+        return [1] if ok else [-1]
 
-    moveAndClick(re_breed_btn) #[1246, 764]
-    delay(1)
-    breed_btn = getImagePositionRegion(C.BREED_BREED_BTN, 700, 600, 900, 750, .8, 3)
-    if exists(breed_btn):
-        moveAndClick(breed_btn)
-        closePopup()
-        print('Finish breeding')
-    return [1]
-        
 def startBreeding(priority='breed'):
     print('Start breeding')
     fast_breed(priority)
@@ -106,60 +97,40 @@ def start():
 
 def _get_breeding_tree_pos():
     dragMapToCenter()
-    lst = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_TREE, 400, 400, 550, 700, 0.8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_WINTER_TREE, 400, 400, 550, 700, 0.8, 2)).start()
-    ]
-
-    for tree_pos in lst:
-        tree_pos = tree_pos.join()
-        if exists(tree_pos): return tree_pos
-    return [-1]
-
+    return getImagePositionRegion(C.BREED_TREE, 400, 400, 550, 700, 0.8, 3)
+  
 def _get_breeding_rock_pos():
     dragMapToCenter()
-    summer, winter = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_ROCK, 100, 100, 1200, 700, 0.8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.BREED_WINTER_ROCK, 100, 100, 1200, 700, 0.8, 2)).start()
-    ]
-    summer = summer.join()
-    winter = winter.join()
-    return [winter[0]+ 20, winter[1]] if exists(winter) else summer
+    rock = getImagePositionRegion(C.BREED_ROCK,100, 100, 1200, 700, 0.8, 1)
+    return rock if exists(rock) else [667, 656]
 
 def _is_hachery_displayed():
-    return getImagePositionRegion(C.BREED_EGG, 400, 790, 1600, 860, 0.8, 2)
+    return getImagePositionRegion(C.BREED_EGG, 400, 790, 1600, 860, 0.8, 3)
 
 def _do_breed(breedFn = _get_breeding_tree_pos):
-    # scenario 1, there is an egg and hatchery full message displayed
-    # scenario 2, there is an egg and hatchery is displayed
-    # scenario 3, rebreed btn is displayed
     breeding_place = breedFn()
     if not exists(breeding_place): return [-1]
-      
+
     moveAndClick(breeding_place)
-    delay(.5)
-    # scenario 1
+    delay(.3)
     if exists(_is_hatchery_full()):
-        print('Scenario 1')
+        print('Hatchery is full, need to clean it first')
         handle_full_hatchery()
-        delay(.3)
         moveAndClick(breedFn())  # the egg was not placed in hatchery. click it to place it
+        # hatchery was cleaned
         delay(1)
         moveAndClick(breedFn()) # click on the breeding place in order to rebreed 
-        delay(.3)
         return _re_breed()
-     
-    # scenario 2
+
+    if exists(getImagePositionRegion(C.BREED_RE_BREED_BTN, 1100, 700, 1400, 900, .8, 2)):
+        print('Normal flow')
+        return _re_breed()
+
     if exists(_is_hachery_displayed()):
-        print('Scenario 2')
-        delay(.3)
-        moveAndClick( breedFn())
-        delay(.3)
+        print('Egg displayed, dispose of it')
+        moveAndClick(breedFn())
         return _re_breed()
-   
-   # scenario 3
-    print('scenario 3')
-    return _re_breed()
+    return [-1]
 
 def _is_hatchery_full():
     return getImagePositionRegion(C.BREED_HATCHERY_FULL, 900, 370, 1200, 500,0.8, 2)
@@ -227,12 +198,15 @@ def fast_breed(priority='breed'):
     is_rock_breed =_do_breed(breedFn=_get_breeding_rock_pos)
     st2 = time.time()
 
+    print('Tree is', is_tree_breed)
     if exists(is_tree_breed):
         delay(math.ceil(breeding_time - (time.time() - st1)))
         _place_egg_in_hatchery(breedFn=_get_breeding_tree_pos, priority=priority)
-       
+        # MAybe we can rebreeed since that sell is taking time
+    print('Rock is', is_rock_breed)
     if exists(is_rock_breed):
         delay(math.ceil(breeding_time - (time.time() - st2)))
         _place_egg_in_hatchery(breedFn=_get_breeding_rock_pos, priority=priority)
-
+        # MAybe we can rebreeed since that sell is taking time
 # start()
+
