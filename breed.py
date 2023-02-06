@@ -90,11 +90,6 @@ def startBreeding(priority='breed'):
     print('Start breeding')
     fast_breed(priority)
 
-def start():
-    while (True):
-        delay(3)
-        fast_breed('breed')
-
 def _get_breeding_tree_pos():
     dragMapToCenter()
     return getImagePositionRegion(C.BREED_TREE, 400, 400, 550, 700, 0.8, 3)
@@ -172,8 +167,8 @@ def handle_full_hatchery():
         print('Hatchert could not be found')
         return [-1]
     moveAndClick(hatchery)
-
-    while exists(_hatch_terra_egg()):
+    st = time.time()
+    while exists(_hatch_terra_egg() or time.time() - st < 15):
         print('terra egg found')
         delay(.3)
     

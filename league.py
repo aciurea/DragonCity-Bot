@@ -1,3 +1,4 @@
+import time
 from utils import ThreadWithValue, checkIfCanClaim, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
 import constants as C
 
@@ -38,8 +39,9 @@ def getStrongAttacks(avoid, attacks):
 
 def goToFight():
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 10)
+    st = time.time()
     moveAndClick(attack)
-    while exists(get_in_progress()):
+    while exists(get_in_progress() or time.time() - st < 120):
         delay(.5)
 
 def goToLeague():

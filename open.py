@@ -47,7 +47,8 @@ def _get_close_btn():
 def _close():
     close_btn = _get_close_btn()
     moveAndClick([1270, 84])
-    while(exists(close_btn)):
+    st = time.time()
+    while(exists(close_btn) or time.time() - st < 15):
         moveAndClick(close_btn)
         delay(.5)
         close_btn = _get_close_btn()

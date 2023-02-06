@@ -1,4 +1,5 @@
 
+import time
 from utils import (ThreadWithValue,
                    checkIfCanClaim,
                    closePopup,
@@ -78,7 +79,8 @@ def _check_last_claim_from_video():
 
 def _watch_videos():
     print('Watching videos...')
-    while not exists(video_error()):
+    st = time.time()
+    while not exists(video_error() or time.time() - st < 60):
         moveAndClick( [802, 352]) # play videos btn
         checkIfCanClaim()
         closeVideo()

@@ -1,4 +1,4 @@
-from threading import Thread, Event
+from threading import Thread
 from win32gui import FindWindow, GetWindowRect
 import pyautogui
 import time
@@ -62,6 +62,7 @@ def go_back():
 # It retries 10 times which means 5 seconds for the image to appear
 def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10, speed=0.5):
     image = imagesearcharea(path, x1, y1, x2, y2, precision)
+   
     while not exists(image):
         image = imagesearcharea(path, x1, y1, x2, y2, precision)
         if retries == 0: return [image[0] + x1, image[1] + y1] if exists(image) else [-1]
@@ -273,7 +274,8 @@ def get_text(x = 410):
     try:
         lst.sort(reverse=True)
         lst = list(filter(lambda item: len(item) > 0, lst))
-        return int(lst[0])
+        num = int(lst[0])
+        return num if(num != 321926) else 321526 # problem with 5 not being able to distinguish
     except: return 247336 # value of strongest dragon
     
 def _get_text_2(ref):
@@ -313,13 +315,3 @@ def get_window_size():
     default_size = [1600, 900]
   
     return default_size  if (window_handle != None) else GetWindowRect(window_handle)
-
-def run_for(fnToRun, limit=60):
-    e = Event()
-    thread = Thread(target=fnToRun)
-    thread.start()
-    thread.join(timeout=limit)
-    if(thread.is_alive()):
-        print("Thread is not done, stop it")
-        e.set()
-    else: print("Thread successfully finished")

@@ -1,3 +1,4 @@
+import time
 from utils import ThreadWithValue, closePopup, exists, getImagePositionRegion, moveAndClick, delay, scroll
 import constants as C
 
@@ -74,8 +75,8 @@ def _trading_hub():
     if not exists(unavailable_btn):
         return print('Cannot continue since there is no unavailable btn')
     delay(1)
-
-    while(True):
+    st = time.time()
+    while(time.time() - st < 120):
         new = getImagePositionRegion(C.TREE_TRADING_NEW, 300, 200, 800, 600, .8, 3)
         if exists(new):
             moveAndClick(new)

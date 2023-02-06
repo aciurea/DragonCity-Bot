@@ -5,7 +5,7 @@ import time
 def _wait_for_artifact_to_be_visible():
     st = time.time()
 
-    while(st - time.time() < 10 and not exists(dragMapToCenter())):
+    while(time.time() - st < 10 or not exists(dragMapToCenter())):
         delay(.5)
 
 def collect_resources():

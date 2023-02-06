@@ -26,10 +26,9 @@ def log_arena_fights(messages, fileName = "arena"):
 def has_the_opponent_attacked():
     st = time.time()
     print('check if the opponent attacked')
-    while(st - time.time() < 10 and
-        not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
-
-        new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 740, 1600, 830, .8, 1)
+    while(not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))
+    or time.time() - st < 10):
+        new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 700, 1600, 850, .8, 1)
         if exists(new_dragon_btn): return moveAndClick(new_dragon_btn)
         delay(.5)
     print('The oponent finished attacking..')
@@ -73,15 +72,17 @@ def _swap_dragon():
 
 def freeze_dragons():
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
+    attack = attack if (exists(attack)) else [78, 170]
     text = _prepare_best_dragon()
     _freeze_dragons(777_777, text)
     # Some dragons don't do damage and the value doesn't get updated.
-    _swap_dragon() 
-    _prepare_best_dragon()
-    moveAndClick(attack) # start the fight
-    delay(.2)
-    moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
-    has_the_opponent_attacked()
+    # _swap_dragon() 
+    # _prepare_best_dragon()
+    for _ in range(2):
+        moveAndClick(attack) # start the fight
+        delay(.2)
+        moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
+        has_the_opponent_attacked()
     _freeze_dragons(99_999_999)
     moveAndClick(attack) # resume fight
     _prevent_sleep()
@@ -92,12 +93,13 @@ def _freeze_dragons(lock_value, text = None):
     pid = Process.get_pid_by_name('DragonCity.exe')
     with Process.open_process(pid) as p:
         addrs = p.search_all_memory(ctypes.c_int32(value))
-        print(f'for dragon:[{value}] found [{len(addrs)}]')
+        print(f'for dragon:[{value}] found [{len(addrs)}]  lock_value [{lock_value}]')
         for addr in addrs:
             p.write_memory(addr, ctypes.c_int32(lock_value))
 
 def _prevent_sleep():
-    while exists(get_in_progress()):
+    st = time.time()
+    while exists(get_in_progress() or time.time() - st < 300):
         # move mouse because of long battle that can turn off the display and the game will stop
         moveTo([random.randrange(100, 1600), random.randrange(0, 500)])
         delay(10)
