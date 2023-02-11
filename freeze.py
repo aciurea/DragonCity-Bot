@@ -26,12 +26,13 @@ def log_arena_fights(messages, fileName = "arena"):
 def has_the_opponent_attacked():
     st = time.time()
     print('check if the opponent attacked')
-    while(not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))
-    or time.time() - st < 10):
+    while(time.time() - st < 10 or not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
         new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 700, 1600, 850, .8, 1)
-        if exists(new_dragon_btn): return moveAndClick(new_dragon_btn)
+        if exists(new_dragon_btn):
+            print('The oponent finished attacking..')
+            return moveAndClick(new_dragon_btn)
         delay(.5)
-    print('The oponent finished attacking..')
+    print('No oponent to attack: Might need to check_if_I_Can_close??')
 
 def _get_new_dragon_btn(x1 = 640, x2 = 1440):
     return getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, x1, 740, x2, 810, .8, 5)
@@ -71,6 +72,7 @@ def _swap_dragon():
     moveAndClick(_get_new_dragon_btn(0, 1600), 'New Dragon button not available')
 
 def freeze_dragons():
+    print('Freeze_dragons')
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
     attack = attack if (exists(attack)) else [78, 170]
     text = _prepare_best_dragon()
@@ -89,6 +91,7 @@ def freeze_dragons():
 
 
 def _freeze_dragons(lock_value, text = None):
+    print('Trying to freeze the dragons')
     value = get_text() if text == None else text
     pid = Process.get_pid_by_name('DragonCity.exe')
     with Process.open_process(pid) as p:
@@ -99,7 +102,7 @@ def _freeze_dragons(lock_value, text = None):
 
 def _prevent_sleep():
     st = time.time()
-    while exists(get_in_progress() or time.time() - st < 300):
+    while exists(get_in_progress()) and time.time() - st < 300:
         # move mouse because of long battle that can turn off the display and the game will stop
         moveTo([random.randrange(100, 1600), random.randrange(0, 500)])
         delay(10)

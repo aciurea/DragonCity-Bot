@@ -10,7 +10,7 @@ from open import close_app, open_app
 from rewards import collectRewards
 from shop import shop
 from towers import boost_gold, collect_gems, collect_resources
-from utils import check_if_not_ok, delay, dragMapToCenter, exists, getImagePosition
+from utils import check_if_not_ok, delay, dragMapToCenter, exists, get_time_to_midnight, getImagePosition
 import win32gui
 import win32con
 import datetime
@@ -79,5 +79,11 @@ def start():
     close_app()
 
 while(True):
+    seconds_limit = 60 * 20
+    seconds_to_midnight = get_time_to_midnight()
+    #  when fighting, the midnight offers popups and blocks all the fights if it happens to be there.
+    # delay this in order to have a proper way of starting the game
+    if seconds_to_midnight < seconds_limit:
+        delay(seconds_to_midnight + 120) # delay the difference + 2 minutes.
     start()
     delay(HALF_AN_HOUR * 4)

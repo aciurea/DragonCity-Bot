@@ -10,6 +10,14 @@ from PIL import ImageGrab
 import constants as C
 import random
 import time
+import json
+import concurrent.futures
+import datetime
+from screeninfo import get_monitors
+
+def get_screen_resolution():
+    res = get_monitors()
+    return f'{res[0].width}x{res[0].height}'
 
 def get_path(path):
     return path+'.png'
@@ -123,19 +131,20 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
-    btns = [
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/app_start/no.png', 610, 635, 800, 735 , .8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+    btns_pos = [
+        ['./img/app_start/back.png', 0, 0, 150, 150, .8, 2],
+        ['./img/utils/close.png', 800, 0, 1600, 500, .8, 2],
+        ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
+        [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
     ]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        btns = executor.map(lambda args: getImagePositionRegion(*args), btns_pos)
 
-    for btn in btns:
-        btn = btn.join()
-        if exists(btn):
-            moveAndClick(btn)
-            delay(1)
-            return closePopup()
+        for btn in btns:
+            if exists(btn):
+                moveAndClick(btn)
+                delay(1)
+                return closePopup()
 
 def openChest():
     # TODO fix it according to all the scenarios
@@ -305,8 +314,6 @@ def _get_text_4(ref):
 
     return pytesseract.image_to_string(bnt, config="--psm 6 digits")
 
-
-
 def get_in_progress():
     return getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 2)
 
@@ -315,3 +322,12 @@ def get_window_size():
     default_size = [1600, 900]
   
     return default_size  if (window_handle != None) else GetWindowRect(window_handle)
+
+def get_json_file(file_name): 
+    resolution = get_screen_resolution()
+    with open(f'positions/{resolution}/{file_name}') as f:
+        return json.load(f)
+
+def get_time_to_midnight():
+    dt = datetime.datetime.now()
+    return ((24 - dt.hour - 1) * 60 * 60) + ((60 - dt.minute - 1) * 60) + (60 - dt.second)

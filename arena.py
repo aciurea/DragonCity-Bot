@@ -119,6 +119,7 @@ def inside_arena():
     moveAndClick(fight)
     _ready_for_battle()
     freeze_dragons()
+    print('battle finished')
     claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)
     moveAndClick(claim_btn, 'No arena claim button')
     if is_application_crashed():

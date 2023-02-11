@@ -46,7 +46,7 @@ ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
 ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
 
 APP_START_CLAIM_BTN = get_path(_BASE_APP_START + 'claim_yellow')
-APP_START_DIVINE_CLOSE = get_path(_BASE_APP_START + 'close_divine')
+APP_START_DIVINE_CLOSE = get_path(f'{_BASE_APP_START}close_divine')
 APP_START_RED_CLOSE = get_path(_BASE_APP_START + 'red_close')
 APP_START_BIG_CLOSE = get_path(_BASE_APP_START + 'big_close')
 APP_START_CLAIM_DAILY = get_path(_BASE_APP_START + 'claim_yellow')
