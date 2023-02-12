@@ -26,13 +26,15 @@ def log_arena_fights(messages, fileName = "arena"):
 def has_the_opponent_attacked():
     st = time.time()
     print('check if the opponent attacked')
-    while(time.time() - st < 10 or not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
+    while(not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
+        if (time.time() - st) >= 10:
+            return print('No oponent to attack: Might need to check_if_I_Can_close??')
         new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 700, 1600, 850, .8, 1)
         if exists(new_dragon_btn):
             print('The oponent finished attacking..')
             return moveAndClick(new_dragon_btn)
         delay(.5)
-    print('No oponent to attack: Might need to check_if_I_Can_close??')
+   
 
 def _get_new_dragon_btn(x1 = 640, x2 = 1440):
     return getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, x1, 740, x2, 810, .8, 5)
