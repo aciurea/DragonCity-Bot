@@ -59,11 +59,12 @@ def doHeroicRace():
 def start():
     st = time.time()   
     open_app()
+    runAction(doHeroicRace)
     if not exists(collect_resources()):
         runAction(collectGold)
         runAction(collectFood)
-    runAction(startBattle)
     runAction(doHeroicRace)
+    runAction(startBattle)
     runAction(shop)
     runAction(collectRewards)
     runAction(startBreeding)

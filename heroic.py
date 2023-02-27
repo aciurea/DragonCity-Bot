@@ -59,13 +59,12 @@ def check_if_can_claim():
 
 def heroic_race():
     island = getImagePosition(C.HEROIC_ARENA, 3)
-
     if not exists(island):
         print('No Heroic Island found')
         return []
 
     delay(.5)
-    moveAndClick(island)
+    moveAndClick([island[0]+20, island[1]+ 10])
     check_if_can_claim()
     enter_fight_thread = ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 250, 1450, 735, .8, 3)).start()
     missions = find_missions()
