@@ -32,6 +32,8 @@ def runAction(action):
 
 def doHeroicRace():
     if not exists(getImagePosition(C.HEROIC_ARENA, 2)): return
+    print('Entered heoric race')
+
     priorities = { 'breed': startBreeding,
                   'feed': startBreeding,
                   'hatch': startBreeding,
@@ -63,7 +65,6 @@ def start():
     if not exists(collect_resources()):
         runAction(collectGold)
         runAction(collectFood)
-    runAction(doHeroicRace)
     runAction(startBattle)
     runAction(shop)
     runAction(collectRewards)

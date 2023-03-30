@@ -46,18 +46,21 @@ def _get_close_btn():
    
 def _close():
     close_btn = _get_close_btn()
-    moveAndClick([1270, 84])
-    st = time.time()
-    while(exists(close_btn) or time.time() - st < 15):
-        moveAndClick(close_btn)
-        delay(.5)
-        close_btn = _get_close_btn()
-    return close_btn
 
+    if exists(close_btn):
+        moveAndClick(close_btn)
+        delay(1)
+        _close()
+    else:
+        print('close button not found')
+        moveAndClick([1270, 84])
+        moveAndClick([1265, 95])
+        openChest()
+      
 def _get_artifact():
     artifacts_list = [
         ['./img/utils/artifact.png', 370, 290, 1350, 830, 0.8, 2],
-        ['./img/utils/artifact_2.png', 370, 290, 1350, 830, 0.8, 2]
+        ['./img/app_start/artifact_3.png', 100, 500, 1000, 900, 0.8, 2]
     ]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -74,12 +77,12 @@ def _retry_to_open_app(start_time):
 
 def _close_all_the_windows():
     start = time.time()
+
     while(not exists(_get_artifact())):
         _retry_to_open_app(start)
         zoom_out()
-        if not exists(_close()):
-            openChest()
-        delay(1.5)
+        _close()
+        delay(2.5)
 
 def _check_if_app_started():
     start = time.time()
