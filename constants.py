@@ -57,6 +57,7 @@ APP_START_BUY_NOW_2 = get_path(f'{_BASE_APP_START}buy_now2')
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
+BREED_SELL_BTN_CENTER = get_path(_BASE_BREED + 'sell_center') 
 BREED_CONFIRM_SELL_BTN = get_path(_BASE_BREED + 'sell_confirmation') 
 BREED_PLACE_BTN = get_path(_BASE_BREED + 'place') 
 BREED_DRAGON_PLACE_POINT = get_path(_BASE_BREED + 'dragon_place_point') 

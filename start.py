@@ -88,4 +88,5 @@ while(True):
     if seconds_to_midnight < seconds_limit:
         delay(seconds_to_midnight + 120) # delay the difference + 2 minutes.
     start()
-    delay(HALF_AN_HOUR * 4)
+    delay_time = HALF_AN_HOUR if exists(getImagePosition(C.HEROIC_ARENA, 2)) else HALF_AN_HOUR * 4
+    delay(delay_time)

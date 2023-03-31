@@ -17,13 +17,27 @@ def feed():
         times -= 1
         moveAndClick(feedBtn)
         delay(.2)
-           
+
+def get_sell_btn():
+    _lst = [
+        [C.BREED_SELL_BTN, 1300, 700, 1550, 860, .8, 5],
+        [C.BREED_SELL_BTN_CENTER, 670, 550, 1200, 700, 0.8, 5]
+    ]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        lst = executor.map(lambda args: getImagePositionRegion(*args), _lst)
+        for btn in lst:
+            if exists(btn): 
+                print('sell btn is ', btn)
+                return btn
+
+    return [-1] 
 
 def sellEgg():
-    sell_btn =  getImagePositionRegion(C.BREED_SELL_BTN, 970, 570, 1170, 660, .8, 10, 0.2)
+    sell_btn = get_sell_btn()
     if not exists(sell_btn): return print('Sell btn not found')
     moveAndClick(sell_btn)
-    confirm_sell = getImagePositionRegion(C.BREED_CONFIRM_SELL_BTN, 800, 570, 1000, 700, 0.8, 10, 0.2)
+    delay(1)
+    confirm_sell = getImagePositionRegion(C.BREED_CONFIRM_SELL_BTN, 795, 600, 1000, 700, 0.8, 5)
     moveAndClick(confirm_sell, 'Confirm sell not found')
 
 def _place_egg():
@@ -37,12 +51,9 @@ def _place_egg():
 
     if not exists(point):
         return print('Point to place the egg not found')
-    moveAndClick([point[0] + 65, point[1] + 32])
+    moveAndClick([point[0] + 70, point[1] + 32])
     dragon = getImagePositionRegion(C.BREED_DRAGON, 300, 700, 1400, 850, 0.8, 2)
-    if not exists(dragon):
-        return print('Dragon not found ')
-    moveAndClick(dragon)
-
+    moveAndClick(dragon, 'Dragon not found ')
 
 def placeAndFeed():
     _place_egg()
@@ -69,7 +80,7 @@ def _hatch_terra_egg(priority='breed'):
     return [1]
 
 def _re_breed():
-    re_breed_btn = getImagePositionRegion(C.BREED_RE_BREED_BTN, 1100, 700, 1400, 900, .8, 5)
+    re_breed_btn = getImagePositionRegion(C.BREED_RE_BREED_BTN, 900, 600, 1400, 900, .8, 5)
     if not exists(re_breed_btn): return [-1]
     moveAndClick(re_breed_btn)
     rebreed_lst = [
@@ -92,11 +103,11 @@ def startBreeding(priority='breed'):
 
 def _get_breeding_tree_pos():
     dragMapToCenter()
-    return getImagePositionRegion(C.BREED_TREE, 400, 400, 550, 700, 0.8, 3)
+    return getImagePositionRegion(C.BREED_TREE, 200, 300, 700, 750, 0.8, 3)
   
 def _get_breeding_rock_pos():
     dragMapToCenter()
-    rock = getImagePositionRegion(C.BREED_ROCK,100, 100, 1200, 700, 0.8, 1)
+    rock = getImagePositionRegion(C.BREED_ROCK, 100, 100, 1200, 700, 0.8, 1)
     return rock if exists(rock) else [667, 656]
 
 def _is_hachery_displayed():
@@ -117,7 +128,7 @@ def _do_breed(breedFn = _get_breeding_tree_pos):
         moveAndClick(breedFn()) # click on the breeding place in order to rebreed 
         return _re_breed()
 
-    if exists(getImagePositionRegion(C.BREED_RE_BREED_BTN, 1100, 700, 1400, 900, .8, 2)):
+    if exists(getImagePositionRegion(C.BREED_RE_BREED_BTN, 1170, 650, 1350, 860, .8, 5)):
         print('Normal flow')
         return _re_breed()
 
