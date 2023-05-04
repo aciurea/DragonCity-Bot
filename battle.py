@@ -6,7 +6,7 @@ from league import openLeaguePanel
 def chooseBattle():
     moveAndClick([800, 450])
     delay(1)
-    battleBtn = getImagePositionRegion('./img/battle/battle_btn.png', 400, 700, 600, 900, .8, 3)
+    battleBtn = getImagePositionRegion('./img/battle/battle_btn.png', 400, 700, 600, 900)
 
     if not exists(battleBtn):
         return print('Battle Button not found')
@@ -14,7 +14,8 @@ def chooseBattle():
     moveAndClick(battleBtn)
 
 def startBattle():
-    for action in [openQuestPanel, openQuestPanel, openLeaguePanel]:
+    print('start the battle')
+    for action in [openLeaguePanel, openQuestPanel]:
         chooseBattle()
         action()
     arena()

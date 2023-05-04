@@ -1,8 +1,9 @@
 import subprocess
 from AppOpener import run
 import pyautogui
+from screeninfo import get_monitors
 import constants as C
-from utils import delay, exists, getImagePositionRegion, moveAndClick, openChest
+from utils import delay, exists, getImagePositionRegion, moveAndClick, moveTo, openChest
 import time
 import concurrent.futures
 
@@ -12,13 +13,16 @@ def close_app():
     except: print('Cannot kill the application')
 
 def zoom_out():
+    [ res ] = get_monitors()
+    moveTo([res.width / 2, res.height / 2])
     pyautogui.scroll(-5000)
 
 def open_app():
     close_app()
-    try:
-        run("Dragon City")
+
+    try: run("Dragon City")
     except: open_app()
+
     _check_if_app_started()
     moveAndClick([10, 50])
     delay(3)
@@ -46,24 +50,29 @@ def _get_close_btn():
    
 def _close():
     close_btn = _get_close_btn()
-    moveAndClick([1270, 84])
-    st = time.time()
-    while(exists(close_btn) or time.time() - st < 15):
-        moveAndClick(close_btn)
-        delay(.5)
-        close_btn = _get_close_btn()
-    return close_btn
 
+    if exists(close_btn):
+        moveAndClick(close_btn)
+        delay(1)
+        _close()
+    else:
+        print('close button not found')
+        moveAndClick([1270, 84])
+        moveAndClick([1265, 95])
+        openChest()
+      
 def _get_artifact():
     artifacts_list = [
         ['./img/utils/artifact.png', 370, 290, 1350, 830, 0.8, 2],
-        ['./img/utils/artifact_2.png', 370, 290, 1350, 830, 0.8, 2]
+        ['./img/app_start/artifact_3.png', 350, 660, 620, 900, 0.8, 2]
     ]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         result_list = executor.map(lambda args: getImagePositionRegion(*args), artifacts_list)
         for artifact in result_list:
-            if exists(artifact): return artifact
+            if exists(artifact): 
+                print('artifact found', artifact)
+                return artifact
         return [-1]
 
 def _retry_to_open_app(start_time):
@@ -74,12 +83,12 @@ def _retry_to_open_app(start_time):
 
 def _close_all_the_windows():
     start = time.time()
+
     while(not exists(_get_artifact())):
         _retry_to_open_app(start)
         zoom_out()
-        if not exists(_close()):
-            openChest()
-        delay(1.5)
+        _close()
+        delay(3)
 
 def _check_if_app_started():
     start = time.time()

@@ -1,7 +1,7 @@
 from league import goToFight
 from utils import ThreadWithValue, closePopup, delay, exists, getImagePositionRegion, go_back, moveAndClick, getImagePosition, openChest
-
 import constants as C
+import concurrent.futures
 
 def exit_heroic():
     go_back()
@@ -21,24 +21,35 @@ def fight_heroic(fight):
     goToFight()
 
 
-def find_missions():
-    threads = [
-        [ThreadWithValue(target=getImagePositionRegion, 
-        args=(C.HEROIC_FOOD, 1090, 225, 1270, 725, .8, 3)).start(), 'food'],
-        [ThreadWithValue(target=getImagePositionRegion, 
-        args=(C.HEROIC_BREED, 1090, 225, 1270, 725, .8, 3)).start(), 'breed'],
-        [ThreadWithValue(target=getImagePositionRegion, 
-        args=(C.HEROIC_HATCH, 1090, 225, 1270, 725, .8, 3)).start(), 'hatch'],
-        [ThreadWithValue(target=getImagePositionRegion,args=(C.HEROIC_FEED, 1090, 225, 1270, 725, .8, 3)).start(), 'feed']
-        ]
+def filter_completed(items):
+    delta = 50
+    if len(items) == 0: return items
 
     missions = []
-    for mission_thread in threads:
-        thread, mission_type = mission_thread
-        mission = thread.join()
-        if exists(mission):
-            missions.append(mission_type)
+    for item in items:
+        _, height = item[0]
+    
+        if not exists(getImagePositionRegion(C.HEROIC_COMPLETED, 1000, height - 10, 1600, height+delta, 0.8, 2)):
+            missions.append(item[1])
     return missions
+
+def find_missions():
+    items = [
+        [[C.HEROIC_FOOD, 1090, 225, 1270, 725, .8, 3], 'food'],
+        [[C.HEROIC_BREED, 1090, 225, 1270, 725, .8, 3], 'breed'],
+        [[C.HEROIC_HATCH, 1090, 225, 1270, 725, .8, 3],'hatch'],
+        [[C.HEROIC_FEED, 1090, 225, 1270, 725, .8, 3],  'feed']
+    ]
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        items = executor.map(lambda args: [getImagePositionRegion(*(args[0])), args[1]], items)
+        items = list(filter(lambda args: exists(args[0]), items))
+ 
+        # items = filter_completed(items)
+        # print(items)
+        # return items
+    # [[[1157, 402], 'food'], [[1171, 284], 'feed']]
+        return list(map(lambda args: args[1], items))
 
 
 def check_if_can_claim():
@@ -59,13 +70,12 @@ def check_if_can_claim():
 
 def heroic_race():
     island = getImagePosition(C.HEROIC_ARENA, 3)
-
     if not exists(island):
         print('No Heroic Island found')
         return []
 
     delay(.5)
-    moveAndClick(island)
+    moveAndClick([island[0]+20, island[1]+ 10])
     check_if_can_claim()
     enter_fight_thread = ThreadWithValue(target=getImagePositionRegion, args=(C.HEROIC_FIGHT, 1260, 250, 1450, 735, .8, 3)).start()
     missions = find_missions()

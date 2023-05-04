@@ -2,6 +2,7 @@ from league import goToFight
 from rewards import openChest
 from utils import ThreadWithValue, closePopup, delay, exists, go_back, moveAndClick, getImagePositionRegion, scroll
 import constants as C
+import pyautogui
 
 def getQuests():
     paths = []
@@ -55,12 +56,13 @@ def open_quest():
             delay(.5)
             go_back()
         return [-1]
+   
     quest = inner_quest()
     if exists(quest): 
        return quest
-
+    scroll_width = -1700
+    pyautogui.scroll(scroll_width)
     delay(.5)
-    scroll([1550, 450], [9, 450])
     delay(1)
     quest = inner_quest()
 

@@ -6,10 +6,18 @@ import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
 import cv2
 from pytesseract import pytesseract
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 import constants as C
 import random
 import time
+import json
+import concurrent.futures
+import datetime
+from screeninfo import get_monitors
+
+def get_screen_resolution():
+    res = get_monitors()
+    return f'{res[0].width}x{res[0].height}'
 
 def get_path(path):
     return path+'.png'
@@ -123,19 +131,20 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
-    btns = [
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close.png', 800, 0, 1600, 500, .8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/app_start/no.png', 610, 635, 800, 735 , .8, 2)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2)).start(),
+    btns_pos = [
+        ['./img/app_start/back.png', 0, 0, 150, 150, .8, 2],
+        ['./img/utils/close.png', 800, 0, 1600, 500, .8, 2],
+        ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
+        [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
     ]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        btns = executor.map(lambda args: getImagePositionRegion(*args), btns_pos)
 
-    for btn in btns:
-        btn = btn.join()
-        if exists(btn):
-            moveAndClick(btn)
-            delay(1)
-            return closePopup()
+        for btn in btns:
+            if exists(btn):
+                moveAndClick(btn)
+                delay(1)
+                return closePopup()
 
 def openChest():
     # TODO fix it according to all the scenarios
@@ -251,13 +260,14 @@ def scroll(pos1, pos2):
     delay(.5)
     mouse.release()
    
-def get_text(x = 410):
+def get_text(x = 410, oponent = False):
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    cap_length_6 = ImageGrab.grab(bbox=(x, 127, 491, 161))
+    bbox = [970, 110, 1093, 270] if oponent else [x, 127, 491, 161] 
+    cap_length_6 = ImageGrab.grab(bbox)
     cap_length_6.save(path)
     ref = cv2.imread(path)
-    
+    if(oponent): return int(_get_text_chat(ref))
     lst = [
         _get_text_2(ref).replace(" ", "").replace(".","").rstrip(),
         _get_text_3(ref).replace(" ", "").replace(".","").rstrip(),
@@ -280,10 +290,21 @@ def get_text(x = 410):
     
 def _get_text_2(ref):
     gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    thr = gry
-    bnt = cv2.bitwise_not(thr)
+    bnt = cv2.bitwise_not(gry)
 
     return pytesseract.image_to_string(bnt, config="--psm 6 digits")
+
+def _get_text_chat(ref):
+    gray = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        (x, y, w, h) = cv2.boundingRect(contour)
+        roi = thresh[y:y + h, x:x + w]
+        digit = pytesseract.image_to_string(Image.fromarray(roi), config="--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789")
+        digit = digit.replace(" ", "")
+        if(len(digit) > 0 and len(digit) > 6):
+            return digit[:-1]
 
 def _get_text_3(ref):
     gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
@@ -305,8 +326,6 @@ def _get_text_4(ref):
 
     return pytesseract.image_to_string(bnt, config="--psm 6 digits")
 
-
-
 def get_in_progress():
     return getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 2)
 
@@ -315,3 +334,12 @@ def get_window_size():
     default_size = [1600, 900]
   
     return default_size  if (window_handle != None) else GetWindowRect(window_handle)
+
+def get_json_file(file_name): 
+    resolution = get_screen_resolution()
+    with open(f'positions/{resolution}/{file_name}') as f:
+        return json.load(f)
+
+def get_time_to_midnight():
+    dt = datetime.datetime.now()
+    return ((24 - dt.hour - 1) * 60 * 60) + ((60 - dt.minute - 1) * 60) + (60 - dt.second)
