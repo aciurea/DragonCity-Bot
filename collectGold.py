@@ -1,6 +1,8 @@
-from utils import ThreadWithValue, check_if_not_ok, exists, getImagePositionRegion, move_to_top, moveAndClick
+from utils import ThreadWithValue, check_if_not_ok, exists, getImagePositionRegion, moveAndClick
 import constants as C
 import time
+
+from utilss.drag_map import move_to_top
 
 def _get_gold_position():
     list = [

@@ -2,11 +2,12 @@ from utils import ( check_if_not_ok,
                     delay, exists,
                     getImagePositionRegion,
                     get_json_file,
-                    move_to_bottom,
                     moveAndClick)
 import constants as C
 import time
 import concurrent.futures
+
+from utilss.drag_map import move_to_bottom
 
 jsonPos = get_json_file('collectFood.json')
 
