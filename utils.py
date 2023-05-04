@@ -1,6 +1,5 @@
 from threading import Thread
 from win32gui import FindWindow, GetWindowRect
-import pyautogui
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
@@ -11,6 +10,10 @@ import json
 import concurrent.futures
 import datetime
 from screeninfo import get_monitors
+
+def get_center():
+    res = get_monitors()
+    return [res[0].width/2, res[0].height/2]
 
 def get_screen_resolution():
     res = get_monitors()
@@ -203,50 +206,7 @@ def closeVideo():
 
 def moveTo(position):
    mouse.release()
-   mouse.move(position[0], position[1], True, .05)
-
-def dragMap(artifact, next=[800, 450]):
-    x, y = next
-    moveTo(artifact)
-    delay(.2)
-    pyautogui.mouseDown()
-    pyautogui.moveTo(x, y)
-    delay(1)
-    pyautogui.mouseUp()
-
-
-def dragMapToCenter():
-    artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
-    if(artifact[0] == 800 and artifact[1] == 450):
-        moveAndClick(artifact)
-        return artifact
-
-    if not exists(artifact):
-        print('Cannot move the map since there is no point of reference')
-        return [-1]
-    print('artifact is ', artifact)
-    dragMap(artifact)
-    return artifact
-    
-def move_to_top():
-    artifact = dragMapToCenter()
-    print('artifact is', artifact)
-    if not exists(artifact): return [-1]
-    print('move to top')
-    dragMap(artifact, [800, 700])
-
-def move_to_bottom():
-    artifact = dragMapToCenter()
-    print('artifact is', artifact)
-    if not exists(artifact): return
-    print('move to bottom')
-    dragMap(artifact, [800, 300])
-
-def getMovePositions():
-    return [
-        'down',
-        'up',
-    ]
+   mouse.move(position[0], position[1], True, 0)
 
 def scroll(pos1, pos2):
     moveTo(pos1)

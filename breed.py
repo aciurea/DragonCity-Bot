@@ -1,6 +1,6 @@
 from utils import (check_if_not_ok,
                     closePopup,
-                    delay, dragMapToCenter,
+                    delay,
                     exists,
                     getImagePositionRegion,
                     moveAndClick)
@@ -8,6 +8,8 @@ import constants as C
 import time
 import math
 import concurrent.futures
+
+from utilss.drag_map import dragMapToCenter
 
 def feed():
     feedBtn = getImagePositionRegion(C.BREED_FEED_BTN, 300, 700, 600, 850, 0.8, 3)

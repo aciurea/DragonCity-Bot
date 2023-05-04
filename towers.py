@@ -1,6 +1,8 @@
-from utils import delay, dragMap, dragMapToCenter, exists, getImagePositionRegion, moveAndClick
+from utils import delay, exists, getImagePositionRegion, moveAndClick
 import constants as C
 import time
+
+from utilss.drag_map import drag_to, dragMapToCenter
 
 def _wait_for_artifact_to_be_visible():
     st = time.time()
@@ -12,7 +14,7 @@ def collect_resources():
     _wait_for_artifact_to_be_visible()
     artifact = dragMapToCenter()
     if exists(artifact):
-        dragMap(artifact, [artifact[0], artifact[1]-150])
+        drag_to(artifact, [artifact[0], artifact[1]-150])
     resources_tower = getImagePositionRegion(C.TOWERS_RESOURCESS_TOWER, 950, 500, 1250, 800, 0.8, 5)
 
     if not exists(resources_tower): return [-1]
@@ -36,7 +38,7 @@ def boost_gold(artifact):
 def collect_gems(artifact):
     print(artifact)
     if exists(artifact):
-        dragMap(artifact, [artifact[0], artifact[1]+50])
+        drag_to(artifact, [artifact[0], artifact[1]+50])
     gems_tower = getImagePositionRegion(C.TOWERS_GEMS_TOWER, 1120, 10, 1400, 300, 0.8, 3)
     if not exists(gems_tower): return [-1]
     moveAndClick(gems_tower)

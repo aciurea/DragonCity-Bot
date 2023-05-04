@@ -10,12 +10,13 @@ from open import close_app, open_app
 from rewards import collectRewards
 from shop import shop
 from towers import boost_gold, collect_gems, collect_resources
-from utils import check_if_not_ok, delay, dragMapToCenter, exists, get_time_to_midnight, getImagePosition
+from utils import check_if_not_ok, delay, exists, get_time_to_midnight, getImagePosition
 import win32gui
 import win32con
 import datetime
 import time
 import constants as C
+from utilss.drag_map import dragMapToCenter
 
 HALF_AN_HOUR = 1800
 
