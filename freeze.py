@@ -6,11 +6,11 @@ from utils import (
     delay,
     exists,
     get_in_progress,
-    get_text,
     getImagePositionRegion,
     moveAndClick,
     moveTo,
     )
+from extract_text import get_text
 import random
 import time
 import datetime
@@ -69,24 +69,14 @@ def _prepare_best_dragon():
         return best_values[0]["value"]
     except: return None
 
-def _swap_dragon():
-    moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1), 'Swap button not available')
-    moveAndClick(_get_new_dragon_btn(0, 1600), 'New Dragon button not available')
-
 def freeze_dragons():
     print('Freeze_dragons')
     attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 100)
     attack = attack if (exists(attack)) else [78, 170]
     text = _prepare_best_dragon()
     _freeze_dragons(777_777, text)
-    # Some dragons don't do damage and the value doesn't get updated.
-    # _swap_dragon() 
-    # _prepare_best_dragon()
-    for _ in range(2):
-        moveAndClick(attack) # start the fight
-        delay(.2)
-        moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
-        has_the_opponent_attacked()
+
+    strengthen_dragon()
     _freeze_dragons(99_999_999)
     moveAndClick(attack) # resume fight
     _prevent_sleep()
@@ -109,5 +99,15 @@ def _prevent_sleep():
     while exists(get_in_progress()) and time.time() - st < 300:
         # move mouse because of long battle that can turn off the display and the game will stop
         moveTo([random.randrange(100, 1600), random.randrange(0, 500)])
-        delay(10)
+        delay(20)
 
+
+def strengthen_dragon(attack):
+    for _ in range(2):
+        moveAndClick(attack) # start the fight
+        delay(.2)
+        moveAndClick(attack) # pause the fight in order to give the change to opponent to hit
+        has_the_opponent_attacked()
+        try:
+            _freeze_dragons(-1, get_text(oponent=True))
+        except: print('error in freezing the dragons')

@@ -4,9 +4,6 @@ import pyautogui
 import time
 import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
-import cv2
-from pytesseract import pytesseract
-from PIL import ImageGrab, Image
 import constants as C
 import random
 import time
@@ -259,72 +256,6 @@ def scroll(pos1, pos2):
     mouse.move(pos2[0], pos2[1], True, .05)
     delay(.5)
     mouse.release()
-   
-def get_text(x = 410, oponent = False):
-    pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-    path ='./temp/img.png'
-    bbox = [970, 110, 1093, 270] if oponent else [x, 127, 491, 161] 
-    cap_length_6 = ImageGrab.grab(bbox)
-    cap_length_6.save(path)
-    ref = cv2.imread(path)
-    if(oponent): return int(_get_text_chat(ref))
-    lst = [
-        _get_text_2(ref).replace(" ", "").replace(".","").rstrip(),
-        _get_text_3(ref).replace(" ", "").replace(".","").rstrip(),
-        _get_text_4(ref).replace(" ", "").replace(".","").rstrip()
-    ]
-
-    i = 0
-    while (i < len(lst)):
-        if len(lst[i]) > 6:
-            lst[i] = lst[i][1:]
-        i+=1
-
-
-    try:
-        lst.sort(reverse=True)
-        lst = list(filter(lambda item: len(item) > 0, lst))
-        num = int(lst[0])
-        return num if(num != 321926) else 321526 # problem with 5 not being able to distinguish
-    except: return 247336 # value of strongest dragon
-    
-def _get_text_2(ref):
-    gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    bnt = cv2.bitwise_not(gry)
-
-    return pytesseract.image_to_string(bnt, config="--psm 6 digits")
-
-def _get_text_chat(ref):
-    gray = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    for contour in contours:
-        (x, y, w, h) = cv2.boundingRect(contour)
-        roi = thresh[y:y + h, x:x + w]
-        digit = pytesseract.image_to_string(Image.fromarray(roi), config="--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789")
-        digit = digit.replace(" ", "")
-        if(len(digit) > 0 and len(digit) > 6):
-            return digit[:-1]
-
-def _get_text_3(ref):
-    gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    (h, w) = gry.shape[:2]
-    gry = cv2.resize(gry, (w * 2, h * 2))
-    erd = cv2.erode(gry, None, iterations=1)
-    thr = cv2.threshold(erd, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    bnt = cv2.bitwise_not(thr)
-
-    return pytesseract.image_to_string(bnt, config="--psm 6 digits")
-
-def _get_text_4(ref):
-    gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    (h, w) = gry.shape[:2]
-    gry = cv2.resize(gry, (w * 2, h * 2))
-    erd = cv2.erode(gry, None, iterations=1)
-    thr = cv2.threshold(erd, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
-    bnt = cv2.bitwise_not(thr)
-
-    return pytesseract.image_to_string(bnt, config="--psm 6 digits")
 
 def get_in_progress():
     return getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 2)
