@@ -6,7 +6,7 @@ import mouse
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
 import cv2
 from pytesseract import pytesseract
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 import constants as C
 import random
 import time
@@ -260,13 +260,14 @@ def scroll(pos1, pos2):
     delay(.5)
     mouse.release()
    
-def get_text(x = 410):
+def get_text(x = 410, oponent = False):
     pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
     path ='./temp/img.png'
-    cap_length_6 = ImageGrab.grab(bbox=(x, 127, 491, 161))
+    bbox = [970, 110, 1093, 270] if oponent else [x, 127, 491, 161] 
+    cap_length_6 = ImageGrab.grab(bbox)
     cap_length_6.save(path)
     ref = cv2.imread(path)
-    
+    if(oponent): return int(_get_text_chat(ref))
     lst = [
         _get_text_2(ref).replace(" ", "").replace(".","").rstrip(),
         _get_text_3(ref).replace(" ", "").replace(".","").rstrip(),
@@ -289,10 +290,21 @@ def get_text(x = 410):
     
 def _get_text_2(ref):
     gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    thr = gry
-    bnt = cv2.bitwise_not(thr)
+    bnt = cv2.bitwise_not(gry)
 
     return pytesseract.image_to_string(bnt, config="--psm 6 digits")
+
+def _get_text_chat(ref):
+    gray = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        (x, y, w, h) = cv2.boundingRect(contour)
+        roi = thresh[y:y + h, x:x + w]
+        digit = pytesseract.image_to_string(Image.fromarray(roi), config="--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789")
+        digit = digit.replace(" ", "")
+        if(len(digit) > 0 and len(digit) > 6):
+            return digit[:-1]
 
 def _get_text_3(ref):
     gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)

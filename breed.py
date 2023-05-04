@@ -214,5 +214,7 @@ def fast_breed(priority='breed'):
         delay(math.ceil(breeding_time - (time.time() - st2)))
         _place_egg_in_hatchery(breedFn=_get_breeding_rock_pos, priority=priority)
         # MAybe we can rebreeed since that sell is taking time
-# start()
+
+# while 1:
+#     fast_breed()
 

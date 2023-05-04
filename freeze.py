@@ -96,11 +96,13 @@ def _freeze_dragons(lock_value, text = None):
     print('Trying to freeze the dragons')
     value = get_text() if text == None else text
     pid = Process.get_pid_by_name('DragonCity.exe')
-    with Process.open_process(pid) as p:
-        addrs = p.search_all_memory(ctypes.c_int32(value))
-        print(f'for dragon:[{value}] found [{len(addrs)}]  lock_value [{lock_value}]')
-        for addr in addrs:
-            p.write_memory(addr, ctypes.c_int32(lock_value))
+    try:
+        with Process.open_process(pid) as p:
+            addrs = p.search_all_memory(ctypes.c_int32(value))
+            print(f'for dragon:[{value}] found [{len(addrs)}]  lock_value [{lock_value}]')
+            for addr in addrs:
+                p.write_memory(addr, ctypes.c_int32(lock_value))
+    except: print('error in freezing the dragons')
 
 def _prevent_sleep():
     st = time.time()
