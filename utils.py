@@ -131,11 +131,14 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
+    jsonPos = get_json_file('close.json')
+    # TODO refactor this.
     btns_pos = [
-        ['./img/app_start/back.png', 0, 0, 150, 150, .8, 2],
-        ['./img/utils/close.png', 800, 0, 1600, 500, .8, 2],
-        ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
-        [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
+        # ['./img/app_start/back.png', 0, 0, 150, 150, .8, 2],
+        ['./img/utils/close.png', *jsonPos['close']],
+        ['./img/utils/close.png', *jsonPos['smallClose']]
+        # ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
+        # [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
     ]
     with concurrent.futures.ThreadPoolExecutor() as executor:
         btns = executor.map(lambda args: getImagePositionRegion(*args), btns_pos)
@@ -144,8 +147,8 @@ def check_if_not_ok():
             if exists(btn):
                 moveAndClick(btn)
                 delay(1)
-                return closePopup()
 
+        return closePopup()
 def openChest():
     # TODO fix it according to all the scenarios
     tap, close_btn = [
@@ -187,7 +190,8 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     mouse.release()
 
 def get_close_btn(x1 = 1000, y1= 0, x2 = 1600, y2 = 300):
-    return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2, .8, 3)
+    jsonPos = get_json_file('close.json')
+    return getImagePositionRegion('./img/utils/close.png', *jsonPos['close'])
 
 def closePopup(btn = [-1]):
     if exists(btn):  

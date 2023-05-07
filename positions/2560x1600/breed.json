@@ -1,0 +1,26 @@
+{
+    "NOPOS": [955, 1160, 1275, 1310, 0.8, 1],
+    "treePos": [710, 1090],
+    "rockPos": [1060, 1183],
+    "mountainPos": [1826, 383],
+    "tarraPos": [835, 1159],
+    "hatcheryPos": [895, 1030],
+    "closeBtnPos": [2424, 145],
+    "sellBtnPos": [1778, 1090],
+    "sellDragonBtnHabitatPos": [2262, 1451],
+    "sellBtnConfirmPos": [1450, 1100],
+    "placeBtnPos": [1450, 1100],
+    "terraHabitatPos": [828, 1160],
+    "feedBtnPos": [747, 1419],
+    "placeBtnConfirmPos": [1375, 1090],
+    "closeHatcheryBtnPos": [2039, 420],
+
+    "breedBtnPos": [925, 1090, 1235, 1280, 0.8, 5, 1],
+    "wrongPanel": [850, 60, 1050, 260, 0.8, 3, 0.5],
+    "rebreedPos": [1800, 1200, 2312, 1525, 0.8, 6, 0.5],
+    "hatcheryText": [2280, 1170, 2555, 1285, 0.8, 1],
+    "terraEggPos": [535, 1255, 2065, 1530, 0.8, 20, 0.5],
+    "terraDragonPos": [535, 1255, 2065, 1530, 0.8, 1, 0.5],
+    "finishBreedPos": [520, 700, 1200, 1270, 0.8, 1],
+    "fullHatcheryPos": [550, 630, 755, 810, 0.8, 2, 0.5]
+}
