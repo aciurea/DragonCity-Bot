@@ -16,17 +16,15 @@ def dragMapToCenter():
 
 def move_to_top():
     artifact = dragMapToCenter()
-    print('artifact is', artifact)
-    if not exists(artifact): return [-1]
-    print('move to top')
-    drag_to(artifact, [800, 700])
+    if not exists(artifact): return
+    delay(1)
+    drag_to(artifact, [artifact[0], artifact[1]+300])
 
 def move_to_bottom():
     artifact = dragMapToCenter()
-    print('artifact is', artifact)
     if not exists(artifact): return
-    print('move to bottom')
-    drag_to(artifact, [800, 300])
+    delay(1)
+    drag_to(artifact, [artifact[0], artifact[1]-200])
 
 def move_to(pos):
     pyautogui.mouseUp()
