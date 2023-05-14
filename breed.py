@@ -2,8 +2,7 @@ from utils import (check_if_not_ok,
                     delay,
                     exists, get_json_file,
                     getImagePositionRegion,
-                    moveAndClick,
-                    ThreadWithValue)
+                    moveAndClick)
 import constants as C
 import concurrent.futures
 
@@ -79,7 +78,7 @@ def _breed(pos, priority):
             feed_dragon()
             sell_egg_from_habitat()
     dragMapToCenter()
-    # check_if_not_ok()
+    check_if_not_ok()
     return True
 
 # terra_egg breed takes 12s
@@ -95,8 +94,6 @@ def fast_breed(priority='breed'):
     move_to_top()
     _breed(jsonPos['mountainPos'], priority)
    
-    # delay(time_to_delay if time_to_delay > 0 else 0)
-
 def start_clean():
     for _ in range(2):
         dragMapToCenter()
@@ -107,7 +104,7 @@ def start_clean():
 def start():
     start_clean()
     while 1:
-        fast_breed(priority='feed')
+        fast_breed(priority='hatch')
     
 
-start()
+# start()

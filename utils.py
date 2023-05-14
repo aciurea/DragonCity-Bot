@@ -131,8 +131,9 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def check_if_not_ok():
-    jsonPos = get_json_file('close.json')
     # TODO refactor this.
+    print("just return: TODO")
+    jsonPos = get_json_file('close.json')
     btns_pos = [
         # ['./img/app_start/back.png', 0, 0, 150, 150, .8, 2],
         ['./img/utils/close.png', *jsonPos['close']],
