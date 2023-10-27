@@ -1,100 +1,87 @@
-import subprocess
-from AppOpener import run
+import os
+import psutil
 import pyautogui
 from screeninfo import get_monitors
 import constants as C
-from utils import delay, exists, getImagePositionRegion, moveAndClick, moveTo, openChest
+from move import moveAndClick, moveTo
+from timers import delay
+from utils import exists, get_json_file, get_monitor_quarters, getImagePositionRegion, openChest
 import time
 import concurrent.futures
+from mem_edit import Process
+import datetime
+
+jsonPos = get_json_file('open.json')
 
 def close_app():
     try:
-        subprocess.call("TASKKILL /F /IM DragonCity.exe", shell=False)
+        pid = Process.get_pid_by_name('DragonCity.exe')
+        if(pid == None): return
+        p = psutil.Process(pid)
+        p.terminate()
     except: print('Cannot kill the application')
 
 def zoom_out():
     [ res ] = get_monitors()
     moveTo([res.width / 2, res.height / 2])
-    pyautogui.scroll(-5000)
+    pyautogui.scroll(-10000)
 
-def open_app():
+def open_app(i = 0):
     close_app()
+    delay(2)
+    if(i == 5):
+        print('Cannot start the application ad ', datetime.datetime.now().strftime("%X"))
+        return False
+    
+   # your app model id
+    app_model_id="SocialPoint.DragonCityMobile_jahftqv9k5jer!App" 
+    try: os.system(f'start shell:AppsFolder\\{app_model_id}')
+    except: open_app(i+1)
 
-    try: run("Dragon City")
-    except: open_app()
-
+    delay(15)
     _check_if_app_started()
     moveAndClick([10, 50])
-    delay(3)
     _close_all_the_windows()
 
-def _get_close_btn():
-    buy_now_close_pos = [1270, 84]
-    close_params = [
-        [C.APP_START_BUY_NOW, 670, 720, 900, 820, 0.8, 2],
-        [C.APP_START_BUY_NOW_2, 670, 720, 900, 820, 0.8, 2],
-        [C.APP_START_RED_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-        [C.APP_START_BIG_CLOSE,  1400, 0, 1550, 50, 0.8, 2],
-        [C.APP_START_CLAIM_DAILY,  500, 650, 1000, 850, 0.8, 2],
-        [C.APP_START_NO,  600, 0, 1400, 600, 0.8, 2],
+def _get_btn():
+    mon_quarters = get_monitor_quarters()
+    top_right = mon_quarters['top_right']
+    btns = [
+        [C.APP_START_BIG_CLOSE, *top_right, 0.8, 2]
     ]
-
+    
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        buy_now_btn1, buy_now_btn2, *result_list = executor.map(lambda args: getImagePositionRegion(*args), close_params)
-        if exists(buy_now_btn1) or exists(buy_now_btn2):
-            print('Buy now found') 
-            return buy_now_close_pos
+        result_list = executor.map(lambda args: getImagePositionRegion(*args), btns)
         for close_btn in result_list:
             if exists(close_btn): return close_btn
         return [-1]
-   
-def _close():
-    close_btn = _get_close_btn()
 
+def _close():
+    close_btn = _get_btn()
     if exists(close_btn):
         moveAndClick(close_btn)
-        delay(1)
-        _close()
     else:
         print('close button not found')
-        moveAndClick([1270, 84])
-        moveAndClick([1265, 95])
-        openChest()
+        moveAndClick(jsonPos["POPUP_ICON"])
+        # openChest()
       
 def _get_artifact():
-    artifacts_list = [
-        ['./img/utils/artifact.png', 370, 290, 1350, 830, 0.8, 2],
-        ['./img/app_start/artifact_3.png', 350, 660, 620, 900, 0.8, 2]
-    ]
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        result_list = executor.map(lambda args: getImagePositionRegion(*args), artifacts_list)
-        for artifact in result_list:
-            if exists(artifact): 
-                print('artifact found', artifact)
-                return artifact
-        return [-1]
-
-def _retry_to_open_app(start_time):
-    if (time.time() - start_time > 50):
-        close_app()
-        delay(5)
-        open_app()
+    return getImagePositionRegion('./img/utils/artifact.png', 0, 0, 2600, 1600, 0.8, 2)
 
 def _close_all_the_windows():
     start = time.time()
-
+    app_time_to_close_all_buttons = 50
+    zoom_out()
     while(not exists(_get_artifact())):
-        _retry_to_open_app(start)
-        zoom_out()
+        if(time.time() - start > app_time_to_close_all_buttons): return open_app()
         _close()
-        delay(3)
+        delay(2)
 
 def _check_if_app_started():
     start = time.time()
-    time_limit = 50
+    time_limit = 30
     while((time.time() - start) < time_limit):
-        image = getImagePositionRegion(C.APP_START_STATIC, 0, 380, 120, 530, .8, 1)
+        image = getImagePositionRegion(C.APP_START_STATIC, *jsonPos['APP_START_STATIC'])
         if exists(image): return image
         delay(1)
     return [-1]

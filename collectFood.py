@@ -1,9 +1,10 @@
+from move import move_to_bottom, moveAndClick
+from timers import delay
 from utils import ( check_if_not_ok,
-                    delay, exists,
+                    exists,
                     getImagePositionRegion,
                     get_json_file,
-                    move_to_bottom,
-                    moveAndClick)
+                    )
 import constants as C
 import time
 import concurrent.futures
@@ -24,37 +25,36 @@ def _get_regrow_button():
             if exists(btn): return btn
         return [-1]
 
-def regrowFood():
-    correction = 5
-    farm = get_farm_position()
-    print('Farm positon is', farm)
-
-    if not exists(farm):
-        check_if_not_ok()
-        return print('Farm not found')
-
-    moveAndClick([farm[0] + correction, farm[1] + correction])
-
+def _regrow():
     regrow = _get_regrow_button()
     if exists(regrow):
         moveAndClick(regrow)
         return print('Regrow successful!')
     check_if_not_ok()
-
-def collectFood(priority = False, regrow = regrowFood):
-    for _ in range(2):
-        start = time.time()
-        food = getImagePositionRegion(C.FOOD_IMG, *jsonPos['foodImg'])
-        while(exists(food) or (time.time() - start) < 10): 
-            print('Food position is ', food)
-            moveAndClick(food)
-            food = getImagePositionRegion(C.FOOD_IMG, *jsonPos['foodImg'])
+    
+def regrowFood():
+    farm = get_farm_position()
+    if not exists(farm):
         check_if_not_ok()
-        move_to_bottom()
+        print('Farm not found')
+    else:
+        moveAndClick(farm)
+        _regrow()
+
+def collectFood(isHeroicRace = False, regrow = regrowFood):
+    move_to_bottom()
+    start = time.time()
+    food = getImagePositionRegion(C.FOOD_IMG, *jsonPos['foodImg'])
+    while(exists(food) and (time.time() - start) < 10): 
+        print('Food position is ', food)
+        moveAndClick(food)
+        food = getImagePositionRegion(C.FOOD_IMG, *jsonPos['foodImg'])
+        delay(.2)
+    check_if_not_ok()
     regrow()
 
-    if priority != False: # it is in heroic race so delay a little bit to collect the food again
-        time_to_collect = 25
+    if isHeroicRace != False: # it is in heroic race so delay a little bit to collect the food again
+        time_to_collect = 28
         delay(time_to_collect)
 
 # while 1:

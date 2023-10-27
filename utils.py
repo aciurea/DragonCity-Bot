@@ -146,6 +146,28 @@ def check_if_not_ok():
                 delay(1)
                 return closePopup()
 
+def _get_int(num):
+    return int(round(num))
+
+def get_int(num):
+    return int(round(num))
+
+def get_monitor_quarters():
+    [ res ] = get_monitors()
+    piece = _get_int(res.height / 5)
+    return {
+        "top_left": [0, 0, _get_int(res.width / 2), _get_int(res.height / 2)],
+        "top_right": [_get_int(res.width / 2), 0, res.width, _get_int(res.height / 2)],
+        "bottom_right": [res.width / 2, _get_int(res.height / 2), res.width, res.height],
+        "bottom_left": [0, _get_int(res.height / 2), _get_int(res.width / 2), res.height],
+        "1stRow": [0, 0, res.width, piece],
+        "2ndRow": [0, piece, res.width, piece * 2 ],
+        "3rdRow": [0, piece * 2, res.width, piece * 3],
+        "4thRow": [0, piece * 3, res.width, piece * 4],
+        "5thRow": [0, piece * 4, res.width, piece * 5],
+    }
+   
+
 def openChest():
     # TODO fix it according to all the scenarios
     tap, close_btn = [
@@ -174,17 +196,10 @@ def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450
 def claim(): return imagesearcharea('./img/utils/close.png', 400, 200, 1200, 800)
 
 def moveAndClick(pos, msg = 'Nothing to click'):
-    if not exists(pos):
-        return print(msg)
-    mouse.release() 
+    if not exists(pos): return print(msg)
     moveTo(pos)
-    
-    while(mouse.get_position()[0] != pos[0]):
-       delay(0.2)
-    delay(0.1)
-    mouse.click()
-    delay(0.1)
-    mouse.release()
+    pyautogui.leftClick()
+    delay(0.05)
 
 def get_close_btn(x1 = 1000, y1= 0, x2 = 1600, y2 = 300):
     return getImagePositionRegion('./img/utils/close.png', x1, y1, x2, y2, .8, 3)
@@ -205,22 +220,22 @@ def closeVideo():
         moveAndClick(thread.join(), 'Close btn not found')
 
 def moveTo(position):
-   mouse.release()
-   mouse.move(position[0], position[1], True, .05)
+    mouse.move(*position)
+    delay(0.1)
 
-def dragMap(artifact, next=[800, 450]):
-    x, y = next
-    moveTo(artifact)
-    delay(.2)
-    pyautogui.mouseDown()
-    pyautogui.moveTo(x, y)
+def dragMap(artifact, next = [800, 450]):
+    pyautogui.moveTo(*artifact, 0)
+    pyautogui.mouseDown(duration=1)
+    pyautogui.moveTo(*next, 0)
     delay(1)
     pyautogui.mouseUp()
-
+    delay(.5)
+    pyautogui.mouseUp()
 
 def dragMapToCenter():
+    [res] = get_monitors()
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
-    if(artifact[0] == 800 and artifact[1] == 450):
+    if(artifact[0] == _get_int(res.width / 2) and artifact[1] == _get_int(res.height / 2)):
         moveAndClick(artifact)
         return artifact
 
@@ -228,7 +243,7 @@ def dragMapToCenter():
         print('Cannot move the map since there is no point of reference')
         return [-1]
     print('artifact is ', artifact)
-    dragMap(artifact)
+    dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2)])
     return artifact
     
 def move_to_top():
@@ -236,14 +251,16 @@ def move_to_top():
     print('artifact is', artifact)
     if not exists(artifact): return [-1]
     print('move to top')
-    dragMap(artifact, [800, 700])
+    [res] = get_monitors()
+    dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) + 350])
 
 def move_to_bottom():
     artifact = dragMapToCenter()
-    print('artifact is', artifact)
-    if not exists(artifact): return
+    if not exists(artifact): return [-1]
     print('move to bottom')
-    dragMap(artifact, [800, 300])
+    [res] = get_monitors()
+    dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) - 300])
+    pyautogui.mouseUp()
 
 def getMovePositions():
     return [
