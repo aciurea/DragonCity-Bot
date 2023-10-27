@@ -13,6 +13,14 @@ _BASE_HEROIC = './img/heroic/'
 _BASE_TOWERS = './img/towers/'
 _BASE_TREE = './img/tree/'
 _BASE_UTILS = './img/utils/'
+_BASE_WRONG_POPUPS = './img/wrong_popups/'
+
+HALLOW_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'hallow_close')
+SETTINGS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'settings_close')
+BIG_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'big_close')
+DIVINE_PASS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'divine_pass_close')
+GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
+LOGOUT_POPUP = get_path(_BASE_WRONG_POPUPS + 'logout')
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
@@ -37,7 +45,6 @@ GOLD_2 = get_path(_BASE_GOLD+'gold_2')
 FOOD_FARM = get_path(_BASE_FOOD + 'farm')
 FOOD_FARM_WINTER = get_path(_BASE_FOOD + 'farm_winter')
 FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
-FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_0')
 FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_single')
 FOOD_IMG = get_path(_BASE_FOOD + 'food')
 

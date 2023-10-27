@@ -2,7 +2,7 @@ from app_start import check_if_can_claim_daily, check_if_can_close_divine_offer
 from arena import arena
 from battle import startBattle
 from breed import startBreeding
-from collectFood import collectFood
+from collectFood import collect_food
 from collectGold import collectGold
 from divine_tree import tree_of_life
 from heroic import heroic_race
@@ -48,7 +48,7 @@ def doHeroicRace():
     priorities = { 'breed': startBreeding,
                   'feed': startBreeding,
                   'hatch': startBreeding,
-                  'food': collectFood
+                  'food': collect_food
                   }
     missions = heroic_race()
     print('Missions are ', missions)
