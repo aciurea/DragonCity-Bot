@@ -53,21 +53,23 @@ def drag_map_to_the_bottom():
     _drag_map(artifact, next_pos)
     return next_pos
 
-def move_to_right():
+def drag_map_to_the_right():
     artifact = center_map()
     if not exists(artifact): return [-1]
     print('move to bottom')
     [res] = get_monitors()
-    _drag_map(artifact, [get_int(res.width / 2) + 500, get_int(res.height / 2)])
-    pyautogui.mouseUp()
+    next_pos = [get_int(res.width / 2) + 500, get_int(res.height / 2)]
+    _drag_map(artifact, next_pos)
+    return next_pos
 
-def move_to_left():
+def drag_map_to_the_left():
     artifact = center_map()
     if not exists(artifact): return [-1]
     print('move to bottom')
     [res] = get_monitors()
-    _drag_map(artifact, [get_int(res.width / 2) - 500, get_int(res.height / 2)])
-    pyautogui.mouseUp()
+    next_pos = [get_int(res.width / 2) - 500, get_int(res.height / 2)]
+    _drag_map(artifact, next_pos)
+    return next_pos
 
 def _drag_map(artifact, next = [800, 450]):
     pyautogui.moveTo(*artifact, 0)
