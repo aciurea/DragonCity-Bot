@@ -83,7 +83,7 @@ class FoodCollector:
         FoodCollector._run_times += 1
 
         if isHeroicRace:
-            time_to_collect = 28
+            time_to_collect = 24
             delay(time_to_collect)
 
 def collect_food(isHeroicRace = False):
