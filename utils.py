@@ -14,6 +14,7 @@ import json
 import concurrent.futures
 import datetime
 from screeninfo import get_monitors
+import constants as C
 
 def get_screen_resolution():
     res = get_monitors()
@@ -97,7 +98,7 @@ def delay(seconds):
     time.sleep(seconds)
 
 def exists(value):
-    return value[0] != -1;
+    return (value != None and value[0] != None) and value[0] != -1 
 
 def checkIfCanClaim():
     st = time.time()
@@ -128,23 +129,33 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
     return image
 
-
-
 def check_if_not_ok():
+    mon = get_monitor_quarters()
     btns_pos = [
-        ['./img/app_start/back.png', 0, 0, 150, 150, .8, 2],
-        ['./img/utils/close.png', 800, 0, 1600, 500, .8, 2],
-        ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
-        [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
+
+        [C.DIVINE_PASS_CLOSE_BTN, *mon['top_right'], .8, 1],
+        ['./img/app_start/back.png', *mon['top_left'], .8, 1],
+        [C.HALLOW_CLOSE_BTN, *mon['top_right'], .8, 1],
+        [C.SETTINGS_CLOSE_BTN, *mon['top_right'], .8, 1],
+        [C.BIG_CLOSE_BTN, *mon['top_right'], .8, 1],
+        # [C.BOOK_CLOSE_BTN, *mon['top_right'], .8, 1],
+        # [C.BOOK_CLOSE_BTN, *mon['top_right'], .8, 1],
+
+
+        # ['./img/app_start/back.png', mon['top_left'], .8, 1],
+        # ['./img/utils/close.png', 800, 0, 1600, 500, .8, 2],
+        # ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
+        # [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
     ]
     with concurrent.futures.ThreadPoolExecutor() as executor:
         btns = executor.map(lambda args: getImagePositionRegion(*args), btns_pos)
 
         for btn in btns:
             if exists(btn):
-                moveAndClick(btn)
-                delay(1)
-                return closePopup()
+                return btn
+                # moveAndClick(btn)
+                # delay(1)
+                # return closePopup()
 
 def _get_int(num):
     return int(round(num))
@@ -158,7 +169,7 @@ def get_monitor_quarters():
     return {
         "top_left": [0, 0, _get_int(res.width / 2), _get_int(res.height / 2)],
         "top_right": [_get_int(res.width / 2), 0, res.width, _get_int(res.height / 2)],
-        "bottom_right": [res.width / 2, _get_int(res.height / 2), res.width, res.height],
+        "bottom_right": [_get_int(res.width / 2), _get_int(res.height / 2), res.width, res.height],
         "bottom_left": [0, _get_int(res.height / 2), _get_int(res.width / 2), res.height],
         "1stRow": [0, 0, res.width, piece],
         "2ndRow": [0, piece, res.width, piece * 2 ],

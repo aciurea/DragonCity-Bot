@@ -42,6 +42,7 @@ def drag_map_to_the_top():
     [res] = get_monitors()
     next_pos = [get_int(res.width / 2), get_int(res.height / 2) - 300]
     _drag_map(artifact, next_pos)
+    delay(1)
     return next_pos
     
 def drag_map_to_the_bottom():
@@ -51,6 +52,7 @@ def drag_map_to_the_bottom():
     [res] = get_monitors()
     next_pos = [get_int(res.width / 2), get_int(res.height / 2) + 300]
     _drag_map(artifact, next_pos)
+    delay(1)
     return next_pos
 
 def drag_map_to_the_right():
@@ -60,6 +62,7 @@ def drag_map_to_the_right():
     [res] = get_monitors()
     next_pos = [get_int(res.width / 2) + 500, get_int(res.height / 2)]
     _drag_map(artifact, next_pos)
+    delay(1)
     return next_pos
 
 def drag_map_to_the_left():
@@ -69,6 +72,7 @@ def drag_map_to_the_left():
     [res] = get_monitors()
     next_pos = [get_int(res.width / 2) - 500, get_int(res.height / 2)]
     _drag_map(artifact, next_pos)
+    delay(1)
     return next_pos
 
 def _drag_map(artifact, next = [800, 450]):
@@ -76,6 +80,7 @@ def _drag_map(artifact, next = [800, 450]):
     pyautogui.mouseDown()
     pyautogui.moveTo(*next, 0)
     delay(1)
+    pyautogui.mouseUp()
     pyautogui.mouseUp()
 
 def is_artifact_at_pos(pos):

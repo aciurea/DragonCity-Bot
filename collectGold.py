@@ -34,7 +34,6 @@ def _inner_collect():
     check_if_ok()
 
 def collectGold():
-    print(center_map())
     # custom implementation. There are one over another habitats at this position. just click 50 times to improve collection of gold
     if is_artifact_at_pos([1280, 800]):
         for _ in range(50): fast_click([452, 643])
@@ -44,3 +43,5 @@ def collectGold():
         action()
         _inner_collect()
         center_map()
+
+# collectGold()

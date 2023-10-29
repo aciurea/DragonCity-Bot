@@ -32,6 +32,7 @@ def check_if_ok():
         for btn in [*btns, _close_user_settings()]:
             if exists(btn):
                 print('Close btn at pos ', btn)
-                return moveAndClick(btn)
+                moveAndClick(btn)
+                return btn
                 
              
