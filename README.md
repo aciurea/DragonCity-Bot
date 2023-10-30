@@ -23,6 +23,11 @@
 - `The application works only for 1600x900 resolution`
 - TODO: added screenshot with the map
 
+## Open the Game
+- In order to open it you need to find out the AppUserModelID
+- Open power shell with admin right and type `Get-StartApps | select Name, AppID`
+- copy the appId into open.py, `app_model_id` variable. now you can start the game.
+
 
 ### Features
 - Collect gold
