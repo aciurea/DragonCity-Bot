@@ -165,7 +165,8 @@ def get_int(num):
 
 def get_monitor_quarters():
     [ res ] = get_monitors()
-    piece = _get_int(res.height / 5)
+    piece = _get_int(res.height / 4)
+
     return {
         "top_left": [0, 0, _get_int(res.width / 2), _get_int(res.height / 2)],
         "top_right": [_get_int(res.width / 2), 0, res.width, _get_int(res.height / 2)],
@@ -174,8 +175,7 @@ def get_monitor_quarters():
         "1stRow": [0, 0, res.width, piece],
         "2ndRow": [0, piece, res.width, piece * 2 ],
         "3rdRow": [0, piece * 2, res.width, piece * 3],
-        "4thRow": [0, piece * 3, res.width, piece * 4],
-        "5thRow": [0, piece * 4, res.width, piece * 5],
+        "4thRow": [0, piece * 3, res.width, piece * 4]  
     }
    
 

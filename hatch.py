@@ -21,13 +21,14 @@ class Hatch:
 
 
     def sell_egg():
+        moveAndClick(Hatch.hatchery_pos)
         egg = Hatch._get_terra_egg()
         if exists(egg):
             moveAndClick(egg)
             #sell
-            delay(1)
+            delay(.5)
             moveAndClick([get_int(0.681153846 * Hatch.res.width),  get_int(0.6825 * Hatch.res.height)])
-            delay(1)
+            delay(.5)
             # confirm sell
             moveAndClick([get_int(0.5526923 * Hatch.res.width), get_int(0.685625 * Hatch.res.height)])
             return Hatch.sell_egg()

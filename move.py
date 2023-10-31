@@ -21,8 +21,12 @@ def moveAndClick(pos, msg = 'Nothing to click'):
 def _get_artifact_pos():
     return getImagePosition('./img/utils/artifact.png', 5, .8, .5)
 
+def is_artifact_visible():
+    return exists(_get_artifact_pos())
+
 def center_map():
     [res] = get_monitors()
+    moveTo([1,1])
     artifact = _get_artifact_pos()
     if(artifact[0] == get_int(res.width / 2) and artifact[1] == get_int(res.height / 2)):
         moveAndClick(artifact)
