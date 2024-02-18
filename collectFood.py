@@ -13,18 +13,20 @@ class FoodCollector:
     FARM_POS = None
     REGROW_POS = None
     [res] = get_monitors()
-    X_START = get_int(0.49 * res.width)
+    X_START = get_int(0.4 * res.width)
     Y_START = get_int(0.76 * res.height)
     X_END = get_int(0.82 * res.width)
     Y_END = res.height
     FOOD_POS = []
     CACHE_INVALIDATION_TIMES = 30
     _run_times = 0
+    _count = 0
 
     @staticmethod
     def _get_farm_position():
         if FoodCollector.FARM_POS is None or not exists(FoodCollector.FARM_POS):
             FoodCollector.FARM_POS = getImagePositionRegion(C.FOOD_FARM, *FoodCollector.jsonPos['foodFarm'])
+            FoodCollector.FARM_POS = [FoodCollector.FARM_POS[0] + 5, FoodCollector.FARM_POS[1] + 10] # add some correction due to screenshot image.
         return FoodCollector.FARM_POS
 
     @staticmethod
@@ -34,9 +36,11 @@ class FoodCollector:
     @staticmethod
     def _regrow():
         regrow = FoodCollector._get_regrow_button()
+     
         if exists(regrow):
             moveAndClick(regrow)
-            print('Regrow successful!')
+            FoodCollector._count += 1
+            print('Regrow successful!', FoodCollector._count)
         check_if_ok()
 
     @staticmethod
@@ -89,5 +93,5 @@ class FoodCollector:
 def collect_food(isHeroicRace = False):
     return FoodCollector.collectFood(isHeroicRace)  
  
-# while 1:
-#     collect_food(True)
+while 1:
+    collect_food(True)
