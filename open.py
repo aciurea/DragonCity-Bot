@@ -5,10 +5,10 @@ from screeninfo import get_monitors
 from close import Close
 import constants as C
 from move import _get_artifact_pos, moveAndClick, moveTo
+from popup import Popup
 from timers import delay
-from utils import exists, get_json_file, get_monitor_quarters, get_screen_resolution, getImagePositionRegion, openChest
+from utils import exists, get_json_file, getImagePositionRegion
 import time
-import concurrent.futures
 from mem_edit import Process
 import datetime
 
@@ -48,12 +48,12 @@ def _clean_all_popups():
     app_time_to_close_all_buttons = 50
     while(not exists(_get_artifact_pos())):
         if(time.time() - start > app_time_to_close_all_buttons): return open_app()
+        Popup.check_popup_chest()
+        
         close_btn = Close.get_btn()
         if(exists(close_btn)): moveAndClick(close_btn)
         else: moveAndClick(jsonPos["POPUP_ICON"])
-        
-        # TODO: check if the chest is open
-        # openChest()
+       
         delay(2)
         zoom_out()
     print('APP STARTED SUCCESSFULY')
@@ -69,6 +69,3 @@ def _check_if_app_started():
             os.remove('screenshot.png')
             return [-1]
         delay(1)
-
-
-# _clean_all_popups()

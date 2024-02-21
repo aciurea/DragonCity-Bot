@@ -175,32 +175,9 @@ def get_monitor_quarters():
         "1stRow": [0, 0, res.width, piece],
         "2ndRow": [0, piece, res.width, piece * 2 ],
         "3rdRow": [0, piece * 2, res.width, piece * 3],
-        "4thRow": [0, piece * 3, res.width, piece * 4]  
+        "4thRow": [0, piece * 3, res.width, piece * 4],  
+        "full": [0, 0, res.width, res.height]
     }
-   
-
-def openChest():
-    # TODO fix it according to all the scenarios
-    tap, close_btn = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.TV_TAP, 300, 300, 1600, 800, 0.8, 2)).start(),
-        ThreadWithValue(target=get_close_btn).start(),
-    ]
-    tap = tap.join()
-    close_btn = close_btn.join()
-    if not exists(tap):
-        moveAndClick(close_btn, 'Close btn from open chest not found')
-        return print('Chest not found in order to be opened')
-    moveAndClick(tap)
-    delay(3)
-    claim = getImagePositionRegion(
-        './img/tv/yellow_claim.png', 630, 500, 1200, 800, .8, 3)
-    if not exists(claim):
-        delay(1)
-        closePopup()
- 
-    moveAndClick(claim)
-    delay(1)
-  
 
 def backFn(): return imagesearcharea('./img/app_start/back.png', 0, 0, 500, 150)
 def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)

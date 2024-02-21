@@ -15,6 +15,7 @@ _BASE_TREE = './img/tree/'
 _BASE_UTILS = './img/utils/'
 _BASE_WRONG_POPUPS = './img/wrong_popups/'
 _BASE_APP_CLOSE = './img/close_buttons/'
+_BASE_APP_POPUP = './img/popups/'
 
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
@@ -48,6 +49,17 @@ FOOD_IMG = get_path(_BASE_FOOD + 'food')
 ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
 ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
 ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
+
+
+# Start section popups
+
+POPUP_CLAIM = get_path(f'{_BASE_APP_POPUP}claim')
+POPUP_TAP = get_path(f'{_BASE_APP_POPUP}tap')
+POPUP_LEFT_CORNER = get_path(f'{_BASE_APP_POPUP}left_corner')
+POPUP_HEADER = get_path(f'{_BASE_APP_POPUP}left_header')
+
+# End section popups
+
 
 
 
