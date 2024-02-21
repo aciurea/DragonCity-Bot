@@ -137,6 +137,17 @@ class Arena:
     def select_new_dragon():
         return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *Arena.mon_quarters['4thRow'], .8, 1)
 
+
+    def wait_for_dragon_to_be_ready():
+        print("Waiting for my turn...")
+        if not Arena.is_fight_in_progress(): return print('Dragon is not available any more')
+        
+        times = 5
+        while times > 0:
+            if exists(getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)): return
+            delay(2)
+            times -= 1
+
     @staticmethod
     def fight():
         if not Arena.is_fight_in_progress():
@@ -144,23 +155,20 @@ class Arena:
             if exists(new_dragon):
                 moveAndClick(new_dragon)
                 delay(1)
-                return Arena.fight()
-            return print('Fight ended')
-
-        # TODO not able to know when the dragon has low life.
-        while exists(getImagePositionRegion(C.FIGHT_GOOD_LIFE, *Arena.mon_quarters['top_left'], .8, 1)):
+            else: return print('Fight ended')
+        
+        times = 5
+        while times > 0:
+            times -= 1
             play = getImagePositionRegion(C.FIGHT_PLAY, *Arena.mon_quarters['1stCol'], .8, 1)
             if exists(play):
                 moveAndClick(play) # start
                 delay(1)
                 moveAndClick(play) # stop
             print("Dragon life is ok, continue..")
-            
+
             # wait for my turn
-            while not exists(getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)):
-                delay(2)
-                if not Arena.is_fight_in_progress(): return Arena.fight()
-                print("Waiting for my turn...")
+            Arena.wait_for_dragon_to_be_ready()
         
         swap_btn = getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)
         if exists(swap_btn): moveAndClick(swap_btn)
@@ -214,25 +222,55 @@ class Arena:
     @staticmethod
     def enter_battle():
         arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
+        if not exists(arena): return print('Arena not found')
+        moveAndClick(arena)
 
-        if exists(arena):
-            moveAndClick(arena)
+        delay(1)
+
+        fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)    
+        if not exists(fight_tab): return print('Fight tab not found')
+        moveAndClick(fight_tab)
+
+        delay(1)
+        
+        start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
+        while exists(start_fight):
+            # TODO check if I can collect the chest from TOP
+
+            Arena.skip_strong_dragons()
+            Arena.prepare_fight()
+            moveAndClick(start_fight)
+
+            delay(5)
+            Arena.fight()
+
+            collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
+            if exists(collect_btn): moveAndClick(collect_btn)
+
+            Arena.close_buying_stats()
+
             delay(1)
-            fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)    
-            if exists(fight_tab):
-                moveAndClick(fight_tab)
-                delay(1)
-            # Arena.prepare_fight()
-            fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 20)
-            if not exists(fight): print('Fight is not ready yet')
-            # moveAndClick(fight)
-            moveTo(fight)
-            # delay(5)
-            # Arena.fight()
 
-            # try to hit the collect button
-            # check for the annoying popup of buying with gems after losing a fight
+            start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
+        
+        print('Fight is not ready yet or finished.')
+        Close.check_if_ok()
+       
+    @staticmethod
+    def close_buying_stats():
+       #TODO to be implemented
+        return True
+    
+    @staticmethod
+    def skip_strong_dragons():
+        strong_dragons = [
+            [C.ARENA_HIGH_ARCANA, *Arena.mon_quarters['bottom_right']]
+        ]
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
+            for is_strong_dragonb in result_list:
+                if exists(is_strong_dragonb):
+                    moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
+                    delay(5)
 
-        else: print('Arena button not found')
-
-# print(Arena.enter_battle())
+print(Arena.enter_battle())

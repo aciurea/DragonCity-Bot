@@ -40,9 +40,16 @@ ARENA_FILTER_DRAGONS = get_path(_BASE_ARENA + 'filter_dragons')
 ARENA_NEW_DRAGON = get_path(_BASE_ARENA + 'new_dragon')
 ARENA_ORDER_BY = get_path(_BASE_ARENA + 'order_by')
 ARENA_ORDER_BY_POWER = get_path(_BASE_ARENA + 'order_by_power')
+ARENA_SKIP = get_path(_BASE_ARENA + 'skip')
 
 # End Arena
 
+
+# Start Strong Dragons
+
+ARENA_HIGH_ARCANA = get_path(_BASE_ARENA + 'high_arcana')
+
+# End Strong Dragons
 
 # Start Fight
 FIGHT_SWAP = get_path(f'{_BASE_BATTLE}swap')
