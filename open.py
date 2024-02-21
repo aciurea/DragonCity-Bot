@@ -89,7 +89,3 @@ def _check_if_app_started():
             return [-1]
         delay(1)
 
-
-
-open_app()
-        

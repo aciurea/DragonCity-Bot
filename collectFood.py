@@ -93,5 +93,3 @@ class FoodCollector:
 def collect_food(isHeroicRace = False):
     return FoodCollector.collectFood(isHeroicRace)  
  
-while 1:
-    collect_food(True)
