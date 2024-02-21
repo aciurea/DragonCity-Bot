@@ -1,6 +1,4 @@
 from close import Close
-from freeze import log_arena_fights, freeze_dragons
-from open import open_app
 from popup import Popup
 from utils import (ThreadWithValue,
                 checkIfCanClaim,
@@ -9,12 +7,9 @@ from utils import (ThreadWithValue,
                 delay,
                 exists, get_monitor_quarters,
                 getImagePositionRegion,
-                moveAndClick,
-                moveTo)
+                moveAndClick)
 import constants as C
-import random
-import time
-# from ahk import AHK
+
 import concurrent.futures
 
 def _check_attack_report():
@@ -40,94 +35,7 @@ def _check_attack_report():
         if exists(img):
             moveAndClick(img)
 
-def _check_if_can_fight():
-    cannot_fight = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON,180, 380, 790, 490, .8, 3)
-
-    if not exists(cannot_fight):
-        return print('Battle button not found')
-    delay(.5)
-    change = getImagePositionRegion(C.ARENA_CHANGE, 375, 670, 590 ,760, .8, 3)
-
-    if not exists(change):
-        return print('Change button not found.')
-    moveAndClick(change)
-    
-    # try 3 times for 3 dragons
-    btns = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED, 280, 620, 680, 720, .8, 20)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED, 800, 620, 1020, 720, .8, 20)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_SPEED, 1300, 620, 1530, 720, .8, 20)).start(),
-    ]
-
-    index = 0
-    for item in btns:
-        speed_up_btn = item.join()
-        if not exists(speed_up_btn): 
-            index += 1
-            continue
-        moveAndClick([speed_up_btn[0] - 175, speed_up_btn[1]])
-        delay(1)
-        left_arrow = [1084, 760]
-        moveAndClick(left_arrow)
-        delay(.5)
-        dragon = [660, 330]
-        moveAndClick(dragon)
-        delay(2)
-    if index == len(btns):
-        log_arena_fights(['\n [Lost all dragons... \n BATTLE LOST] \n', "lost_fights"])
-    closePopup()
-
-def _check_and_collect():
-    collect= getImagePositionRegion(C.ARENA_CHEST_COLLECT, 1015, 125, 1200, 200, .8, 3)
-
-    if exists(collect):
-        moveAndClick(collect)
-        Popup.check_popup_chest
-
-def arena():
-    delay(1)
-    arena_quest = getImagePositionRegion(C.ARENA_QUEST, 0, 380, 120, 530, .8, 1)
-    arena_quest = arena_quest if exists(arena_quest) else [65, 435]
-    moveAndClick(arena_quest)
-    inside_arena()
-
-def _ready_for_battle():
-    start = time.time()
-    to_execute = [
-        [C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1],
-        [C.ARENA_NEW_DRAGON, 0, 600, 1600, 850, .8, 1]
-    ]
-
-    while (time.time() - start < 20):
-        moveTo([random.randrange(0, 1600), random.randrange(0, 800)])
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            items = executor.map(lambda args: getImagePositionRegion(*args), to_execute)
-            for item in items:
-                if (exists(item)): return
-        delay(.5)
-
-def inside_arena():
-    _check_attack_report()
-    _check_if_can_fight()
-    _check_and_collect()
-    moveTo([random.randrange(100, 1500), random.randrange(100, 700)])
-
-    fight = getImagePositionRegion(C.ARENA_FIGHT, 740, 730, 870, 800, 0.8, 20)
-
-    if not exists(fight): 
-        closePopup()
-        return print('No fight button found')
-    moveAndClick(fight)
-    _ready_for_battle()
-    freeze_dragons()
-    print('battle finished')
-    claim_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, 700, 750, 900, 850, .8, 10)
-    moveAndClick(claim_btn, 'No arena claim button')
-    return inside_arena()
-
-
-class Arena:
-    mon_quarters = get_monitor_quarters()
+class Battle:
     
     @staticmethod
     def is_fight_in_progress():
@@ -137,10 +45,9 @@ class Arena:
     def select_new_dragon():
         return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *Arena.mon_quarters['4thRow'], .8, 1)
 
-
     def wait_for_dragon_to_be_ready():
         print("Waiting for my turn...")
-        if not Arena.is_fight_in_progress(): return print('Dragon is not available any more')
+        if not Battle.is_fight_in_progress(): return print('Dragon is not available any more')
         
         times = 5
         while times > 0:
@@ -150,8 +57,8 @@ class Arena:
 
     @staticmethod
     def fight():
-        if not Arena.is_fight_in_progress():
-            new_dragon = Arena.select_new_dragon()
+        if not Battle.is_fight_in_progress():
+            new_dragon = Battle.select_new_dragon()
             if exists(new_dragon):
                 moveAndClick(new_dragon)
                 delay(1)
@@ -168,12 +75,24 @@ class Arena:
             print("Dragon life is ok, continue..")
 
             # wait for my turn
-            Arena.wait_for_dragon_to_be_ready()
+            Battle.wait_for_dragon_to_be_ready()
         
         swap_btn = getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)
         if exists(swap_btn): moveAndClick(swap_btn)
         
-        return Arena.fight() # try again
+        return Battle.fight() # try again
+
+class Arena:
+    mon_quarters = get_monitor_quarters()
+
+    @staticmethod
+    def check_and_collect_rewards():
+        # TODO to be implemented
+        collect= getImagePositionRegion(C.ARENA_CHEST_COLLECT, 1015, 125, 1200, 200, .8, 3)
+
+        if exists(collect):
+            moveAndClick(collect)
+            Popup.check_popup_chest()
 
     @staticmethod
     def prepare_fight():
@@ -236,13 +155,14 @@ class Arena:
         start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
         while exists(start_fight):
             # TODO check if I can collect the chest from TOP
+            #Arena.check_and_collect_rewards()
 
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
             moveAndClick(start_fight)
 
             delay(5)
-            Arena.fight()
+            Battle.fight()
 
             collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
             if exists(collect_btn): moveAndClick(collect_btn)

@@ -7,12 +7,15 @@ import constants as C
 from move import _get_artifact_pos, moveAndClick, moveTo
 from popup import Popup
 from timers import delay
-from utils import exists, get_json_file, getImagePositionRegion
+from utils import exists, get_json_file, get_monitor_quarters, getImagePositionRegion
 import time
 from mem_edit import Process
 import datetime
+import concurrent.futures
 
 jsonPos = get_json_file('open.json')
+
+mon_quarters = get_monitor_quarters()
 
 def close_app():
     try:
@@ -43,6 +46,20 @@ def open_app(i = 0):
     _check_if_app_started()
     _clean_all_popups()
 
+def check_extra_bonus():
+    btns = [
+        [C.APP_START_EXTRA_CLAIM, *mon_quarters['4thRow']],
+    ]
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
+            for btn in result_list:
+                if exists(btn): 
+                    moveAndClick(btn)
+                    return check_extra_bonus()
+    return [-1]
+
+
 def _clean_all_popups():
     start = time.time()
     app_time_to_close_all_buttons = 50
@@ -53,6 +70,8 @@ def _clean_all_popups():
         close_btn = Close.get_btn()
         if(exists(close_btn)): moveAndClick(close_btn)
         else: moveAndClick(jsonPos["POPUP_ICON"])
+
+        check_extra_bonus()
        
         delay(2)
         zoom_out()
@@ -69,3 +88,8 @@ def _check_if_app_started():
             os.remove('screenshot.png')
             return [-1]
         delay(1)
+
+
+
+open_app()
+        

@@ -104,17 +104,19 @@ APP_LOOSE = get_path(f'{_BASE_APP_CLOSE}loose')
 
 
 
-
+# Start App start
 APP_START_CLAIM_BTN = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_DIVINE_CLOSE = get_path(f'{_BASE_APP_START}close_divine')
 APP_START_RED_CLOSE = get_path(_BASE_APP_START + 'red_close')
 APP_START_BIG_CLOSE = get_path(_BASE_APP_START + 'big_close')
-APP_START_CLAIM_DAILY = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_NO = get_path(_BASE_APP_START + 'no')
 APP_START_BUY_NOW = get_path(f'{_BASE_APP_START}buy_now')
 APP_START_BUY_NOW_2 = get_path(f'{_BASE_APP_START}buy_now2')
 
 
+APP_START_EXTRA_CLAIM = get_path(_BASE_APP_START + 'extra_claim')
+
+# End App start
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
