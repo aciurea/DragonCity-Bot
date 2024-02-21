@@ -16,14 +16,8 @@ _BASE_UTILS = './img/utils/'
 _BASE_WRONG_POPUPS = './img/wrong_popups/'
 _BASE_APP_CLOSE = './img/close_buttons/'
 
-HALLOW_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'hallow_close')
-SETTINGS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'settings_close')
-BIG_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'big_close')
-DIVINE_PASS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'divine_pass_close')
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
-LOGOUT_POPUP = get_path(_BASE_WRONG_POPUPS + 'logout')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
-PIGGY_POPUP = get_path(_BASE_WRONG_POPUPS + 'piggy')
 
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
