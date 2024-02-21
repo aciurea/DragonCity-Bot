@@ -23,7 +23,7 @@ class Close:
         # TODO check this if it has the right icons to click on 
         # VIP buttons
         # [C.GOALS_CLOSE_BTN, *mon['top_right'], .8, 1], search for goal close btn
-        
+        #     ['./img/app_start/back.png', *mon['top_left'], .8, 1],
         
         mon_quarters = get_monitor_quarters()
         top_right = mon_quarters['top_right']
@@ -45,33 +45,16 @@ class Close:
         
     @staticmethod
     def check_if_ok():
-        mon = get_monitor_quarters()
-        btns_pos = [
-            [C.DIVINE_PASS_CLOSE_BTN, *mon['top_right'], .8, 1],
-            ['./img/app_start/back.png', *mon['top_left'], .8, 1],
-            [C.HALLOW_CLOSE_BTN, *mon['top_right'], .8, 1],
-            [C.SETTINGS_CLOSE_BTN, *mon['top_right'], .8, 1],
-            [C.BIG_CLOSE_BTN, *mon['top_right'], .8, 1],
-            [C.BIG_CLOSE_BTN, *mon['top_right'], .8, 1],
-            [C.GOALS_CLOSE_BTN, *mon['top_right'], .8, 1],
-        ]
+        btn = Close.get_btn()
+        if exists(btn):
+            moveAndClick(btn)
+            return btn
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            btns = executor.map(lambda args: getImagePositionRegion(*args), btns_pos)
-
-            for btn in [*btns, Close._close_user_settings()]:
-                if exists(btn):
-                    moveAndClick(btn)
-                    return btn
-
+       # TODO check what enjoy popup is
         if Close._is_enjoy_popup():
             Close._close_enjoy_popup()
             delay(.5)
             return Close.check_if_ok()
-        
-        if Close._is_piggy_popup():
-            close_btn = [get_int(0.771153846 * Close.res.width), get_int(0.1475 * Close.res.height)] 
-            moveAndClick(close_btn)
 
     @staticmethod
     def _close_enjoy_popup():
@@ -82,9 +65,6 @@ class Close:
     @staticmethod
     def _is_enjoy_popup():
         return exists(getImagePositionRegion(C.ENJOY_POPUP, *Close.mon['top_left'], .8, 1))
-    
-    def _is_piggy_popup():
-        return exists(getImagePositionRegion(C.PIGGY_POPUP, *Close.mon['1stRow'], .8, 1))
-             
+
 def check_if_ok():
     return Close.check_if_ok()
