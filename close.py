@@ -6,27 +6,16 @@ import concurrent.futures
 
 class Close:
     [res] = get_monitors()
-    mon = get_monitor_quarters()
-
-    @staticmethod
-    def _close_user_settings():
-        mon = get_monitor_quarters()
-        (2247, 187)
-
-        if exists(getImagePositionRegion(C.LOGOUT_POPUP, *mon['top_right'], .8, 1)):
-            x = get_int(.877 * Close.res.width)
-            y = get_int(.1168 * Close.res.height)
-            return [x, y]
+    mon_quarters = get_monitor_quarters()
     
     @staticmethod
     def get_btn():
         # TODO check this if it has the right icons to click on 
         # VIP buttons
         # [C.GOALS_CLOSE_BTN, *mon['top_right'], .8, 1], search for goal close btn
-        #     ['./img/app_start/back.png', *mon['top_left'], .8, 1],
+        # ['./img/app_start/back.png', *mon['top_left'], .8, 1],
         
-        mon_quarters = get_monitor_quarters()
-        top_right = mon_quarters['top_right']
+        top_right = Close.mon_quarters['top_right']
         high_priority_btns = [
             [C.APP_CLOSE_DIVINE, *top_right],
             [C.APP_CLOSE_GEMS, *top_right],
@@ -64,7 +53,7 @@ class Close:
 
     @staticmethod
     def _is_enjoy_popup():
-        return exists(getImagePositionRegion(C.ENJOY_POPUP, *Close.mon['top_left'], .8, 1))
+        return exists(getImagePositionRegion(C.ENJOY_POPUP, *Close.mon_quarters['top_left'], .8, 1))
 
 def check_if_ok():
     return Close.check_if_ok()
