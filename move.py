@@ -19,7 +19,7 @@ def moveAndClick(pos, msg = 'Nothing to click'):
     delay(0.05)
 
 def _get_artifact_pos():
-    return getImagePosition('./img/utils/artifact.png', 5, .8, .5)
+    return getImagePosition('./img/utils/artifact.png', 1, .8, .5)
 
 def is_artifact_visible():
     return exists(_get_artifact_pos())

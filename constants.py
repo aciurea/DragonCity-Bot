@@ -14,6 +14,7 @@ _BASE_TOWERS = './img/towers/'
 _BASE_TREE = './img/tree/'
 _BASE_UTILS = './img/utils/'
 _BASE_WRONG_POPUPS = './img/wrong_popups/'
+_BASE_APP_CLOSE = './img/close_buttons/'
 
 HALLOW_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'hallow_close')
 SETTINGS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'settings_close')
@@ -54,15 +55,32 @@ ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
 ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
 ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
 
+
+
+## Start section close buttons
+
+APP_CLOSE_DIVINE = get_path(f'{_BASE_APP_CLOSE}divine')
+APP_CLOSE_GEMS = get_path(f'{_BASE_APP_CLOSE}gems')
+APP_CLOSE_OFFERS = get_path(f'{_BASE_APP_CLOSE}offers')
+APP_CLOSE_PIGGY = get_path(f'{_BASE_APP_CLOSE}piggy')
+APP_CLOSE_SETTINGS = get_path(f'{_BASE_APP_CLOSE}settings')
+APP_CLOSE_TOWER = get_path(f'{_BASE_APP_CLOSE}tower')
+
+## End section close buttons
+
+
+
+
 APP_START_CLAIM_BTN = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_DIVINE_CLOSE = get_path(f'{_BASE_APP_START}close_divine')
 APP_START_RED_CLOSE = get_path(_BASE_APP_START + 'red_close')
 APP_START_BIG_CLOSE = get_path(_BASE_APP_START + 'big_close')
 APP_START_CLAIM_DAILY = get_path(_BASE_APP_START + 'claim_yellow')
 APP_START_NO = get_path(_BASE_APP_START + 'no')
-APP_START_STATIC = get_path(_BASE_APP_START + 'static_icon')
 APP_START_BUY_NOW = get_path(f'{_BASE_APP_START}buy_now')
 APP_START_BUY_NOW_2 = get_path(f'{_BASE_APP_START}buy_now2')
+
+
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
