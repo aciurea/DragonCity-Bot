@@ -20,22 +20,42 @@ _BASE_APP_POPUP = './img/popups/'
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
 
+
+# Start Arena
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
 ARENA_ATTACK_REPORT_ACCEPT = get_path(_BASE_ARENA + 'attack_report_accept')
 ARENA_REPEAL = get_path(_BASE_ARENA + 'repeal')
-ARENA_WAIT_TIME = get_path(_BASE_ARENA + 'wait_time')
-ARENA_CHANGE_DRAGON= get_path(_BASE_ARENA + 'change_dragon')
-ARENA_SPEED_UP = get_path(_BASE_ARENA + 'speed')
+
 ARENA_CHEST_COLLECT = get_path(_BASE_ARENA + 'collect')
 ARENA_QUEST = get_path(_BASE_ARENA + 'arenas_quest')
-ARENA_FIGHT = get_path(_BASE_ARENA + 'fight')
-ARENA_SELECT_NEW_DRAGON_BTN = get_path(_BASE_ARENA + 'new_dragon')
 ARENA_CLAIM_BTN = get_path(_BASE_ARENA + 'claim')
 
-FIGHT_SWAP_DRAGON = get_path(f'{_BASE_BATTLE}swap')
+ARENA = get_path(_BASE_ARENA + 'arena')
+ARENA_FIGHT = get_path(_BASE_ARENA + 'fight')
+ARENA_SPEED = get_path(_BASE_ARENA + 'speed')
+ARENA_DEFETEAD_DRAGON = get_path(_BASE_ARENA + 'defeated_dragon')
+ARENA_CHANGE = get_path(_BASE_ARENA + 'change_dragon')
+ARENA_FILTER_DRAGONS = get_path(_BASE_ARENA + 'filter_dragons')
+ARENA_NEW_DRAGON = get_path(_BASE_ARENA + 'new_dragon')
+ARENA_ORDER_BY = get_path(_BASE_ARENA + 'order_by')
+ARENA_ORDER_BY_POWER = get_path(_BASE_ARENA + 'order_by_power')
+
+# End Arena
+
+
+# Start Fight
+FIGHT_SWAP = get_path(f'{_BASE_BATTLE}swap')
 FIGHT_PLAY = get_path(f'{_BASE_BATTLE}play')
 FIGHT_IN_PROGRESS = get_path(f'{_BASE_BATTLE}fight_in_progress')
+FIGHT_GOOD_LIFE = get_path(f'{_BASE_BATTLE}low_life')
+FIGHT_TAB = get_path(f'{_BASE_BATTLE}fight_tab')
+FIGHT_SELECT_DRAGON = get_path(f'{_BASE_BATTLE}select_dragon')
+
+
+# End Fight
+
+
 
 GOLD_1 = get_path(_BASE_GOLD+'gold')
 GOLD_2 = get_path(_BASE_GOLD+'gold_2')
@@ -71,6 +91,7 @@ APP_CLOSE_OFFERS = get_path(f'{_BASE_APP_CLOSE}offers')
 APP_CLOSE_PIGGY = get_path(f'{_BASE_APP_CLOSE}piggy')
 APP_CLOSE_SETTINGS = get_path(f'{_BASE_APP_CLOSE}settings')
 APP_CLOSE_TOWER = get_path(f'{_BASE_APP_CLOSE}tower')
+APP_LOOSE = get_path(f'{_BASE_APP_CLOSE}loose')
 
 ## End section close buttons
 

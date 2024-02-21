@@ -42,3 +42,4 @@ class Popup:
     def check_popup_chest():
         if exists(Popup.get_chest()):
           Popup.open_chest()
+

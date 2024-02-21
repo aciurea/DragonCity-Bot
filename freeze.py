@@ -29,7 +29,7 @@ def has_the_opponent_attacked():
     while(not exists(getImagePositionRegion(C.BATTLE_ATTACK_IS_AVAILABLE, 1330, 750, 1425,850, .8, 1))):
         if (time.time() - st) >= 10:
             return print('No oponent to attack: Might need to check_if_I_Can_close??')
-        new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, 0, 700, 1600, 850, .8, 1)
+        new_dragon_btn = getImagePositionRegion(C.ARENA_NEW_DRAGON, 0, 700, 1600, 850, .8, 1)
         if exists(new_dragon_btn):
             print('The oponent finished attacking..')
             return moveAndClick(new_dragon_btn)
@@ -37,7 +37,7 @@ def has_the_opponent_attacked():
    
 
 def _get_new_dragon_btn(x1 = 640, x2 = 1440):
-    return getImagePositionRegion(C.ARENA_SELECT_NEW_DRAGON_BTN, x1, 740, x2, 810, .8, 5)
+    return getImagePositionRegion(C.ARENA_NEW_DRAGON, x1, 740, x2, 810, .8, 5)
 
 def _prepare_best_dragon():
     pos = [[640, 920], [1170, 1440]]
@@ -48,7 +48,7 @@ def _prepare_best_dragon():
             best_values.append({"value":  get_text(), "pos": [140, 380]}) # first dragon
         
         for item in pos:
-            swap_btn = getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1)
+            swap_btn = getImagePositionRegion(C.FIGHT_SWAP, 80, 645, 310, 745, .8, 1)
             moveAndClick(swap_btn, 'Swap button not available')
             delay(.2)
             new_dragon_btn = _get_new_dragon_btn(*item)
@@ -61,7 +61,7 @@ def _prepare_best_dragon():
         log_arena_fights([
             f'Dragon values are: {repr(best_values)} \n'
         ])
-        moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1))
+        moveAndClick(getImagePositionRegion(C.FIGHT_SWAP, 80, 645, 310, 745, .8, 1))
         _new_dragon_btn = _get_new_dragon_btn(*best_values[0]["pos"])
         if not exists(_new_dragon_btn): closePopup()
         else: moveAndClick(_new_dragon_btn)
@@ -70,7 +70,7 @@ def _prepare_best_dragon():
     except: return None
 
 def _swap_dragon():
-    moveAndClick(getImagePositionRegion(C.FIGHT_SWAP_DRAGON, 80, 645, 310, 745, .8, 1), 'Swap button not available')
+    moveAndClick(getImagePositionRegion(C.FIGHT_SWAP, 80, 645, 310, 745, .8, 1), 'Swap button not available')
     moveAndClick(_get_new_dragon_btn(0, 1600), 'New Dragon button not available')
 
 def freeze_dragons():

@@ -175,7 +175,8 @@ def get_monitor_quarters():
         "1stRow": [0, 0, res.width, piece],
         "2ndRow": [0, piece, res.width, piece * 2 ],
         "3rdRow": [0, piece * 2, res.width, piece * 3],
-        "4thRow": [0, piece * 3, res.width, piece * 4],  
+        "4thRow": [0, piece * 3, res.width, piece * 4],
+        "1stCol": [0, 0, piece, res.height],
         "full": [0, 0, res.width, res.height]
     }
 
