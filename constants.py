@@ -99,6 +99,7 @@ APP_CLOSE_PIGGY = get_path(f'{_BASE_APP_CLOSE}piggy')
 APP_CLOSE_SETTINGS = get_path(f'{_BASE_APP_CLOSE}settings')
 APP_CLOSE_TOWER = get_path(f'{_BASE_APP_CLOSE}tower')
 APP_LOOSE = get_path(f'{_BASE_APP_CLOSE}loose')
+APP_CLOSE_BACK = get_path(f'{_BASE_APP_CLOSE}back')
 
 ## End section close buttons
 

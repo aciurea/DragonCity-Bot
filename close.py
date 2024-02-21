@@ -22,6 +22,7 @@ class Close:
             [C.APP_CLOSE_PIGGY, *top_right],
             [C.APP_CLOSE_SETTINGS, *top_right],
             [C.APP_CLOSE_TOWER, *top_right],
+            [C.APP_LOOSE, *Close.mon_quarters['top_left']],
         ]
         lower_priority_btns = [[C.APP_CLOSE_OFFERS, *top_right]]
     
