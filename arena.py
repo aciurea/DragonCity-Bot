@@ -234,5 +234,3 @@ class Arena:
                 if exists(is_strong_dragonb):
                     moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                     delay(5)
-
-print(Arena.enter_battle())

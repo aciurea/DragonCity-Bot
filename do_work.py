@@ -19,8 +19,9 @@ def start_working():
         close_app
     ]
 
-    for work in do_work:
+    for i, work in enumerate(do_work):
         work()
+        if i == len(do_work) - 1: return
         check_if_ok()
         dragMapToCenter()
     
