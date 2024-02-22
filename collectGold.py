@@ -9,7 +9,7 @@ class Gold:
     @staticmethod
     def collectGold():
         dragMapToCenter()
-        times = 70
+        times = 50
         while times > 0:
             fast_click(jsonPos["STACKED_HABITTATS"])
             times -= 1

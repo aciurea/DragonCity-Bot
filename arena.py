@@ -205,11 +205,11 @@ class Arena:
             collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
             if exists(collect_btn): moveAndClick(collect_btn)
 
-            delay(1)
+            delay(3)
             
             Arena.close_buying_dragon_powers()
 
-            delay(1)
+            delay(3)
 
             start_fight = Arena.get_fight_btn()
 
