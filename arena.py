@@ -4,11 +4,14 @@ from popup import Popup
 from utils import (
                 delay,
                 exists,
+                get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
                 moveAndClick)
 import constants as C
 import concurrent.futures
+
+jsonPos = get_json_file('arena.json')
 
 class Battle:
     
@@ -169,7 +172,7 @@ class Arena:
 
     @staticmethod
     def get_fight_btn():
-        return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 1)
+        return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 2)
 
     @staticmethod
     def enter_battle():
@@ -202,20 +205,26 @@ class Arena:
             delay(5)
             Battle.fight()
 
-            collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
-            if exists(collect_btn): moveAndClick(collect_btn)
-
-            delay(3)
-            
+            Arena.collect_arena_battle_rewards()
             Arena.close_buying_dragon_powers()
 
-            delay(3)
+            delay(1)
 
             start_fight = Arena.get_fight_btn()
 
         print('Fight is not ready yet or finished.')
         check_if_ok()
        
+    @staticmethod
+    def collect_arena_battle_rewards():
+        collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 5)
+
+        if exists(collect_btn):
+            moveAndClick(collect_btn)
+        else:
+            moveAndClick(jsonPos["STATIC_CLAIM_BATTLE"])
+            print('Collect button not found')
+
     @staticmethod
     def close_buying_dragon_powers():
         if exists(Arena.get_fight_btn()): return 
@@ -236,4 +245,5 @@ class Arena:
                     delay(5)
 
 
-Arena._check_attack_report()
+
+Arena.prepare_fight()
