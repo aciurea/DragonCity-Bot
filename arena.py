@@ -1,84 +1,116 @@
+import time
 from close import check_if_ok
 from popup import Popup
-from utils import (ThreadWithValue,
-                checkIfCanClaim,
-                closePopup,
-                closeVideo, 
+from utils import (
                 delay,
-                exists, get_monitor_quarters,
+                exists,
+                get_monitor_quarters,
                 getImagePositionRegion,
                 moveAndClick)
 import constants as C
-
 import concurrent.futures
 
 class Battle:
     
     @staticmethod
     def is_fight_in_progress():
-        return exists(getImagePositionRegion(C.FIGHT_IN_PROGRESS, *Popup.mon_quarters['1stCol'], .8, 1))
+        if exists(Battle.get_play_button()): return True
+
+        return exists(Battle.get_new_dragon_btn())
 
     @staticmethod
-    def select_new_dragon():
+    def get_play_button():
+        return getImagePositionRegion(C.FIGHT_PLAY, *Popup.mon_quarters['1stCol'], .8, 1)
+    
+    @staticmethod
+    def get_new_dragon_btn():
         return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *Arena.mon_quarters['4thRow'], .8, 1)
+    
+    @staticmethod
+    def get_swap_button():
+        return getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)
 
-    def wait_for_dragon_to_be_ready():
-        print("Waiting for my turn...")
-        if not Battle.is_fight_in_progress(): return print('Dragon is not available any more')
-        
-        times = 5
-        while times > 0:
-            if exists(getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)): return
-            delay(2)
-            times -= 1
+    @staticmethod
+    def wait_for_oponent_to_attack():
+        start = time.time()
+      
+        while (time.time() - start < 10  # wait for 10 seconds and stop
+               and 
+               not exists(getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1))):
+            delay(1)
+    
+    @staticmethod
+    def change_dragon():
+        swap_btn = Battle.get_swap_button()
+        if not exists(swap_btn): return print('Swap button not found')
+        moveAndClick(swap_btn)
+
+        delay(1)
+
+        moveAndClick(Battle.get_new_dragon_btn())
+        print('Dragon was changed')
 
     @staticmethod
     def fight():
-        if not Battle.is_fight_in_progress():
-            new_dragon = Battle.select_new_dragon()
-            if exists(new_dragon):
-                moveAndClick(new_dragon)
-                delay(1)
-            else: return print('Fight ended')
-        
-        times = 5
-        while times > 0:
-            times -= 1
-            play = getImagePositionRegion(C.FIGHT_PLAY, *Arena.mon_quarters['1stCol'], .8, 1)
-            if exists(play):
-                moveAndClick(play) # start
-                delay(1)
-                moveAndClick(play) # stop
-            print("Dragon life is ok, continue..")
+        while Battle.is_fight_in_progress():
+            # prepare to fight
+            last_dragon = False
+            attacks_per_dragon = 3
 
-            # wait for my turn
-            Battle.wait_for_dragon_to_be_ready()
-        
-        swap_btn = getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)
-        if exists(swap_btn): moveAndClick(swap_btn)
-        
-        return Battle.fight() # try again
+            if last_dragon:
+                delay(3)
+                continue # go to next iteration
+
+            while attacks_per_dragon > 0 and not last_dragon:
+                attacks_per_dragon -= 1
+
+                # dragon is defetead
+                new_dragon_button = Battle.get_new_dragon_btn()
+                if exists(new_dragon_button):
+                    moveAndClick(new_dragon_button)
+                    print('Dragon was defetead')
+                    break
+
+                # dragon is the last one
+                swap_btn = Battle.get_swap_button()
+                if not exists(swap_btn):
+                    last_dragon = True
+                    print('Dragon is the last one')
+                    attacks_per_dragon = 0
+                    break # exit the loop since is the last dragon
+
+                # attack is ok, play and pause
+                play = Battle.get_play_button()
+                moveAndClick(play)
+                delay(1)
+                moveAndClick(play) # pause
+
+                # wait for opponent to attack
+                Battle.wait_for_oponent_to_attack()
+
+            # check if is last dragon and just hit the play button
+            if last_dragon: moveAndClick(Battle.get_play_button())
+
+            # swap the dragon
+            Battle.change_dragon()
+
+        print('Fight is over')
+                
 
 class Arena:
     mon_quarters = get_monitor_quarters()
 
     @staticmethod
     def _check_attack_report():
-        # TODO go for repeal afterwards since video check has to be performed.
-
         accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, *Arena.mon_quarters['3rdRow'], .8, 1)
-        if not exists(accept): return print('Report is ok')
-        moveAndClick(accept)
-        # repeal = getImagePositionRegion(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)
+        if not exists(accept): 
+            return print('No report found')
+            # not working because it will close the popup
+            #check_if_ok()  # there is a change that the report to be positive and we need to close the popup.
 
-        # if exists(repeal):
-        #     moveAndClick(repeal)
-        #     checkIfCanClaim()
-        #     closeVideo()
-        #     delay(1)
-        #     accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)
-        #     if exists(accept): moveAndClick(accept)
-        #     else: closePopup()
+        moveAndClick(accept)
+
+        #TODO improvement: check if we have a video to close
 
     @staticmethod
     def check_and_collect_rewards():
