@@ -1,33 +1,51 @@
 ## Dragon City Bot
 
+### Why this tool?
+- There is plenty of tedious tasks, like: `collect gold`, `collect/grow food`, `collect daily gem`, `fighting other oponents`, etc
+- There is not time to do all the above tasks
+- Learn `Python`
+- 
 ### Goal
 - The goal is to automate as much as possible the game play.
 - Since I have no access to their APIs (at least I don't know how to access them from windows, android or iOS), I created a script that will play for me (collecting resources, fighting, identifying the resources where it needs to click, etc)
 
 ### Technology stack
-- The project started with autohotkey `https://www.autohotkey.com/` but due to it's limitations I switched the language to Python 3s.
+- The project started with autohotkey `https://www.autohotkey.com/` but due to it's limitations I switched the language to Python.
 
 `NOTE`: I am new with python, I am a based JavaScript developer, I am adapting the code to the community guidelines as soons as I am learning new things in Python
 
 ### Platforms
-- Works only for windows right now but it can also work with `bluestacks` or any other emulator as soon as the script runs from windows. Images might be updated due to different resolution on emulators
-- Didn't try to run the script from other OS (but it should work)
+- Works only for windows right now but it can also work with `bluestacks`
+- I think it can be adapted to other Operating Systems, but since the game is available for Windows and it happens to have a computer with windows, it is built only for windows.
+- If someone wants to contribute, feel free.
+
+### Limitations
+- The games is **optimized/works** for a single resolution. 2600/1440 px. (The images from the games used to identify the position of the resources are taken at this resolution)
+- Dragon City team, changed the way dragons fight (doing and taking damage). Everything was on user's machine, but now is validated on server. This means that we cannot use `pytesseract` any more to find out the dragon life points and use a memory editing tool to modify this values.
+- I have a different map, some of the habitats are stacked one over another. Did this in the past when DC was available in browser. **www.ditlep.com** So for me is more easy to collect gold.
+- The map it is centered around an object, in mycase an artifact. [TODO] attach picture
+- The map is moved only in 2 direction up/down for simplicity reasons
+- The game cannot run on background, basically it needs to open the game and do mouse move and click all over the screen.
 
 ## How it works
 - I use Python3 to identify resources on screen. For this I need to take a screenshot (this one is not automated, it has to be manually) and I am using the `imagesearch` [https://pypi.org/project/python-imagesearch/] to get the coordinates on screen. 
 - Once the resources are identified I am clicking on this coordinates or I am moving forward with other screenshots.
 - The application needs a starting point (in my case the center of the map) and drag the map up and down to collect gold and food.
 - The application is zoomed out to maximum.
-- The starting point is needed because there might be a lot of missed clicks and thus opening unwanted screens (In the future can be fixed, be closing those screens and try again to move the map on other coordonates [`x` + step, `y` +step])
 - The application has a lot of screenshots with buttons, resources and this is happening because some of the screenshots looks the same at first view but in reality are not the same (have extra shadows, borders, maybe different colors) and `imagesearch` will fail
-- `The application works only for 1600x900 resolution`
-- TODO: added screenshot with the map
+- `The application works for 2600/1440 resolution`. There is a possibility that the `imagesearch` package to return true for some screenshots, but is not guaranteed
+- The entry file into the game is `scheduler.py` that will run other files like: collect god, activate towers, collect/grow food, fight in the arena, watch adds for you.
 
-## Open the Game
+## Hot to run the project
+- make sure you have python and pip installed
+- pip install -r requirements.txt
 - In order to open it you need to find out the AppUserModelID
 - Open power shell with admin right and type `Get-StartApps | select Name, AppID`
 - copy the appId into open.py, `app_model_id` variable. now you can start the game.
+- python start scheduler.py
 
+# The current project goes through a refactoring phase and code removal.
+The sections below will be updated once the refactoring to those functionalities is performed.
 
 ### Features
 - Collect gold
@@ -127,11 +145,6 @@
     - Will farm and collect food for 20 times and moves forward to `feed`
     - If action is `feed` in order to avoid the food drainage, the application will breed a terra egg, hatch it and feed the dragon to level 3 and sell it. The food consumed will be `60` which is not a big deal.
 - `Note`: The `Tree` is used for breeding, `hatchery` is very closed to the `Tree` and the `Terra habitat` is very close to the hatchery. Since the game will display all the available places to put the dragon, the best way is to have the habitat very close to the `hatchery` and calculate the position relative to the `Tree` or to the `hatcher` or any other point that is easy to find.
-
-
-
-
-
 
 ### Heroic Race 
 - Lap1: minTime = 25 minutes
