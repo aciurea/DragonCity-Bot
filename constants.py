@@ -183,12 +183,14 @@ HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
 TOWERS_RESOURCESS_TOWER = get_path(_BASE_TOWERS + 'resources_tower')
 TOWERS_GEMS_TOWER = get_path(_BASE_TOWERS + 'gems_tower')
 TOWERS_GOLD_TOWER = get_path(_BASE_TOWERS + 'gold_tower')
-TOWER_POWER_TOWER = get_path(_BASE_TOWERS + 'power_tower')
+TOWERS_POWER_TOWER = get_path(_BASE_TOWERS + 'power_tower')
+TOWERS_FOOD_TOWER = get_path(_BASE_TOWERS + 'food_tower')
 
 TOWERS_COLLECT_RESOURCES_BTN = get_path(_BASE_TOWERS + 'collect_resources')
 TOWERS_GEMS_BTN = get_path(_BASE_TOWERS + 'collect_gems')
 TOWERS_BOOST_GOLD_BTN = get_path(_BASE_TOWERS + 'boost_gold')
-TOWERS_BOOTS_COMBAT_BTN = get_path(_BASE_TOWERS + 'boost_combat')
+TOWERS_BOOST_COMBAT_BTN = get_path(_BASE_TOWERS + 'boost_combat')
+TOWERS_BOOST_FOOD_BTN = get_path(_BASE_TOWERS + 'boost_food')
 
 # End Towers
 
