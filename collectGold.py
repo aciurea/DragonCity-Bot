@@ -1,5 +1,5 @@
 from close import check_if_ok
-from move import fast_click, moveAndClick
+from move import fast_click
 from timers import delay
 from utils import  dragMapToCenter, get_json_file
 
