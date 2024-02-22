@@ -17,12 +17,12 @@ class Close:
         
         top_right = Close.mon_quarters['top_right']
         high_priority_btns = [
+            [C.APP_LOOSE, *Close.mon_quarters['3rdRow']],
             [C.APP_CLOSE_DIVINE, *top_right],
             [C.APP_CLOSE_GEMS, *top_right],
             [C.APP_CLOSE_PIGGY, *top_right],
             [C.APP_CLOSE_SETTINGS, *top_right],
             [C.APP_CLOSE_TOWER, *top_right],
-            [C.APP_LOOSE, *Close.mon_quarters['top_left']],
         ]
         lower_priority_btns = [[C.APP_CLOSE_OFFERS, *top_right]]
     

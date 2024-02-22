@@ -1,4 +1,4 @@
-from close import Close
+from close import check_if_ok
 from popup import Popup
 from utils import (ThreadWithValue,
                 checkIfCanClaim,
@@ -11,29 +11,6 @@ from utils import (ThreadWithValue,
 import constants as C
 
 import concurrent.futures
-
-def _check_attack_report():
-    repeal = getImagePositionRegion(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)
-
-    if exists(repeal):
-        moveAndClick(repeal)
-        checkIfCanClaim()
-        closeVideo()
-        delay(1)
-        accept = getImagePositionRegion(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)
-        if exists(accept): moveAndClick(accept)
-        else: closePopup()
-    
-    threads = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_CLOSE_ATTACK_REPORT, 1100, 160, 1320, 300, .8, 3)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=(C.ARENA_ATTACK_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)).start()
-    ]
-    
-    for thread in threads:
-        img = thread.join()
-        print(img)
-        if exists(img):
-            moveAndClick(img)
 
 class Battle:
     
@@ -86,6 +63,24 @@ class Arena:
     mon_quarters = get_monitor_quarters()
 
     @staticmethod
+    def _check_attack_report():
+        # TODO go for repeal afterwards since video check has to be performed.
+
+        accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, *Arena.mon_quarters['3rdRow'], .8, 1)
+        if not exists(accept): return print('Report is ok')
+        moveAndClick(accept)
+        # repeal = getImagePositionRegion(C.ARENA_REPEAL, 550, 550, 1100, 750, .8, 3)
+
+        # if exists(repeal):
+        #     moveAndClick(repeal)
+        #     checkIfCanClaim()
+        #     closeVideo()
+        #     delay(1)
+        #     accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, 550, 550, 1000, 670, .8, 3)
+        #     if exists(accept): moveAndClick(accept)
+        #     else: closePopup()
+
+    @staticmethod
     def check_and_collect_rewards():
         # TODO to be implemented
         collect= getImagePositionRegion(C.ARENA_CHEST_COLLECT, 1015, 125, 1200, 200, .8, 3)
@@ -136,7 +131,7 @@ class Arena:
         if not exists(new_dragon): return print('New dragon not found')
         moveAndClick(new_dragon)
         delay(1)
-        Close.check_if_ok()
+        check_if_ok()
 
     @staticmethod
     def enter_battle():
@@ -150,6 +145,10 @@ class Arena:
         if not exists(fight_tab): return print('Fight tab not found')
         moveAndClick(fight_tab)
 
+        delay(1)
+        
+        Arena._check_attack_report()
+        
         delay(1)
         
         start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
@@ -167,20 +166,20 @@ class Arena:
             collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
             if exists(collect_btn): moveAndClick(collect_btn)
 
-            Arena.close_buying_stats()
+            Arena.close_buying_dragon_powers()
 
             delay(1)
 
             start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
         
         print('Fight is not ready yet or finished.')
-        Close.check_if_ok()
+        check_if_ok()
        
     @staticmethod
-    def close_buying_stats():
-       #TODO to be implemented
-        return True
-    
+    def close_buying_dragon_powers():
+        check_if_ok() # first we hit the close button
+        check_if_ok() # then we check if we have the loose button and close it.
+
     @staticmethod
     def skip_strong_dragons():
         strong_dragons = [
@@ -192,3 +191,5 @@ class Arena:
                 if exists(is_strong_dragonb):
                     moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                     delay(5)
+
+print(Arena.enter_battle())

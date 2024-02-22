@@ -24,7 +24,7 @@ ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
 # Start Arena
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
-ARENA_ATTACK_REPORT_ACCEPT = get_path(_BASE_ARENA + 'attack_report_accept')
+
 ARENA_REPEAL = get_path(_BASE_ARENA + 'repeal')
 
 ARENA_CHEST_COLLECT = get_path(_BASE_ARENA + 'collect')
@@ -41,6 +41,7 @@ ARENA_NEW_DRAGON = get_path(_BASE_ARENA + 'new_dragon')
 ARENA_ORDER_BY = get_path(_BASE_ARENA + 'order_by')
 ARENA_ORDER_BY_POWER = get_path(_BASE_ARENA + 'order_by_power')
 ARENA_SKIP = get_path(_BASE_ARENA + 'skip')
+ARENA_REPORT_ACCEPT = get_path(_BASE_ARENA + 'report_accept')
 
 # End Arena
 
