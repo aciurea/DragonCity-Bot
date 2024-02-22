@@ -1,46 +1,73 @@
-from utils import delay, dragMap, dragMapToCenter, exists, getImagePositionRegion, moveAndClick
+from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, moveAndClick
 import constants as C
-import time
 
-def _wait_for_artifact_to_be_visible():
-    st = time.time()
+class Towers:
+    mon = get_monitor_quarters()
 
-    while(time.time() - st < 10 or not exists(dragMapToCenter())):
-        delay(.5)
+    @staticmethod
+    def greedy_tower():
+        dragMapToCenter()
 
-def collect_resources():
-    _wait_for_artifact_to_be_visible()
-    artifact = dragMapToCenter()
-    if exists(artifact):
-        dragMap(artifact, [artifact[0], artifact[1]-150])
-    resources_tower = getImagePositionRegion(C.TOWERS_RESOURCESS_TOWER, 950, 500, 1250, 800, 0.8, 5)
+        tower  = getImagePositionRegion(C.TOWERS_RESOURCESS_TOWER, *Towers.mon['4thRow'], 0.8, 1)
+        if not exists(tower): return print("No Greedy Tower found")
+        moveAndClick(tower)
 
-    if not exists(resources_tower): return [-1]
-    moveAndClick(resources_tower)
+        delay(1)
+        
+        resources_btn = getImagePositionRegion(C.TOWERS_COLLECT_RESOURCES_BTN, *Towers.mon['4thRow'], 0.8, 1)
+        if not exists(resources_btn): return print("No resources btn found or not ready!")
+        moveAndClick(resources_btn)
+        print('Resources collected')
 
-    resources_btn = getImagePositionRegion(C.TOWERS_COLLECT_RESOURCES_BTN, 1100, 700, 1350, 850, 0.8, 3)
-    if not exists(resources_btn): return [-1]
-    moveAndClick(resources_btn)
-    return resources_btn
+    @staticmethod
+    def gems_towers():
+        dragMapToCenter()
 
-def boost_gold(artifact):
-    print(artifact)
-    boost_gold_tower = getImagePositionRegion(C.TOWERS_BOOST_GOLD_TOWER, 100, 50, 1000, 700, 0.8, 3)
-    if not exists(boost_gold_tower): return [-1]
-    moveAndClick(boost_gold_tower)
-    boost_gold_btn = getImagePositionRegion(C.TOWERS_BOOST_GOLD_BTN, 1160, 700, 1330, 860, 0.8, 3)
-    if not exists(boost_gold_btn): return [-1]
-    moveAndClick(boost_gold_btn)
-    print('Goold boosted')
+        tower  = getImagePositionRegion(C.TOWERS_GEMS_TOWER, *Towers.mon['top_right'], 0.8, 1)
+        if not exists(tower): return print("No Gems Tower found")
+        moveAndClick(tower)
 
-def collect_gems(artifact):
-    print(artifact)
-    if exists(artifact):
-        dragMap(artifact, [artifact[0], artifact[1]+50])
-    gems_tower = getImagePositionRegion(C.TOWERS_GEMS_TOWER, 1120, 10, 1400, 300, 0.8, 3)
-    if not exists(gems_tower): return [-1]
-    moveAndClick(gems_tower)
-    gems_btn = getImagePositionRegion(C.TOWERS_GEMS_BTN, 1160, 700, 1330, 860, 0.8, 3)
-    if not exists(gems_btn): return [-1]
-    moveAndClick(gems_btn)
-    print('Gems collected')
+        delay(1)
+        
+        #TODO updated the gems image once is available
+        resources_btn = getImagePositionRegion(C.TOWERS_COLLECT_RESOURCES_BTN, *Towers.mon['4thRow'], 0.8, 1)
+        if not exists(resources_btn): return print("No resources btn found or not ready!")
+        moveAndClick(resources_btn)
+        print('Gems collected')
+
+    @staticmethod
+    def gold_tower():
+        dragMapToCenter()
+
+        tower  = getImagePositionRegion(C.TOWERS_GOLD_TOWER, *Towers.mon['top_left'], 0.8, 1)
+        if not exists(tower): return print("No Gold Tower found")
+        moveAndClick(tower)
+
+        delay(1)
+
+        resources_btn = getImagePositionRegion(C.TOWERS_BOOST_GOLD_BTN, *Towers.mon['4thRow'], 0.8, 1)
+        if not exists(resources_btn): return print("No [GOLD] btn found or not ready!")
+        moveAndClick(resources_btn)
+        print('Gold boosted')
+
+    @staticmethod
+    def power_tower():
+        dragMapToCenter()
+
+        tower  = getImagePositionRegion(C.TOWER_POWER_TOWER, *Towers.mon['bottom_right'], 0.8, 1)
+        if not exists(tower): return print("No Power Tower found")
+        moveAndClick(tower)
+
+        delay(1)
+
+        resources_btn = getImagePositionRegion(C.TOWERS_BOOTS_COMBAT_BTN, *Towers.mon['4thRow'], 0.8, 1)
+        if not exists(resources_btn): return print("No resources btn found or not ready!")
+
+        moveAndClick(resources_btn)
+        print('Power collected')
+
+def activate_towers():
+    Towers.greedy_tower()
+    Towers.gems_towers()
+    Towers.gold_tower()
+    Towers.power_tower()
