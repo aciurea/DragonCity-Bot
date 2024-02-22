@@ -61,7 +61,7 @@ class Battle:
             attacks_per_dragon = 3
 
             if last_dragon:
-                delay(3)
+                delay(2)
                 continue # go to next iteration
 
             while attacks_per_dragon > 0 and not last_dragon:
@@ -92,11 +92,11 @@ class Battle:
                 Battle.wait_for_oponent_to_attack()
 
             # check if is last dragon and just hit the play button
-            if last_dragon: moveAndClick(Battle.get_play_button())
-
-            # swap the dragon
-            Battle.change_dragon()
-
+            if last_dragon: 
+                moveAndClick(Battle.get_play_button())
+            else:
+                # swap the dragon
+                Battle.change_dragon()
         print('Fight is over')
                 
 
@@ -204,6 +204,7 @@ class Arena:
 
             delay(5)
             Battle.fight()
+            delay(1)
 
             Arena.collect_arena_battle_rewards()
             Arena.close_buying_dragon_powers()
