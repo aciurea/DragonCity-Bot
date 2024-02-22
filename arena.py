@@ -114,12 +114,14 @@ class Arena:
 
     @staticmethod
     def check_and_collect_rewards():
-        # TODO to be implemented
-        collect= getImagePositionRegion(C.ARENA_CHEST_COLLECT, 1015, 125, 1200, 200, .8, 3)
+        collect = getImagePositionRegion(C.ARENA_CHEST_COLLECT, *Arena.mon_quarters['1stRow'], .8, 1)
 
         if exists(collect):
             moveAndClick(collect)
+            delay(1)
             Popup.check_popup_chest()
+            check_if_ok()
+            delay(.3)
 
     @staticmethod
     def prepare_fight():
@@ -166,6 +168,10 @@ class Arena:
         check_if_ok()
 
     @staticmethod
+    def get_fight_btn():
+        return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 1)
+
+    @staticmethod
     def enter_battle():
         arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
         if not exists(arena): return print('Arena not found')
@@ -183,11 +189,12 @@ class Arena:
         
         delay(1)
         
-        start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
+        Arena.check_and_collect_rewards()
+
+        
+        start_fight = Arena.get_fight_btn()
         while exists(start_fight):
             # TODO check if I can collect the chest from TOP
-            #Arena.check_and_collect_rewards()
-
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
             moveAndClick(start_fight)
@@ -198,17 +205,21 @@ class Arena:
             collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
             if exists(collect_btn): moveAndClick(collect_btn)
 
+            delay(1)
+            
             Arena.close_buying_dragon_powers()
 
             delay(1)
 
-            start_fight = getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], 0.8, 1)
-        
+            start_fight = Arena.get_fight_btn()
+
         print('Fight is not ready yet or finished.')
         check_if_ok()
        
     @staticmethod
     def close_buying_dragon_powers():
+        if exists(Arena.get_fight_btn()): return 
+
         check_if_ok() # first we hit the close button
         check_if_ok() # then we check if we have the loose button and close it.
 
