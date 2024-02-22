@@ -8,7 +8,7 @@ from towers import activate_towers
 from utils import dragMapToCenter
 
 
-def start_app():
+def start_working():
     do_work = [
         open_app,
         activate_towers,

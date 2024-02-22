@@ -1,11 +1,11 @@
 import time
 
-from start import start_app
+from do_work import start_working
 
 while True:
     try:
         print("Starting the application...")
-        start_app()
+        start_working()
     except Exception as e:
         print("Script crashed, restarting...", e)
     finally:
