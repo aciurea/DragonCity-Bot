@@ -102,14 +102,14 @@ class Arena:
 
     @staticmethod
     def _check_attack_report():
+        if not exists(getImagePositionRegion(C.ARENA_REPORT, *Arena.mon_quarters['top_left'], .8, 1)): return
+       
         accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, *Arena.mon_quarters['3rdRow'], .8, 1)
-        if not exists(accept): 
-            return print('No report found')
-            # not working because it will close the popup
-            #check_if_ok()  # there is a change that the report to be positive and we need to close the popup.
+        if exists(accept): 
+            moveAndClick(accept)
+            return print("Attack report accepted")
 
-        moveAndClick(accept)
-
+        check_if_ok()
         #TODO improvement: check if we have a video to close
 
     @staticmethod
@@ -234,3 +234,6 @@ class Arena:
                 if exists(is_strong_dragonb):
                     moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                     delay(5)
+
+
+Arena._check_attack_report()

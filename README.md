@@ -23,7 +23,7 @@
 - The games is **optimized/works** for a single resolution. 2600/1440 px. (The images from the games used to identify the position of the resources are taken at this resolution)
 - Dragon City team, changed the way dragons fight (doing and taking damage). Everything was on user's machine, but now is validated on server. This means that we cannot use `pytesseract` any more to find out the dragon life points and use a memory editing tool to modify this values.
 - I have a different map, some of the habitats are stacked one over another. Did this in the past when DC was available in browser. **www.ditlep.com** So for me is more easy to collect gold.
-- The map it is centered around an object, in mycase an artifact. [TODO] attach picture
+- The map it is centered around an object, in mycase an artifact. See picure below (red circle) ![DC Map](./img/map.png) 
 - The map is moved only in 2 direction up/down for simplicity reasons
 - The game cannot run on background, basically it needs to open the game and do mouse move and click all over the screen.
 

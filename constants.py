@@ -42,6 +42,7 @@ ARENA_ORDER_BY = get_path(_BASE_ARENA + 'order_by')
 ARENA_ORDER_BY_POWER = get_path(_BASE_ARENA + 'order_by_power')
 ARENA_SKIP = get_path(_BASE_ARENA + 'skip')
 ARENA_REPORT_ACCEPT = get_path(_BASE_ARENA + 'report_accept')
+ARENA_REPORT = get_path(_BASE_ARENA + 'report')
 
 # End Arena
 
