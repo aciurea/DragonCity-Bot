@@ -28,8 +28,15 @@ class Popup:
     @staticmethod
     def open_chest():
         tab_btn = getImagePositionRegion(C.POPUP_TAP, *Popup.mon_quarters['3rdRow'], .8, 1)
-        if exists(tab_btn): moveAndClick(tab_btn)
-        else: moveAndClick(jsonPos['TAP_BTN'])
+        if exists(tab_btn): 
+            moveAndClick(tab_btn)
+            delay(.2)
+            moveAndClick(tab_btn)
+            delay(.2)
+            moveAndClick(tab_btn)
+        else:
+            print("Tap not found") 
+            moveAndClick(jsonPos['TAP_BTN'])
         delay(3)
         claim_btn = getImagePositionRegion(C.POPUP_CLAIM, *Popup.mon_quarters['full'], .8, 1)
         
@@ -42,4 +49,3 @@ class Popup:
     def check_popup_chest():
         if exists(Popup.get_chest()):
           Popup.open_chest()
-
