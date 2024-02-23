@@ -10,6 +10,8 @@ from utils import (
                 moveAndClick)
 import constants as C
 import concurrent.futures
+import pyautogui
+import os
 
 jsonPos = get_json_file('arena.json')
 
@@ -37,7 +39,7 @@ class Battle:
     def wait_for_oponent_to_attack():
         start = time.time()
       
-        while (time.time() - start < 10  # wait for 10 seconds and stop
+        while (time.time() - start < 7  # wait for 7 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
                and 
                not exists(getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1))):
             delay(1)
@@ -57,51 +59,50 @@ class Battle:
     def fight():
         while Battle.is_fight_in_progress():
             # prepare to fight
-            last_dragon = False
+            is_last_dragon = False
             attacks_per_dragon = 3
 
-            if last_dragon:
+            if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
-                continue # go to next iteration
+                continue 
 
-            while attacks_per_dragon > 0 and not last_dragon:
+            # This flow is specifically for arena where you want to use all the dragons power and not wait for a dragon to get defeated in order to change it.
+            # This flow might save the dragon for a next fight.
+            # Arena battles have very strong dragons.
+            while attacks_per_dragon > 0 and not is_last_dragon:
                 attacks_per_dragon -= 1
 
                 # dragon is defetead
-                new_dragon_button = Battle.get_new_dragon_btn()
-                if exists(new_dragon_button):
-                    moveAndClick(new_dragon_button)
-                    print('Dragon was defetead')
+                if exists(Battle.get_new_dragon_btn()):
+                    print('Dragon is defeated')
                     break
 
                 # dragon is the last one
-                swap_btn = Battle.get_swap_button()
-                if not exists(swap_btn):
-                    last_dragon = True
+                if not exists(Battle.get_swap_button()):
+                    is_last_dragon = True
                     print('Dragon is the last one')
-                    attacks_per_dragon = 0
-                    break # exit the loop since is the last dragon
+                    break # exit the loop since is the last dragon and no need for play and pause
 
                 # attack is ok, play and pause
                 play = Battle.get_play_button()
                 moveAndClick(play)
-                delay(1)
+                delay(.5)
                 moveAndClick(play) # pause
 
                 # wait for opponent to attack
                 Battle.wait_for_oponent_to_attack()
 
             # check if is last dragon and just hit the play button
-            if last_dragon: 
+            if is_last_dragon: 
                 moveAndClick(Battle.get_play_button())
             else:
-                # swap the dragon
                 Battle.change_dragon()
         print('Fight is over')
                 
 
 class Arena:
     mon_quarters = get_monitor_quarters()
+    dump_screenshot_for_rewards = "dump_for_rewards.png"
 
     @staticmethod
     def _check_attack_report():
@@ -174,6 +175,14 @@ class Arena:
     def get_fight_btn():
         return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 2)
 
+    
+    def get_screenshot_for_rewards_collection():
+        return getImagePositionRegion(Arena.dump_screenshot_for_rewards, 1000, 350, 1500, 550, .8, 1)
+    
+    def save_screenshot_for_rewards_collection():
+        screenshot = pyautogui.screenshot(region=(1000, 350, 500, 200))
+        screenshot.save(Arena.dump_screenshot_for_rewards)
+
     @staticmethod
     def enter_battle():
         arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
@@ -187,41 +196,42 @@ class Arena:
         moveAndClick(fight_tab)
 
         delay(1)
-        
         Arena._check_attack_report()
-        
         delay(1)
-        
-        Arena.check_and_collect_rewards()
 
-        
         start_fight = Arena.get_fight_btn()
         while exists(start_fight):
-            # TODO check if I can collect the chest from TOP
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
+            Arena.check_and_collect_rewards()
+            Arena.save_screenshot_for_rewards_collection()
+
             moveAndClick(start_fight)
+           
+            # wait for the battle to start.
+            while not exists(Battle.is_fight_in_progress()): delay(1)
 
-            delay(5)
             Battle.fight()
-            delay(1)
-
             Arena.collect_arena_battle_rewards()
             Arena.close_buying_dragon_powers()
-
-            delay(1)
-
             start_fight = Arena.get_fight_btn()
 
         print('Fight is not ready yet or finished.')
         check_if_ok()
-       
+
     @staticmethod
     def collect_arena_battle_rewards():
         collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 5)
 
         if exists(collect_btn):
             moveAndClick(collect_btn)
+            start = time.time()
+            seconds_limit_to_collect_rewards = 7
+
+            while (time.time() - start < seconds_limit_to_collect_rewards
+                and not exists(Arena.get_screenshot_for_rewards_collection())):
+                delay(1)
+            os.remove(Arena.dump_screenshot_for_rewards)
         else:
             moveAndClick(jsonPos["STATIC_CLAIM_BATTLE"])
             print('Collect button not found')
@@ -232,6 +242,7 @@ class Arena:
 
         check_if_ok() # first we hit the close button
         check_if_ok() # then we check if we have the loose button and close it.
+        delay(1)
 
     @staticmethod
     def skip_strong_dragons():
@@ -244,7 +255,3 @@ class Arena:
                 if exists(is_strong_dragonb):
                     moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                     delay(5)
-
-
-
-Arena.prepare_fight()
