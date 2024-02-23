@@ -19,9 +19,13 @@ class Battle:
     
     @staticmethod
     def is_fight_in_progress():
-        if exists(Battle.get_play_button()): return True
+        if exists(Battle.get_speed_button()): return True
 
         return exists(Battle.get_new_dragon_btn())
+
+    @staticmethod
+    def get_speed_button():
+        return getImagePositionRegion(C.FIGHT_IN_PROGRESS, *Popup.mon_quarters['1stCol'], .8, 1)
 
     @staticmethod
     def get_play_button():
@@ -59,10 +63,8 @@ class Battle:
 
     @staticmethod
     def fight():
+        is_last_dragon = False
         while Battle.is_fight_in_progress():
-            # prepare to fight
-            is_last_dragon = False
-            attacks_per_dragon = 3
 
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
@@ -71,6 +73,7 @@ class Battle:
             # This flow is specifically for arena where you want to use all the dragons power and not wait for a dragon to get defeated in order to change it.
             # This flow might save the dragon for a next fight.
             # Arena battles have very strong dragons.
+            attacks_per_dragon = 3
             while attacks_per_dragon > 0:
                 attacks_per_dragon -= 1
 
@@ -230,7 +233,6 @@ class Arena:
         if exists(collect_btn):
             moveAndClick(collect_btn)
         else:
-            delay(3)
             moveAndClick(jsonPos["STATIC_CLAIM_BATTLE"])
             print('Collect button not found')
 
