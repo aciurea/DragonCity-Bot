@@ -62,7 +62,7 @@ def check_extra_bonus():
 
 def _clean_all_popups():
     start = time.time()
-    app_time_to_close_all_buttons = 50
+    app_time_to_close_all_buttons = 40
     while(not exists(_get_artifact_pos())):
         if(time.time() - start > app_time_to_close_all_buttons): return open_app()
         Popup.check_popup_chest()
@@ -87,5 +87,5 @@ def _check_if_app_started():
         if not exists(image):
             os.remove('screenshot.png')
             return [-1]
-        delay(1)
+        delay(2)
 
