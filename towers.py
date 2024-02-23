@@ -15,7 +15,7 @@ class Towers:
         delay(1)
         
         resources_btn = getImagePositionRegion(C.TOWERS_COLLECT_RESOURCES_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return print("No [Collect gold/food] btn found or not ready!")
+        if not exists(resources_btn): return 
         moveAndClick(resources_btn)
         print('Resources collected')
 
@@ -30,7 +30,7 @@ class Towers:
         delay(1)
         
         resources_btn = getImagePositionRegion(C.TOWERS_GEMS_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return print("No [Gem] btn found or not ready!")
+        if not exists(resources_btn): return
         moveAndClick(resources_btn)
         print('Gems collected')
 
@@ -45,7 +45,7 @@ class Towers:
         delay(1)
 
         resources_btn = getImagePositionRegion(C.TOWERS_BOOST_GOLD_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return print("No [GOLD] btn found or not ready!")
+        if not exists(resources_btn): return
         moveAndClick(resources_btn)
         print('Gold boosted')
 
@@ -60,7 +60,7 @@ class Towers:
         delay(1)
 
         resources_btn = getImagePositionRegion(C.TOWERS_BOOST_COMBAT_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return print("No [Power] btn found or not ready!")
+        if not exists(resources_btn): return
 
         moveAndClick(resources_btn)
         print('Power collected')
@@ -76,7 +76,7 @@ class Towers:
         delay(1)
 
         resources_btn = getImagePositionRegion(C.TOWERS_BOOST_FOOD_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return print("No [Decrease Food  time] btn found or not ready!")
+        if not exists(resources_btn): return 
 
         moveAndClick(resources_btn)
         print('Power collected')
