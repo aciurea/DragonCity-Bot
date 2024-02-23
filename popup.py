@@ -26,14 +26,18 @@ class Popup:
             return [-1]
         
     @staticmethod
+    def multiple_click(tab_btn):
+        times = 5
+        while times > 0:
+            moveAndClick(tab_btn)
+            delay(.1)
+            times -= 1
+       
+    @staticmethod
     def open_chest():
         tab_btn = getImagePositionRegion(C.POPUP_TAP, *Popup.mon_quarters['3rdRow'], .8, 1)
         if exists(tab_btn): 
-            moveAndClick(tab_btn)
-            delay(.2)
-            moveAndClick(tab_btn)
-            delay(.2)
-            moveAndClick(tab_btn)
+          Popup.multiple_click(tab_btn)
         else:
             print("Tap not found") 
             moveAndClick(jsonPos['TAP_BTN'])

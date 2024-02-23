@@ -98,7 +98,6 @@ class Battle:
             else:
                 Battle.change_dragon()
         print('Fight is over')
-                
 
 class Arena:
     mon_quarters = get_monitor_quarters()
@@ -121,7 +120,7 @@ class Arena:
         collect = getImagePositionRegion(C.ARENA_CHEST_COLLECT, *Arena.mon_quarters['1stRow'], .8, 1)
 
         if exists(collect):
-            moveAndClick(collect)
+            Popup.multiple_click(collect)
             delay(1)
             Popup.check_popup_chest()
             check_if_ok()
@@ -203,8 +202,8 @@ class Arena:
         while exists(start_fight):
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
-            Arena.check_and_collect_rewards()
             Arena.save_screenshot_for_rewards_collection()
+            Arena.check_and_collect_rewards()
 
             moveAndClick(start_fight)
            
