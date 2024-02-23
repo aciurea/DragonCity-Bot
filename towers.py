@@ -29,8 +29,7 @@ class Towers:
 
         delay(1)
         
-        #TODO updated the gems image once is available
-        resources_btn = getImagePositionRegion(C.TOWERS_COLLECT_RESOURCES_BTN, *Towers.mon['4thRow'], 0.8, 1)
+        resources_btn = getImagePositionRegion(C.TOWERS_GEMS_BTN, *Towers.mon['4thRow'], 0.8, 1)
         if not exists(resources_btn): return print("No resources btn found or not ready!")
         moveAndClick(resources_btn)
         print('Gems collected')
