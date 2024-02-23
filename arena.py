@@ -39,20 +39,22 @@ class Battle:
     def wait_for_oponent_to_attack():
         start = time.time()
       
-        while (time.time() - start < 7  # wait for 7 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
-               and 
-               not exists(getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1))):
+        while time.time() - start < 7:  # wait for 7 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
+            if exists(Battle.get_swap_button()): return # oponend finished attacking
+            if exists(Battle.get_new_dragon_btn()): return # dragon is defetead.
             delay(1)
     
     @staticmethod
     def change_dragon():
         swap_btn = Battle.get_swap_button()
-        if not exists(swap_btn): return print('Swap button not found')
-        moveAndClick(swap_btn)
+        if exists(swap_btn):
+            moveAndClick(swap_btn)
+            delay(1)
 
-        delay(1)
+        new_dragon = Battle.get_new_dragon_btn()
+        if not exists(new_dragon): return print('Dragon not found')
 
-        moveAndClick(Battle.get_new_dragon_btn())
+        moveAndClick(new_dragon)
         print('Dragon was changed')
 
     @staticmethod
@@ -69,7 +71,7 @@ class Battle:
             # This flow is specifically for arena where you want to use all the dragons power and not wait for a dragon to get defeated in order to change it.
             # This flow might save the dragon for a next fight.
             # Arena battles have very strong dragons.
-            while attacks_per_dragon > 0 and not is_last_dragon:
+            while attacks_per_dragon > 0:
                 attacks_per_dragon -= 1
 
                 # dragon is defetead
@@ -97,7 +99,7 @@ class Battle:
                 moveAndClick(Battle.get_play_button())
             else:
                 Battle.change_dragon()
-        print('Fight is over')
+        print('Fight is over!')
 
 class Arena:
     mon_quarters = get_monitor_quarters()
@@ -208,9 +210,12 @@ class Arena:
             moveAndClick(start_fight)
            
             # wait for the battle to start.
-            while not exists(Battle.is_fight_in_progress()): delay(1)
+            while not Battle.is_fight_in_progress(): delay(1)
 
             Battle.fight()
+            
+            delay(3)
+
             Arena.collect_arena_battle_rewards()
             Arena.close_buying_dragon_powers()
             start_fight = Arena.get_fight_btn()
@@ -220,20 +225,23 @@ class Arena:
 
     @staticmethod
     def collect_arena_battle_rewards():
-        collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 5)
+        collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
 
         if exists(collect_btn):
             moveAndClick(collect_btn)
-            start = time.time()
-            seconds_limit_to_collect_rewards = 7
-
-            while (time.time() - start < seconds_limit_to_collect_rewards
-                and not exists(Arena.get_screenshot_for_rewards_collection())):
-                delay(1)
-            os.remove(Arena.dump_screenshot_for_rewards)
         else:
+            delay(3)
             moveAndClick(jsonPos["STATIC_CLAIM_BATTLE"])
             print('Collect button not found')
+
+        start = time.time()
+        seconds_limit_to_collect_rewards = 7
+
+        while (time.time() - start < seconds_limit_to_collect_rewards
+            and not exists(Arena.get_screenshot_for_rewards_collection())):
+            delay(1)
+        os.remove(Arena.dump_screenshot_for_rewards)
+       
 
     @staticmethod
     def close_buying_dragon_powers():
