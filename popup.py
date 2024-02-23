@@ -16,7 +16,7 @@ class Popup:
     def get_chest():
         sections = [
             # [C.POPUP_LEFT_CORNER, *Popup.mon_quarters['bottom_left']],
-            [C.POPUP_HEADER, *Popup.mon_quarters['top_left']],
+            # [C.POPUP_HEADER, *Popup.mon_quarters['top_left']],
             [C.POPUP_TAP, *Popup.mon_quarters['3rdRow']],
         ]
     

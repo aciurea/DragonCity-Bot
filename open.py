@@ -65,12 +65,14 @@ def _clean_all_popups():
     app_time_to_close_all_buttons = 40
     while(not exists(_get_artifact_pos())):
         if(time.time() - start > app_time_to_close_all_buttons): return open_app()
-        Popup.check_popup_chest()
         
         close_btn = Close.get_btn()
-        if(exists(close_btn)): moveAndClick(close_btn)
+        if(exists(close_btn)): 
+            moveAndClick(close_btn)
+            continue
         else: moveAndClick(jsonPos["POPUP_ICON"])
-
+        
+        Popup.check_popup_chest()
         check_extra_bonus()
        
         delay(2)
