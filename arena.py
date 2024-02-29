@@ -33,7 +33,19 @@ class Battle:
     
     @staticmethod
     def get_new_dragon_btn():
-        return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *Arena.mon_quarters['4thRow'], .8, 1)
+        btns = [
+            [C.FIGHT_SELECT_DRAGON, *Arena.mon_quarters['2ndHorHalf']],
+            [C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['2ndHorHalf']]
+        ]
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
+            for btn in result_list:
+                if exists(btn):
+                    return btn
+        return [-1]
+
+       
     
     @staticmethod
     def get_swap_button():
@@ -65,7 +77,7 @@ class Battle:
     def fight():
         start = time.time()
         is_last_dragon = False
-        while Battle.is_fight_in_progress() and time.time() - start < 180: # minutes is more than enough
+        while Battle.is_fight_in_progress() and (time.time() - start) < 180: # minutes is more than enough
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
                 continue 
@@ -181,10 +193,11 @@ class Arena:
 
         new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
         
-        if not exists(new_dragon): return print('New dragon not found')
+        if not exists(new_dragon): 
+            raise Exception('No dragons available')
         moveAndClick(new_dragon)
         delay(1)
-        Arena.change_defetead_dragon(time + 1)
+        Arena.change_defetead_dragon(times + 1)
 
     @staticmethod
     def get_fight_btn():
@@ -197,6 +210,9 @@ class Arena:
     def save_screenshot_for_rewards_collection():
         screenshot = pyautogui.screenshot(region=(1000, 350, 500, 200))
         screenshot.save(Arena.dump_screenshot_for_rewards)
+
+    def remove_screenshot_for_rewards_collection():
+        os.remove(Arena.dump_screenshot_for_rewards)
 
     def wait_for_the_fight_tab():
         start = time.time()
@@ -225,7 +241,9 @@ class Arena:
         start_time = time.time()
 
         while exists(start_fight):
-            if (time.time() - start_time) < time_limit: raise Exception('Fight is not ready yet or finished. Exit immediatelly')
+            if (time.time() - start_time) > time_limit: 
+                Arena.remove_screenshot_for_rewards_collection()
+                raise Exception('Time limit exceded on arena. Closing the app....')
 
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
@@ -263,8 +281,7 @@ class Arena:
         while (time.time() - start < seconds_limit_to_collect_rewards
             and not exists(Arena.get_screenshot_for_rewards_collection())):
             delay(1)
-        os.remove(Arena.dump_screenshot_for_rewards)
-       
+        Arena.remove_screenshot_for_rewards_collection()
 
     @staticmethod
     def close_buying_dragon_powers():

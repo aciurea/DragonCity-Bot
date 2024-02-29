@@ -86,9 +86,9 @@ def _check_if_app_started():
     start = time.time()
     time_limit = 30
     while((time.time() - start) < time_limit):
-        image = getImagePositionRegion("screenshot.png", 0, 0, 200, 200, .8)
+        image = getImagePositionRegion("screenshot.png", 0, 0, 201, 201, .8, 1)
         if not exists(image):
             os.remove('screenshot.png')
             return [-1]
-        delay(2)
+        delay(1)
 

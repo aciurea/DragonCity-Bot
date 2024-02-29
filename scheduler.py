@@ -9,7 +9,7 @@ while True:
         start_working()
     except Exception as e:
         close_app()
-        print("Script crashed, restarting...", e)
+        print("Exit: ", e)
     finally:
             one_hour = 1800
             print("Waiting for 1 hour...")
