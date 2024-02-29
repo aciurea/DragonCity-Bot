@@ -1,4 +1,5 @@
 import time
+from battle import Battle
 from close import check_if_ok
 from popup import Popup
 from utils import (
@@ -14,107 +15,6 @@ import pyautogui
 import os
 
 jsonPos = get_json_file('arena.json')
-
-class Battle:
-    
-    @staticmethod
-    def is_fight_in_progress():
-        if exists(Battle.get_speed_button()): return True
-
-        return exists(Battle.get_new_dragon_btn())
-
-    @staticmethod
-    def get_speed_button():
-        return getImagePositionRegion(C.FIGHT_IN_PROGRESS, *Popup.mon_quarters['1stCol'], .8, 1)
-
-    @staticmethod
-    def get_play_button():
-        return getImagePositionRegion(C.FIGHT_PLAY, *Popup.mon_quarters['1stCol'], .8, 1)
-    
-    @staticmethod
-    def get_new_dragon_btn():
-        btns = [
-            [C.FIGHT_SELECT_DRAGON, *Arena.mon_quarters['2ndHorHalf']],
-            [C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['2ndHorHalf']]
-        ]
-
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
-            for btn in result_list:
-                if exists(btn):
-                    return btn
-        return [-1]
-
-       
-    
-    @staticmethod
-    def get_swap_button():
-        return getImagePositionRegion(C.FIGHT_SWAP, *Arena.mon_quarters['bottom_left'], .8, 1)
-
-    @staticmethod
-    def wait_for_oponent_to_attack():
-        start = time.time()
-      
-        while time.time() - start < 7:  # wait for 7 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
-            if exists(Battle.get_swap_button()): return # oponend finished attacking
-            if exists(Battle.get_new_dragon_btn()): return # dragon is defetead.
-            delay(1)
-    
-    @staticmethod
-    def change_dragon():
-        swap_btn = Battle.get_swap_button()
-        if exists(swap_btn):
-            moveAndClick(swap_btn)
-            delay(1)
-
-        new_dragon = Battle.get_new_dragon_btn()
-        if not exists(new_dragon): return print('Dragon not found')
-
-        moveAndClick(new_dragon)
-        print('Dragon was changed')
-
-    @staticmethod
-    def fight():
-        start = time.time()
-        is_last_dragon = False
-        while Battle.is_fight_in_progress() and (time.time() - start) < 180: # minutes is more than enough
-            if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
-                delay(2)
-                continue 
-
-            # This flow is specifically for arena where you want to use all the dragons power and not wait for a dragon to get defeated in order to change it.
-            # This flow might save the dragon for a next fight.
-            # Arena battles have very strong dragons.
-            attacks_per_dragon = 3
-            while attacks_per_dragon > 0:
-                attacks_per_dragon -= 1
-
-                # dragon is defetead
-                if exists(Battle.get_new_dragon_btn()):
-                    print('Dragon is defeated')
-                    break
-
-                # dragon is the last one
-                if not exists(Battle.get_swap_button()):
-                    is_last_dragon = True
-                    print('Dragon is the last one')
-                    break # exit the loop since is the last dragon and no need for play and pause
-
-                # attack is ok, play and pause
-                play = Battle.get_play_button()
-                moveAndClick(play)
-                delay(.5)
-                moveAndClick(play) # pause
-
-                # wait for opponent to attack
-                Battle.wait_for_oponent_to_attack()
-
-            # check if is last dragon and just hit the play button
-            if is_last_dragon: 
-                moveAndClick(Battle.get_play_button())
-            else:
-                Battle.change_dragon()
-        print('Fight is over!')
 
 class Arena:
     mon_quarters = get_monitor_quarters()
@@ -168,15 +68,15 @@ class Arena:
     def change_defetead_dragon(times = 0):
         if times == 4: raise Exception('No more dragons to fight. Exit immediatelly')
 
-        pos = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
+        defeated_dragon_btn = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
         select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
 
-        if not exists(pos) and not exists(select_new_dragon_btn):
+        if not exists(defeated_dragon_btn) and not exists(select_new_dragon_btn):
             check_if_ok()
-            return print('Dragons are ready for fights')
+            return print('Dragons are ready for fight')
         
-        if exists(pos):
-            new_pos = [pos[0] - 20, pos[1] + 150]
+        if exists(defeated_dragon_btn):
+            new_pos = [defeated_dragon_btn[0] - 20, defeated_dragon_btn[1] + 150]
             moveAndClick(new_pos)
             delay(1)
         elif exists(select_new_dragon_btn):
