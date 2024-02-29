@@ -5,6 +5,7 @@ import mouse
 import keyboard as K
 import time
 import pyautogui
+from arena import Battle
 
 from move import moveAndClick
 from utils import dragMapToCenter
@@ -34,6 +35,7 @@ def get_pos():
             # print(res.width, res.height, res.width_mm, res.height_mm)
             print('mouse pos',mouse.get_position())
           
+            # print(Battle.is_fight_in_progress())
             # print(get_text(oponent=False))
             # print(get_text(oponent=True))
             # _freeze_dragons(-1, 313707)

@@ -4,7 +4,7 @@ from move import center_map, moveAndClick
 import constants as C
 from timers import delay
 
-from utils import exists, get_int, getImagePositionRegion
+from utils import exists, get_int, get_monitor_quarters, getImagePositionRegion
 
 class Hatch:
     [res] = get_monitors()
@@ -14,10 +14,12 @@ class Hatch:
     sell_egg_btn_from_habitat = [get_int(0.82461538 * res.width), get_int(0.89125 * res.height)]
     confirm_sell_btn = [get_int(0.55730769 * res.width), get_int(0.676875*res.height)]
     place_btn_pos = [get_int(0.52961538 * res.width), get_int(0.6875 * res.height)]
+    mon_quarters = get_monitors()
 
     def _get_terra_egg():
-        y_start = get_int(0.778125 * Hatch.res.height)
-        return getImagePositionRegion(C.BREED_TERRA_EGG, 0, y_start, Hatch.res.width, Hatch.res.height, .8, 3)
+        mon_quarters = get_monitor_quarters()
+
+        return getImagePositionRegion(C.BREED_TERRA_EGG, *mon_quarters['4thRow'], .8, 1)
 
 
     def sell_egg():

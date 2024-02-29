@@ -1,3 +1,4 @@
+import time
 from screeninfo import get_monitors
 from close import check_if_ok
 from hatch import Hatch
@@ -13,7 +14,7 @@ class Breed:
     [res] = get_monitors()
     artifact_center_pos = [res.width / 2, res.height / 2]
     rock_pos = [get_int(0.405769 * res.width), get_int(0.7375 * res.height)]
-    tree_pos = [get_int(0.26769 * res.width), get_int(0.695 * res.height)]
+    tree_pos = [get_int(0.3 * res.width), get_int(0.695 * res.height)]
     habitat_pos = [get_int(0.31769 * res.width), get_int(0.720625 * res.height)]
     hatchery_pos = [get_int(0.346153 * res.width), get_int(0.639375 * res.height)]
     mon_quarters = get_monitor_quarters()
@@ -23,24 +24,25 @@ class Breed:
     
     def _get_re_breed():
        if(Breed._re_breed_btn == None):
-           Breed._re_breed_btn = getImagePositionRegion(C.RE_BREED_BTN, *Breed.mon_quarters['bottom_right'], .8, 3)
+           Breed._re_breed_btn = getImagePositionRegion(C.RE_BREED_BTN, *Breed.mon_quarters['4thRow'], .8, 1)
        return Breed._re_breed_btn
     
     def _re_breed():
-        delay(.3)
+        delay(.5)
         btn = Breed._get_re_breed()
+
+        if not exists(btn): return print('Rebreed button not found')
+
         moveAndClick(btn)
-        y_start = get_int(Breed.res.height / 2)
-        x_start = get_int(0.33423 * Breed.res.width)
-        x_end = get_int(0.63769 * Breed.res.width)
-        y_end = get_int(0.8125 * Breed.res.height)
-        breed_btn = getImagePositionRegion(C.BREED_BTN, x_start, y_start, x_end, y_end, 0.8, 3)
+     
+        delay(1)
+        moveAndClick([1276, 1079])
+        delay(.1)
+        moveAndClick([2418, 120])
 
-        if exists(breed_btn): moveAndClick(breed_btn)
-
-        if Breed._close_btn_pos == None:
-            Breed._close_btn_pos = check_if_ok()
-        else: moveAndClick(Breed._close_btn_pos)
+        # if Breed._close_btn_pos == None:
+        #     Breed._close_btn_pos = check_if_ok()
+        # else: moveAndClick(Breed._close_btn_pos)
     
     def did_breed():
         return exists(getImagePositionRegion(C.HATCHERY, *Breed.mon_quarters['bottom_right'], .8, 2))
@@ -70,18 +72,43 @@ class Breed:
         
         return exists(getImagePositionRegion(C.HATCHERY_FULL, x_start, y_start, x_end, y_end, 0.8, 3))
 
+    def start_fresh():
+        Breed.clear_hatchery()
+
+        for breed_place in [Breed.rock_pos, Breed.tree_pos]:
+            center_map()
+            moveAndClick(breed_place)
+            delay(1)
+        check_if_ok()
+        # in case the tree and rock had eggs, wait 15 secs to hatch and clear them.
+        delay(10)
+        Breed.clear_hatchery()
+     
     @staticmethod
     def breed():
-        center_map()
-        if is_artifact_at_pos(Breed.artifact_center_pos):
+        Breed.start_fresh()
+        time_to_hatch_egg = 5
+
+        times = 30
+        while times > 0:
+            times -= 1
+            
             for breed_place in [Breed.rock_pos, Breed.tree_pos]:
-                Breed.do_work(breed_place)
                 center_map()
+                moveAndClick(breed_place)
+                Breed._re_breed()
+                delay(.5)
+
+            delay(time_to_hatch_egg)
+
+            Breed.clear_hatchery()
+            # collect phase
+            for breed_place in [Breed.rock_pos, Breed.tree_pos]:
+                center_map()
+                moveAndClick(breed_place)
                 delay(1)
-        check_if_ok()
+            check_if_ok()
+            print('Breed cycle done')
 
-def breed():
-    Breed.breed()
 
-# while 1:
-#     breed()
+Breed.breed()

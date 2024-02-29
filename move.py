@@ -35,7 +35,6 @@ def center_map():
     if not exists(artifact):
         print('Cannot move the map since there is no point of reference')
         return [-1]
-    print('artifact is ', artifact)
     _drag_map(artifact, [get_int(res.width / 2), get_int(res.height / 2)])
     return artifact
 
