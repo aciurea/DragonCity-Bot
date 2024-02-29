@@ -44,6 +44,8 @@ ARENA_SKIP = get_path(_BASE_ARENA + 'skip')
 ARENA_REPORT_ACCEPT = get_path(_BASE_ARENA + 'report_accept')
 ARENA_REPORT = get_path(_BASE_ARENA + 'report')
 
+ARENA_SELECT_DRAGON = get_path(_BASE_ARENA + 'select_dragon')
+
 # End Arena
 
 

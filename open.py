@@ -69,6 +69,7 @@ def _clean_all_popups():
         close_btn = Close.get_btn()
         if(exists(close_btn)): 
             moveAndClick(close_btn)
+            delay(1)
             continue
         else: moveAndClick(jsonPos["POPUP_ICON"])
         

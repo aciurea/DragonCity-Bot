@@ -63,9 +63,9 @@ class Battle:
 
     @staticmethod
     def fight():
+        start = time.time()
         is_last_dragon = False
-        while Battle.is_fight_in_progress():
-
+        while Battle.is_fight_in_progress() and time.time() - start < 180: # minutes is more than enough
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
                 continue 
@@ -133,7 +133,7 @@ class Arena:
 
     @staticmethod
     def prepare_fight():
-        while exists(getImagePositionRegion(C.ARENA_SPEED, *Arena.mon_quarters['bottom_left'], .8, 1)):
+        if exists(getImagePositionRegion(C.ARENA_SPEED, *Arena.mon_quarters['bottom_left'], .8, 1)):
             change_btn = getImagePositionRegion(C.ARENA_CHANGE, *Arena.mon_quarters['bottom_left'], .8, 1)
             if not exists(change_btn): return print('Change button not found')
             moveAndClick(change_btn)
@@ -153,13 +153,24 @@ class Arena:
         moveAndClick(new_pos)
 
     @staticmethod
-    def change_defetead_dragon():
-        pos = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
-        if not exists(pos): return print('No defetead dragon found')
+    def change_defetead_dragon(times = 0):
+        if times == 4: raise Exception('No more dragons to fight. Exit immediatelly')
 
-        new_pos = [pos[0] - 20, pos[1] + 150]
-        moveAndClick(new_pos)
-        delay(1)
+        pos = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
+        select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
+
+        if not exists(pos) and not exists(select_new_dragon_btn):
+            check_if_ok()
+            return print('Dragons are ready for fights')
+        
+        if exists(pos):
+            new_pos = [pos[0] - 20, pos[1] + 150]
+            moveAndClick(new_pos)
+            delay(1)
+        elif exists(select_new_dragon_btn):
+            moveAndClick(select_new_dragon_btn)
+            delay(1)
+
         filter_dragons = getImagePositionRegion(C.ARENA_FILTER_DRAGONS, *Arena.mon_quarters['4thRow'], .8, 1)
         
         if not exists(filter_dragons): return print('Filter dragons button not found')
@@ -173,7 +184,7 @@ class Arena:
         if not exists(new_dragon): return print('New dragon not found')
         moveAndClick(new_dragon)
         delay(1)
-        check_if_ok()
+        Arena.change_defetead_dragon(time + 1)
 
     @staticmethod
     def get_fight_btn():
@@ -187,24 +198,35 @@ class Arena:
         screenshot = pyautogui.screenshot(region=(1000, 350, 500, 200))
         screenshot.save(Arena.dump_screenshot_for_rewards)
 
+    def wait_for_the_fight_tab():
+        start = time.time()
+        fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)    
+
+        while time.time() - start < 10 and not exists(fight_tab):
+            fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)
+            delay(1)
+        moveAndClick(fight_tab)
+
+
     @staticmethod
     def enter_battle():
         arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
         if not exists(arena): return print('Arena not found')
         moveAndClick(arena)
 
-        delay(1)
-
-        fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)    
-        if not exists(fight_tab): return print('Fight tab not found')
-        moveAndClick(fight_tab)
-
-        delay(1)
+        delay(2)
         Arena._check_attack_report()
+        delay(1)
+        Arena.wait_for_the_fight_tab()
         delay(1)
 
         start_fight = Arena.get_fight_btn()
+        time_limit = 300 # if doesn't end in 5 minutes, we stop the script.
+        start_time = time.time()
+
         while exists(start_fight):
+            if (time.time() - start_time) < time_limit: raise Exception('Fight is not ready yet or finished. Exit immediatelly')
+
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
             Arena.save_screenshot_for_rewards_collection()
@@ -222,9 +244,8 @@ class Arena:
             Arena.collect_arena_battle_rewards()
             Arena.close_buying_dragon_powers()
             start_fight = Arena.get_fight_btn()
-
-        print('Fight is not ready yet or finished.')
         check_if_ok()
+        print('Arena battle is over')
 
     @staticmethod
     def collect_arena_battle_rewards():
@@ -248,8 +269,8 @@ class Arena:
     @staticmethod
     def close_buying_dragon_powers():
         if exists(Arena.get_fight_btn()): return 
-
         check_if_ok() # first we hit the close button
+        delay(.5)
         check_if_ok() # then we check if we have the loose button and close it.
         delay(1)
 
