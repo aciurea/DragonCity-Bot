@@ -1,35 +1,32 @@
-from utils import check_if_not_ok, closePopup, getImagePositionRegion, exists, moveAndClick, delay, scroll
-import constants as C
+from close import check_if_ok
+from move import fast_click
+from utils import dragMapToCenter, get_json_file, moveAndClick, delay, scroll
 
-def buy():
-    gold = getImagePositionRegion(C.ORBS_GOLD, 1300, 300, 1600, 900, .8, 3)
+class Shop:
+    pos = get_json_file('shop.json')
 
-    if not exists(gold): return print('Nothing to buy')
-    buy_times = 5
-    while buy_times > 0:
-        buy_times -= 1
-        moveAndClick(gold)
+    def buy_orbs(key):
+        times = 6
+        while times > 0:
+            times -= 1
+            fast_click(Shop.pos[key])
+
+    def go_to_orbs():
+        scroll_pos = Shop.pos['vertical_scroll']
+        scroll(scroll_pos, [0, scroll_pos[1]])
+        delay(1)
+        fast_click([0, scroll_pos[1]])
+
+    def open_shop():
+        dragMapToCenter()
+        moveAndClick(Shop.pos['shop'])
         delay(.5)
-    return buy()
+        moveAndClick(Shop.pos['orbs'])
+        delay(.5)
+        Shop.go_to_orbs()
+        
+        delay(1)
 
-
-def shop():
-    orbs_shop = getImagePositionRegion(C.ORBS_SHOP, 1300, 700, 1600, 900)
-
-    if not exists(orbs_shop):
-        print('Shop not found')
-        return check_if_not_ok()
-
-    moveAndClick(orbs_shop)
-    delay(1)
-    orbs = getImagePositionRegion(C.ORBS_ORBS, 400, 600, 1400, 900)
-    if not exists(orbs):
-        print('No orbs')
-        return closePopup()
-
-    moveAndClick(orbs)
-    delay(1)
-    scroll([1550, 550], [0, 550])
-    delay(.5)
-    buy()
-    closePopup()
+        Shop.buy_orbs('buy_heroic')
+        Shop.buy_orbs('buy_legendary')
+        check_if_ok()

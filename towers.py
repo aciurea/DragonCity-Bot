@@ -23,9 +23,9 @@ class Towers:
     def gems_towers():
         dragMapToCenter()
 
-        tower  = getImagePositionRegion(C.TOWERS_GEMS_TOWER, *Towers.mon['top_right'], 0.8, 1)
+        tower = getImagePositionRegion(C.TOWERS_GEMS_TOWER, *Towers.mon['top_right'], 0.8, 1)
         if not exists(tower): return print("No Gems Tower found")
-        moveAndClick(tower)
+        moveAndClick([tower[0] + 5, tower[1] + 35]) # Click on the bottom of the tower (to avoid clicking on the food offer)
 
         delay(1)
         
@@ -87,5 +87,3 @@ def activate_towers():
     Towers.gold_tower()
     Towers.power_tower()
     Towers.food_tower()
-
-

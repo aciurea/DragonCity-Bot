@@ -64,6 +64,7 @@ def _clean_all_popups():
     start = time.time()
     app_time_to_close_all_buttons = 40
     while(not exists(_get_artifact_pos())):
+        zoom_out()
         if(time.time() - start > app_time_to_close_all_buttons): return open_app()
         
         close_btn = Close.get_btn()
@@ -75,9 +76,8 @@ def _clean_all_popups():
         
         Popup.check_popup_chest()
         check_extra_bonus()
-       
         delay(2)
-        zoom_out()
+
     print('APP STARTED SUCCESSFULY')
 
 def _check_if_app_started():
