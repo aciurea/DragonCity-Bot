@@ -1,8 +1,7 @@
-import time
 from screeninfo import get_monitors
 from close import check_if_ok
 from hatch import Hatch
-from move import center_map, is_artifact_at_pos
+from move import center_map
 from utils import ( delay, exists,
                     get_int, get_monitor_quarters,
                     getImagePositionRegion,
@@ -14,7 +13,7 @@ class Breed:
     [res] = get_monitors()
     artifact_center_pos = [res.width / 2, res.height / 2]
     rock_pos = [get_int(0.405769 * res.width), get_int(0.7375 * res.height)]
-    tree_pos = [get_int(0.3 * res.width), get_int(0.695 * res.height)]
+    tree_pos = [get_int(0.29 * res.width), get_int(0.691 * res.height)]
     habitat_pos = [get_int(0.31769 * res.width), get_int(0.720625 * res.height)]
     hatchery_pos = [get_int(0.346153 * res.width), get_int(0.639375 * res.height)]
     mon_quarters = get_monitor_quarters()
@@ -85,9 +84,10 @@ class Breed:
         Breed.clear_hatchery()
      
     @staticmethod
-    def breed():
+    def breed(work_type="breed"):
         Breed.start_fresh()
-        time_to_hatch_egg = 5
+        time_to_hatch_egg = 6
+        first_time = True
 
         times = 30
         while times > 0:
@@ -101,7 +101,8 @@ class Breed:
 
             delay(time_to_hatch_egg)
 
-            Breed.clear_hatchery()
+            if work_type == "breed": Breed.clear_hatchery()
+            else: Hatch.place_egg()
             # collect phase
             for breed_place in [Breed.rock_pos, Breed.tree_pos]:
                 center_map()
@@ -109,6 +110,8 @@ class Breed:
                 delay(1)
             check_if_ok()
             print('Breed cycle done')
+            if first_time:
+                first_time = False
+                time_to_hatch_egg = 2
 
-
-Breed.breed()
+# Breed.breed("hatch")

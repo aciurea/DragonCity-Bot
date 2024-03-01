@@ -15,8 +15,8 @@ def fast_click(pos):
 def moveAndClick(pos, msg = 'Nothing to click'):
     if not exists(pos): return print(msg)
     moveTo(pos)
-    pyautogui.leftClick()
-    delay(0.05)
+    fast_click(pos)
+    delay(0.1)
 
 def _get_artifact_pos():
     return getImagePosition('./img/utils/artifact.png', 1, .8, .5)
