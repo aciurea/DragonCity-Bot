@@ -1,5 +1,5 @@
 import time
-from utils import ThreadWithValue, checkIfCanClaim, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup, closeVideo, video_error
+from utils import ThreadWithValue, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup
 import constants as C
 
 def getRewards():

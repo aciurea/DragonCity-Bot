@@ -144,19 +144,18 @@ HATCHERY_FULL = get_path(_BASE_BREED + 'hatchery_full')
 HATCHERY = get_path(_BASE_BREED + 'hatchery') 
 BREED_EGG = get_path(_BASE_BREED + 'egg') 
 
-TV_DAILY_CHEST = get_path(_BASE_TV + 'daily_chest')
-TV_COLLECT = get_path(_BASE_TV + 'collect')
+
+### Start TV
+
 TV_CLAIM = get_path(_BASE_TV + 'claim')
-TV_CLAIM_AND_NEXT = get_path(_BASE_TV + 'claim_next')
-TV_PRIZES = get_path(_BASE_TV + 'prizes')
-TV_TV = get_path(_BASE_TV + 'tv')
 TV_GET_REWARDS_BTN = get_path(_BASE_TV + 'get_rewards_btn')
+TV_CLOSE_WATCHED_VIDEO = get_path(_BASE_TV + 'claim_close')
+TV_READY_TO_CLOSE_WATCHED_VIDEO = get_path(_BASE_TV + 'ready_to_claim')
 TV_DTV = get_path(_BASE_TV + 'dtv')
-TV_VIDEO_ERROR = get_path(_BASE_TV + 'video_error')
-TV_TAP = get_path(_BASE_TV + 'tap')
-TV_READY_TO_CLAIM = get_path(_BASE_TV + 'ready_to_claim')
-TV_OUT_OF_OFFERS = get_path(_BASE_TV + 'out_of_offers')
-TV_GREEN_CLAIM = get_path(_BASE_TV + 'green_claim')
+TV_LAST_CLAIM = get_path(_BASE_TV + 'last_claim')
+
+## END TV
+
 
 BATTLE_QUEST_BTN = get_path(_BASE_BATTLE + 'quest')
 BATTLE_GO_TO_BATTLE = get_path(_BASE_BATTLE + 'go_to_battle')

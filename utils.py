@@ -42,28 +42,6 @@ class ThreadWithValue(Thread):
         Thread.join(self, *args)
         return self._return
 
-def video_error():
-    video_error, close_btn = [
-        ThreadWithValue(target=getImagePositionRegion, args=(C.TV_VIDEO_ERROR, 200, 50, 1600, 800, 0.8, 12)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 5)).start()
-    ]
-    close_btn = close_btn.join()
-    if exists(close_btn):
-        moveAndClick(close_btn)
-        return close_btn
-    
-    video_error = video_error.join()
-    if not exists(video_error): return video_error
-
-    close = getImagePositionRegion('./img/utils/close.png', video_error[0], video_error[1], 1600, 600)
-
-    if exists(close):
-        moveAndClick(close)
-        print('Error exists but couldnt find the close button')
-        return close
-   
-    return [-1]
-    
 def go_back():
     back_btn = getImagePositionRegion('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)
     moveAndClick(back_btn)
@@ -79,19 +57,6 @@ def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries
         delay(speed)
     return [image[0] + x1, image[1] + y1]
 
-
-def commonClaim():
-    greenClaim = getImagePosition(C.HEROIC_GREEN_CLAIM_BTN, 3)
-    moveAndClick(greenClaim)
-    delay(1)
-    tap = getImagePosition(C.TV_TAP, 3)
-    moveAndClick(tap)
-    delay(1)
-    claim = getImagePosition('./img/app_start/claim_yellow.png', 3)
-    moveAndClick(claim)
-    closePopup()
-    print('Claimed rewards')
-
 def delay(seconds):
     if seconds < 0:
         seconds = 0
@@ -99,23 +64,6 @@ def delay(seconds):
 
 def exists(value):
     return (value != None and value[0] != None) and value[0] != -1 
-
-def checkIfCanClaim():
-    st = time.time()
-    limit = 60
-    while((time.time() - st) < limit):
-        lst = [
-            ThreadWithValue(target=getImagePositionRegion, args=(C.TV_READY_TO_CLAIM, 570, 120, 1020, 170, .8, 1)).start(),
-            ThreadWithValue(target=getImagePositionRegion, args=(C.TV_OUT_OF_OFFERS, 400, 200, 1400, 800, 0.8, 1)).start(),
-        ]
-        for l in lst:
-            l = l.join()
-            if exists(l): return l
-        moveTo([random.randrange(200, 1400), random.randrange(200, 800)])
-        delay(1)
-   
-    return [-1]
-
 
 def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
     image = imagesearcharea(path, 0, 0, 1600, 900, precision)
