@@ -160,6 +160,7 @@ class Arena:
             delay(3)
 
             Arena.collect_arena_battle_rewards()
+            delay(1)
             Arena.close_buying_dragon_powers()
             start_fight = Arena.get_fight_btn()
         check_if_ok()
@@ -186,19 +187,20 @@ class Arena:
     @staticmethod
     def close_buying_dragon_powers():
         if exists(Arena.get_fight_btn()): return 
+
         check_if_ok() # first we hit the close button
-        delay(.5)
-        check_if_ok() # then we check if we have the loose button and close it.
-        delay(1)
 
     @staticmethod
     def skip_strong_dragons():
         strong_dragons = [
-            [C.ARENA_HIGH_ARCANA, *Arena.mon_quarters['bottom_right']]
+            [C.ARENA_HIGH_ARCANA, *Arena.mon_quarters['bottom_right']],
+            # [C.ARENA_STRONG_DRAGON, *Arena.mon_quarters['bottom_right']]
         ]
+
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
             for is_strong_dragonb in result_list:
                 if exists(is_strong_dragonb):
                     moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                     delay(5)
+                    return

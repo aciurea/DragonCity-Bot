@@ -10,14 +10,14 @@ class Close:
     
     @staticmethod
     def get_btn():
-        # TODO check this if it has the right icons to click on 
-        # VIP buttons
-        # [C.GOALS_CLOSE_BTN, *mon['top_right'], .8, 1], search for goal close btn
-        # ['./img/app_start/back.png', *mon['top_left'], .8, 1],
-        
+        # TODO Close btn should be checked before last column, to check if there are popous
+        # RED CLOSE ONLY. Make it separate like close empower 
+        # First check if close exists on top right
+        # in case it exists, check if exists before last column.
+        # all the close buttons are on the second half width of the screen and 
+        # in the first half of the height of the screen. 
         top_right = Close.mon_quarters['top_right']
         high_priority_btns = [
-            [C.APP_LOOSE, *Close.mon_quarters['3rdRow']],
             [C.APP_CLOSE_DIVINE, *top_right],
             [C.APP_CLOSE_GEMS, *top_right],
             [C.APP_CLOSE_PIGGY, *top_right],
@@ -32,9 +32,23 @@ class Close:
                 for close_btn in result_list:
                     if exists(close_btn): return close_btn
             return [-1]
-        
+    
+    @staticmethod
+    def close_empower():
+        close_btn = getImagePositionRegion(C.APP_CLOSE_OFFERS, *Close.mon_quarters['lastCol'], .8, 1)
+
+        if exists(close_btn):
+            moveAndClick(close_btn)
+            delay(1)
+            loose_btn = getImagePositionRegion(C.APP_LOOSE, *Close.mon_quarters['bottom_left'])
+            moveAndClick(loose_btn)
+            return True
+        return False
+    
     @staticmethod
     def check_if_ok():
+        if Close.close_empower(): return
+
         btn = Close.get_btn()
         if exists(btn):
             moveAndClick(btn)

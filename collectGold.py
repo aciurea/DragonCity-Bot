@@ -13,7 +13,6 @@ class Gold:
         while times > 0:
             fast_click(jsonPos["STACKED_HABITTATS"])
             times -= 1
-            delay(.2)
         check_if_ok()
 
 def collectGold():
