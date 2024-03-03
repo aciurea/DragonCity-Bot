@@ -23,13 +23,12 @@ class Arena:
     @staticmethod
     def _check_attack_report():
         if not exists(getImagePositionRegion(C.ARENA_REPORT, *Arena.mon_quarters['top_left'], .8, 1)): return
-       
         accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, *Arena.mon_quarters['3rdRow'], .8, 1)
         if exists(accept): 
             moveAndClick(accept)
             return print("Attack report accepted")
 
-        check_if_ok()
+        moveAndClick(jsonPos["CLOSE_ATTACK"])
         #TODO improvement: check if we have a video to close
 
     @staticmethod
