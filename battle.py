@@ -1,6 +1,10 @@
+import random
 import time
+
+from screeninfo import get_monitors
 from popup import Popup
 from utils import (
+                _get_int,
                 delay,
                 exists,
                 get_json_file,
@@ -15,6 +19,8 @@ jsonPos = get_json_file('arena.json')
 
 class Battle:
     mon_quarters = get_monitor_quarters()
+    [ res ] = get_monitors()
+    one_third = _get_int(res.width / 3)
     
     @staticmethod
     def is_fight_in_progress():
@@ -29,19 +35,27 @@ class Battle:
     
     @staticmethod
     def get_new_dragon_btn():
+        lst = []
+        pos = Battle.mon_quarters['4thRow']
+        second = pos[:]
+        second[0] = Battle.one_third
+        third =  pos[:]
+        third[0] = Battle.one_third * 2
+
         btns = [
-            [C.FIGHT_SELECT_DRAGON, *Battle.mon_quarters['2ndHorHalf']],
-            [C.ARENA_SELECT_DRAGON, *Battle.mon_quarters['2ndHorHalf']]
+            [C.FIGHT_SELECT_DRAGON, *pos],
+            [C.FIGHT_SELECT_DRAGON, *second], # start from 1 third.
+            [C.FIGHT_SELECT_DRAGON, *third], # start from 2nd third.
         ]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
-            for btn in result_list:
-                if exists(btn):
-                    return btn
-        return [-1]
+            lst = [btn for btn in result_list if exists(btn)]
 
-       
+        if lst:
+            return random.choice(lst)
+
+        return [-1]
     
     @staticmethod
     def get_swap_button():
@@ -111,3 +125,4 @@ class Battle:
             else:
                 Battle.change_dragon()
         print('Fight is over!')
+

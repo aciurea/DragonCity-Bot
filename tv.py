@@ -46,8 +46,8 @@ class TV:
             check_if_ok()
         elif exists(last_claim):
             moveAndClick(last_claim)
-            Popup.check_popup_chest()
-        else: Popup.check_popup_chest()
+        
+        Popup.check_popup_chest()
     
     def get_rewards_btn():
         return getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)

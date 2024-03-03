@@ -24,7 +24,7 @@ class Close:
             [C.APP_CLOSE_SETTINGS, *top_right],
             [C.APP_CLOSE_TOWER, *top_right],
         ]
-        lower_priority_btns = [[C.APP_CLOSE_OFFERS, *top_right]]
+        lower_priority_btns = [[C.APP_CLOSE_OFFERS, *Close.mon_quarters['lastCol']]]
     
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for b in [high_priority_btns, lower_priority_btns]:
