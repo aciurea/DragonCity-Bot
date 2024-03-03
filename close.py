@@ -1,5 +1,5 @@
 from screeninfo import get_monitors
-from move import moveAndClick
+from move import moveAndClick, moveTo
 from utils import delay, exists, get_int, get_monitor_quarters, getImagePositionRegion
 import constants as C
 import concurrent.futures
@@ -8,50 +8,49 @@ class Close:
     [res] = get_monitors()
     mon_quarters = get_monitor_quarters()
     
+    def get_red_btn():
+        last_col = Close.mon_quarters['lastCol']
+        big_red_btn = getImagePositionRegion(C.APP_CLOSE_OFFERS, *last_col, .8, 1)
+
+        if exists(big_red_btn):
+            top_right = Close.mon_quarters['top_right']
+            top_right[2] = big_red_btn[0]- 50 # if red button found, try to find a new button before that position
+            popup_close_btn = getImagePositionRegion(C.APP_CLOSE_TOWER, *top_right, .8, 1)
+
+            if exists(popup_close_btn): return popup_close_btn
+        return big_red_btn
+
     @staticmethod
     def get_btn():
-        # TODO Close btn should be checked before last column, to check if there are popous
-        # RED CLOSE ONLY. Make it separate like close empower 
-        # First check if close exists on top right
-        # in case it exists, check if exists before last column.
-        # all the close buttons are on the second half width of the screen and 
-        # in the first half of the height of the screen. 
+        red_btn = Close.get_red_btn()
+        if exists(red_btn): return red_btn
+
         top_right = Close.mon_quarters['top_right']
         high_priority_btns = [
             [C.APP_CLOSE_DIVINE, *top_right],
             [C.APP_CLOSE_GEMS, *top_right],
             [C.APP_CLOSE_PIGGY, *top_right],
             [C.APP_CLOSE_SETTINGS, *top_right],
-            [C.APP_CLOSE_TOWER, *top_right],
         ]
-        lower_priority_btns = [[C.APP_CLOSE_OFFERS, *Close.mon_quarters['lastCol']]]
     
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            for b in [high_priority_btns, lower_priority_btns]:
-                result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), b)
-                for close_btn in result_list:
-                    if exists(close_btn): return close_btn
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), high_priority_btns)
+            for close_btn in result_list:
+                if exists(close_btn): return close_btn
             return [-1]
     
     @staticmethod
     def close_empower():
-        close_btn = getImagePositionRegion(C.APP_CLOSE_OFFERS, *Close.mon_quarters['lastCol'], .8, 1)
-
-        if exists(close_btn):
-            moveAndClick(close_btn)
-            delay(1)
-            loose_btn = getImagePositionRegion(C.APP_LOOSE, *Close.mon_quarters['bottom_left'])
+        loose_btn = getImagePositionRegion(C.APP_LOOSE, *Close.mon_quarters['bottom_left'])
+        if exists(loose_btn):
             moveAndClick(loose_btn)
-            return True
-        return False
     
     @staticmethod
     def check_if_ok():
-        if Close.close_empower(): return
-
         btn = Close.get_btn()
         if exists(btn):
             moveAndClick(btn)
+            Close.close_empower()
             return btn
 
        # TODO check what enjoy popup is

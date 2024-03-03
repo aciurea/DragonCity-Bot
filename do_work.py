@@ -17,9 +17,12 @@ def start_working():
         collect_food,
         collectGold,
         Shop.open_shop,
-        TV.open_tv,
         Arena.enter_battle,
+        TV.open_tv,
         # More work can be added here
+        # collect daily chest
+        # fight in league
+        # Tree of life
         close_app
     ]
 
