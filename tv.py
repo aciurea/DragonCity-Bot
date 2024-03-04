@@ -24,15 +24,19 @@ class TV:
     def is_ready_to_close():
         can_close = getImagePositionRegion(C.TV_READY_TO_CLOSE_WATCHED_VIDEO, *TV.mon_quarters['1stRow'], .8, 1)
         return exists(can_close) or exists(TV.get_watched_video_close_btn())
+    
+    def failed_video():
+        return exists(getImagePositionRegion(C.TV_FAILED_VIDEO, *TV.mon_quarters['1stHorHalf'], .8, 1))
 
     @staticmethod
     def watch_add():
         start = time.time()
         while time.time() - start < 60:
+            if TV.failed_video(): return False
             if TV.is_ready_to_close():
                 close_btn = TV.get_watched_video_close_btn()
                 moveAndClick([close_btn[0] + 5, close_btn[1] + 10])
-                return
+                return True
             delay(1)
         raise Exception("Watched video didn't close in time")
 
@@ -50,7 +54,10 @@ class TV:
         Popup.check_popup_chest()
     
     def get_rewards_btn():
-        return getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)
+        rewards_btn = getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)
+        if exists(rewards_btn): return rewards_btn
+        
+        return  getImagePositionRegion(C.TV_PRAIZES, *TV.mon_quarters["4thRow"], .8, 1)
     
     def open_tv():
         dragMapToCenter()
@@ -62,7 +69,7 @@ class TV:
             moveAndClick(rewards_btn)
             delay(1)
             rewards_btn = getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)
-            TV.watch_add()
+            if not TV.watch_add(): return print("Failed video")
             delay(2)
             TV.collect_reward()
             delay(1)
