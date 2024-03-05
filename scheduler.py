@@ -2,6 +2,7 @@ import time
 
 from do_work import start_working
 from open import close_app
+from datetime import date
 
 while True:
     try:
@@ -12,6 +13,6 @@ while True:
         print("Exit: ", e)
     finally:
             one_hour = 1800
-            print("Waiting for 1 hour...")
+            print("Waiting for 1 hour... ", date.today())
             # Wait for 30 minutes (1800 seconds)
             time.sleep(one_hour)

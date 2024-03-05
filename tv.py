@@ -75,4 +75,5 @@ class TV:
             delay(1)
 
             rewards_btn = TV.get_rewards_btn()
+            delay(3)
         check_if_ok()
