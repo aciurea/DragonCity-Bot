@@ -14,10 +14,11 @@ class Close:
 
         if exists(big_red_btn):
             top_right = Close.mon_quarters['top_right']
-            top_right[2] = big_red_btn[0]- 50 # if red button found, try to find a new button before that position
+            top_right[2] = big_red_btn[0] - 50 # if red button found, try to find a new button before that position
             popup_close_btn = getImagePositionRegion(C.APP_CLOSE_TOWER, *top_right, .8, 1)
-
-            if exists(popup_close_btn): return popup_close_btn
+            if exists(popup_close_btn): 
+                print("Popup clos ebtn found", popup_close_btn)
+                return popup_close_btn
         return big_red_btn
 
     @staticmethod
@@ -31,6 +32,7 @@ class Close:
             [C.APP_CLOSE_GEMS, *top_right],
             [C.APP_CLOSE_PIGGY, *top_right],
             [C.APP_CLOSE_SETTINGS, *top_right],
+            [C.APP_CLOSE_BACK, *Close.mon_quarters['1stRow']],
         ]
     
         with concurrent.futures.ThreadPoolExecutor() as executor:

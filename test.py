@@ -6,6 +6,8 @@ import keyboard as K
 import time
 import pyautogui
 from arena import Battle
+from breed import Breed
+from collectFood import heroic_collect
 
 from move import moveAndClick
 from utils import dragMapToCenter
@@ -27,6 +29,9 @@ def get_pos():
     start = time.time()
     while 1:
 
+        if K.is_pressed('m'):
+            # heroic_collect()
+            Breed.breed()
         if K.is_pressed('c'):
             dragMapToCenter()
         if K.is_pressed('p'):  # if key 'q' is pressed 

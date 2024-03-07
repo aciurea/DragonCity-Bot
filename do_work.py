@@ -3,6 +3,7 @@ from arena import Arena
 from close import check_if_ok
 from collectFood import collect_food
 from collectGold import collectGold
+from heroic import Heroic
 from open import open_app, close_app
 from shop import Shop
 from towers import activate_towers
@@ -18,6 +19,7 @@ def start_working():
         collectGold,
         Shop.open_shop,
         Arena.enter_battle,
+        Heroic.race,
         TV.open_tv,
         # More work can be added here
         # collect daily chest

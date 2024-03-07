@@ -42,7 +42,7 @@ ARENA_ORDER_BY = get_path(_BASE_ARENA + 'order_by')
 ARENA_ORDER_BY_POWER = get_path(_BASE_ARENA + 'order_by_power')
 ARENA_SKIP = get_path(_BASE_ARENA + 'skip')
 ARENA_REPORT_ACCEPT = get_path(_BASE_ARENA + 'report_accept')
-ARENA_REPORT = get_path(_BASE_ARENA + 'report')
+ARENA_CLAIM_RUSH = get_path(_BASE_ARENA + 'claim_rush')
 
 ARENA_SELECT_DRAGON = get_path(_BASE_ARENA + 'select_dragon')
 
@@ -52,6 +52,7 @@ ARENA_SELECT_DRAGON = get_path(_BASE_ARENA + 'select_dragon')
 # Start Strong Dragons
 
 ARENA_HIGH_ARCANA = get_path(_BASE_ARENA + 'high_arcana')
+ARENA_STRONG_DRAGON = get_path(_BASE_ARENA + 'strong_dragon')
 
 # End Strong Dragons
 
@@ -153,6 +154,8 @@ TV_CLOSE_WATCHED_VIDEO = get_path(_BASE_TV + 'claim_close')
 TV_READY_TO_CLOSE_WATCHED_VIDEO = get_path(_BASE_TV + 'ready_to_claim')
 TV_DTV = get_path(_BASE_TV + 'dtv')
 TV_LAST_CLAIM = get_path(_BASE_TV + 'last_claim')
+TV_FAILED_VIDEO = get_path(_BASE_TV + 'failed_video')
+TV_PRAIZES = get_path(_BASE_TV + 'prizes')
 
 ## END TV
 
@@ -179,6 +182,7 @@ HEROIC_NO_CLAIM_BTN_1 = get_path(_BASE_HEROIC + 'no_claim')
 HEROIC_FIGHT = get_path(_BASE_HEROIC + 'fight')
 HEROIC_NOT_READY = get_path(_BASE_HEROIC + 'not_ready_yet')
 HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
+HEROIC_CLAIM = get_path(_BASE_HEROIC + 'claim')
 
 
 # Start Towers

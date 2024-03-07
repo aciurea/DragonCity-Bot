@@ -1,6 +1,7 @@
 import time
 from battle import Battle
 from close import check_if_ok
+from move import moveTo
 from popup import Popup
 from utils import (
                 delay,
@@ -22,7 +23,6 @@ class Arena:
 
     @staticmethod
     def _check_attack_report():
-        if not exists(getImagePositionRegion(C.ARENA_REPORT, *Arena.mon_quarters['top_left'], .8, 1)): return
         accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, *Arena.mon_quarters['3rdRow'], .8, 1)
         if exists(accept): 
             moveAndClick(accept)
@@ -65,38 +65,43 @@ class Arena:
 
     @staticmethod
     def change_defetead_dragon(times = 0):
-        if times == 4: raise Exception('No more dragons to fight. Exit immediatelly')
+        times = 4
+        while times > 0:
+            times -= 1
 
-        defeated_dragon_btn = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
-        select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
+            defeated_dragon_btn = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
+            select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
 
-        if not exists(defeated_dragon_btn) and not exists(select_new_dragon_btn):
-            check_if_ok()
-            return print('Dragons are ready for fight')
-        
-        if exists(defeated_dragon_btn):
-            new_pos = [defeated_dragon_btn[0] - 20, defeated_dragon_btn[1] + 150]
-            moveAndClick(new_pos)
+            if not exists(defeated_dragon_btn) and not exists(select_new_dragon_btn):
+                check_if_ok()
+                print('Dragons are ready for fight')
+                return
+
+            if exists(defeated_dragon_btn):
+                new_pos = [defeated_dragon_btn[0] - 20, defeated_dragon_btn[1] + 150]
+                moveAndClick(new_pos)
+                delay(1)
+            elif exists(select_new_dragon_btn):
+                moveAndClick(select_new_dragon_btn)
+                delay(1)
+
+            filter_dragons = getImagePositionRegion(C.ARENA_FILTER_DRAGONS, *Arena.mon_quarters['4thRow'], .8, 1)
+            
+            if not exists(filter_dragons): 
+                print('Filter dragons button not found')
+                return
+            moveAndClick(filter_dragons)
             delay(1)
-        elif exists(select_new_dragon_btn):
-            moveAndClick(select_new_dragon_btn)
+            Arena.order_by_power()
             delay(1)
 
-        filter_dragons = getImagePositionRegion(C.ARENA_FILTER_DRAGONS, *Arena.mon_quarters['4thRow'], .8, 1)
-        
-        if not exists(filter_dragons): return print('Filter dragons button not found')
-        moveAndClick(filter_dragons)
-        delay(1)
-        Arena.order_by_power()
-        delay(1)
-
-        new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
-        
-        if not exists(new_dragon): 
-            raise Exception('No dragons available')
-        moveAndClick(new_dragon)
-        delay(1)
-        Arena.change_defetead_dragon(times + 1)
+            new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
+            
+            if not exists(new_dragon): 
+                raise Exception('No dragons available')
+            moveAndClick(new_dragon)
+            delay(1)
+        raise Exception('No more dragons to fight. Exit immediatelly')
 
     @staticmethod
     def get_fight_btn():
@@ -132,6 +137,8 @@ class Arena:
         delay(2)
         Arena._check_attack_report()
         delay(1)
+        Arena.claim_rush()
+        delay(1)
         Arena.wait_for_the_fight_tab()
         delay(1)
 
@@ -146,6 +153,7 @@ class Arena:
 
             Arena.skip_strong_dragons()
             Arena.prepare_fight()
+            print('dragons prepared')
             Arena.save_screenshot_for_rewards_collection()
             Arena.check_and_collect_rewards()
 
@@ -164,6 +172,21 @@ class Arena:
             start_fight = Arena.get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
+
+    def claim_rush():
+        rush = getImagePositionRegion(C.ARENA_CLAIM_RUSH, *Arena.mon_quarters['4thRow'], .8, 1)
+
+        if not exists(rush): return 
+        moveAndClick(rush)
+        delay(2)
+        moveAndClick([1250, 1215])
+        delay(2)
+
+        times = 5
+        while times > 0:
+            times -= 1
+            Popup.check_popup_chest
+            delay(2)
 
     @staticmethod
     def collect_arena_battle_rewards():
@@ -203,3 +226,5 @@ class Arena:
                     moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                     delay(5)
                     return
+                
+

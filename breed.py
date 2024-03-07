@@ -84,12 +84,12 @@ class Breed:
         Breed.clear_hatchery()
      
     @staticmethod
-    def breed(work_type="breed"):
+    def breed(work_type="hatch"):
         Breed.start_fresh()
         time_to_hatch_egg = 6
         first_time = True
 
-        times = 30
+        times = 15
         while times > 0:
             times -= 1
             
@@ -113,5 +113,3 @@ class Breed:
             if first_time:
                 first_time = False
                 time_to_hatch_egg = 2
-
-# Breed.breed("hatch")
