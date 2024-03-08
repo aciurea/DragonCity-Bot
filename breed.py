@@ -102,7 +102,7 @@ class Breed:
             delay(time_to_hatch_egg)
 
             if work_type == "breed": Breed.clear_hatchery()
-            else: Hatch.place_egg()
+            else: Hatch.place_egg(work_type)
             # collect phase
             for breed_place in [Breed.rock_pos, Breed.tree_pos]:
                 center_map()

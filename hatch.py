@@ -34,37 +34,30 @@ class Hatch:
             moveAndClick([get_int(0.5526923 * Hatch.res.width), get_int(0.685625 * Hatch.res.height)])
             return Hatch.sell_egg()
 
-    def _sell_dragon():
+    def sell_dragon(work_type):
         delay(.3)
         dragon_pos_in_habitat = getImagePositionRegion(C.HATCH_DRAGON, *Hatch.mon_quarters['4thRow'], .8, 1)
-        print(dragon_pos_in_habitat)
         if exists(dragon_pos_in_habitat):
             moveAndClick(dragon_pos_in_habitat)
             delay(.5)
+            if work_type == 'feed':
+                Hatch.feed_dragon()
+                delay(.5)
             moveAndClick(Hatch.sell_egg_btn_from_habitat)
             delay(.5)
             moveAndClick(Hatch.confirm_sell_btn)
-            return Hatch._sell_dragon()
-      
-    # def _clear_hatchery_with_dragon_placement():
-    #     hatchery_pos_from_habitat = [get_int(0.6596153* Hatch.res.width), get_int(0.636875 * Hatch.res.height)]
-    #     check_if_ok()
-    #     moveAndClick(hatchery_pos_from_habitat)
-    #     egg = Hatch._get_terra_egg()
-    #     habitat_pos_after_sell = [get_int(0.63153846 * Hatch.res.width), get_int(0.714375 * Hatch.res.height)]
-    #     if exists(egg):
-    #         moveAndClick(egg)
-    #         delay(.3)
-    #         moveAndClick(Hatch.place_btn_pos)
-    #         delay(1)
-    #         moveAndClick(habitat_pos_after_sell)
-    #         return Hatch._clear_hatchery_with_dragon_placement()
-
-    #     moveAndClick(habitat_pos_after_sell)
-    #     delay(.3)
-    #     Hatch._sell_dragon()
+            return Hatch.sell_dragon(work_type)
         
-    def place_egg():
+    def feed_dragon():
+        pos = [880, 1290]
+        times = 8
+        while times > 0:
+            times -= 1
+            moveAndClick(pos)
+            delay(.1)
+        
+      
+    def place_egg(work_type):
         center_map()
         moveAndClick(Hatch.hatchery_pos)
         egg = Hatch._get_terra_egg()
@@ -75,8 +68,8 @@ class Hatch:
             delay(2)
             moveAndClick(Hatch.terra_habitat)
             delay(1)
-            Hatch._sell_dragon()
-            return Hatch.place_egg()
+            Hatch.sell_dragon(work_type)
+            return Hatch.place_egg(work_type)
 
 # Hatch.place_egg()
     
