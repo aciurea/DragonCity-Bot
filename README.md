@@ -168,3 +168,12 @@ The sections below will be updated once the refactoring to those functionalities
 - 
 
 ## TOTAL ============================
+
+### Level Up
+- legendary habitat 30M gold, 5M XP
+- level 2 levendary habitat: 60M 7M XP
+
+conclusion. for 6M, I can have 10M XP.
+
+TODO
+- automate this. 

@@ -5,7 +5,7 @@ import mouse
 import keyboard as K
 import time
 import pyautogui
-from arena import Battle
+from arena import Arena, Battle
 from breed import Breed
 from collectFood import heroic_collect
 
@@ -29,9 +29,15 @@ def get_pos():
     start = time.time()
     while 1:
 
+        if K.is_pressed('n'):
+            arr = [1, 2, 3, 4, 5]
+            print(arr[1::])
+            print(arr[1::-1])
+            print(arr[2::-1])
+            print(arr[0::-1])
         if K.is_pressed('m'):
             # heroic_collect()
-            Breed.breed()
+            Breed.breed('feed')
         if K.is_pressed('c'):
             dragMapToCenter()
         if K.is_pressed('p'):  # if key 'q' is pressed 
@@ -49,7 +55,7 @@ def get_pos():
         # if K.is_pressed('t'):
         #     print(get_text())
         if K.is_pressed('s'):
-            print(time.time() - start)
+            Arena.skip_strong_dragons()
         if K.is_pressed('q'):
             break  # if user pressed a key other than the given key the loop will break
          

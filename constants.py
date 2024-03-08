@@ -46,6 +46,7 @@ ARENA_CLAIM_RUSH = get_path(_BASE_ARENA + 'claim_rush')
 
 ARENA_SELECT_DRAGON = get_path(_BASE_ARENA + 'select_dragon')
 
+
 # End Arena
 
 
@@ -53,6 +54,9 @@ ARENA_SELECT_DRAGON = get_path(_BASE_ARENA + 'select_dragon')
 
 ARENA_HIGH_ARCANA = get_path(_BASE_ARENA + 'high_arcana')
 ARENA_STRONG_DRAGON = get_path(_BASE_ARENA + 'strong_dragon')
+ARENA_HAXED_VAMPIRE = get_path(_BASE_ARENA + 'haxed_vampire')
+ARENA_DUAL_PERFECEPTION = get_path(_BASE_ARENA + 'dual_perception')
+ARENA_DUAL_PARLIAMENT = get_path(_BASE_ARENA + 'dual_parliament')
 
 # End Strong Dragons
 
@@ -178,11 +182,12 @@ HEROIC_COMPLETED = get_path(_BASE_HEROIC + 'completed')
 HEROIC_GREEN_CLAIM_BTN = get_path(_BASE_HEROIC + 'claim')
 HEROIC_NO_CLAIM_BTN_2 = get_path(_BASE_HEROIC + 'no_claim2')
 HEROIC_NO_CLAIM_BTN_1 = get_path(_BASE_HEROIC + 'no_claim')
-# HEROIC_ARENA = get_path(_BASE_HEROIC + 'heroic_arena')
 HEROIC_FIGHT = get_path(_BASE_HEROIC + 'fight')
 HEROIC_NOT_READY = get_path(_BASE_HEROIC + 'not_ready_yet')
 HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
 HEROIC_CLAIM = get_path(_BASE_HEROIC + 'claim')
+
+# End Heroic
 
 
 # Start Towers

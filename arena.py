@@ -216,15 +216,24 @@ class Arena:
     def skip_strong_dragons():
         strong_dragons = [
             [C.ARENA_HIGH_ARCANA, *Arena.mon_quarters['bottom_right']],
-            # [C.ARENA_STRONG_DRAGON, *Arena.mon_quarters['bottom_right']]
+            [C.ARENA_HAXED_VAMPIRE, *Arena.mon_quarters['bottom_right']],
+            [C.ARENA_DUAL_PERFECEPTION, *Arena.mon_quarters['bottom_right']],
+            [C.ARENA_DUAL_PARLIAMENT, *Arena.mon_quarters['bottom_right']],
         ]
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
-            for is_strong_dragonb in result_list:
-                if exists(is_strong_dragonb):
-                    moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
-                    delay(5)
-                    return
+        
+        times = 2
+        while times > 0:
+            times -= 1
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
+            
+                for is_strong_dragon in result_list:
+                    print('elem ', is_strong_dragon)
+                    if exists(is_strong_dragon):
+                        moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
+                        break
+                delay(3)
+                  
                 
 
