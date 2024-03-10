@@ -116,7 +116,10 @@ class Arena:
         screenshot.save(Arena.dump_screenshot_for_rewards)
 
     def remove_screenshot_for_rewards_collection():
-        os.remove(Arena.dump_screenshot_for_rewards)
+        try:
+            os.remove(Arena.dump_screenshot_for_rewards)
+        except:
+            print('No screenshot to remove')
 
     def wait_for_the_fight_tab():
         start = time.time()
@@ -158,10 +161,8 @@ class Arena:
             Arena.check_and_collect_rewards()
 
             moveAndClick(start_fight)
-           
-            # wait for the battle to start.
-            while not Battle.is_fight_in_progress(): delay(1)
 
+            Arena.wait_for_tabble_to_start()
             Battle.fight()
             
             delay(3)
@@ -172,6 +173,15 @@ class Arena:
             start_fight = Arena.get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
+
+    def wait_for_tabble_to_start():
+        start = time.time()
+        # wait for 25 seconds to start fight. If not, then the application crashes so throw an exception
+
+        while time.time() - start < 25:
+            if Battle.is_fight_in_progress(): return
+            delay(1)
+        raise Exception('Time limit exceded on arena. Closing the app....')
 
     def claim_rush():
         rush = getImagePositionRegion(C.ARENA_CLAIM_RUSH, *Arena.mon_quarters['4thRow'], .8, 1)
@@ -229,7 +239,6 @@ class Arena:
                 result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
             
                 for is_strong_dragon in result_list:
-                    print('elem ', is_strong_dragon)
                     if exists(is_strong_dragon):
                         moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                         break

@@ -68,3 +68,4 @@ class Heroic:
            if not Heroic.fight_in_heroic_arena():
                 work = random.choice([heroic_collect, Breed.breed])
                 work()
+        else: print('Not in heroic race')

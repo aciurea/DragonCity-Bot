@@ -132,6 +132,9 @@ def get_monitor_quarters():
         "full": [0, 0, res.width, res.height]
     }
 
+def is_in_time(start, limit):
+    return (time.time() - start) < limit
+
 def backFn(): return imagesearcharea('./img/app_start/back.png', 0, 0, 500, 150)
 def closeFn(): return imagesearcharea('./img/utils/close.png', 800, 0, 1600, 450)
 def claim(): return imagesearcharea('./img/utils/close.png', 400, 200, 1200, 800)

@@ -10,6 +10,7 @@ from utils import (
                 get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
+                is_in_time,
                 moveAndClick)
 import constants as C
 import concurrent.futures
@@ -49,7 +50,7 @@ class Battle:
         ]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 6), btns)
             lst = [btn for btn in result_list if exists(btn)]
 
         if lst:
@@ -87,7 +88,9 @@ class Battle:
     def fight():
         start = time.time()
         is_last_dragon = False
-        while Battle.is_fight_in_progress() and (time.time() - start) < 180: # minutes is more than enough
+
+        while is_in_time(start, limit=180) < 180: # minutes is more than enough
+            if not Battle.is_fight_in_progress(): return 
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
                 continue 
@@ -120,9 +123,16 @@ class Battle:
                 Battle.wait_for_oponent_to_attack()
 
             # check if is last dragon and just hit the play button
-            if is_last_dragon: 
-                moveAndClick(Battle.get_play_button())
+            if is_last_dragon:
+                play_btn = Battle.get_play_button()
+                if exists(play_btn): moveAndClick(play_btn)
+                # Try again to find the select btn
+                else:
+                    select_btn = Battle.get_new_dragon_btn()
+                    if not exists(select_btn): raise 'Select button not found! Exit'
+                    moveAndClick(select_btn)
+                    delay(2)
+                    moveAndClick(Battle.get_play_button())
             else:
                 Battle.change_dragon()
         print('Fight is over!')
-

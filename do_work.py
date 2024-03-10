@@ -9,7 +9,7 @@ from shop import Shop
 from towers import activate_towers
 from tv import TV
 from utils import dragMapToCenter
-
+from daily_treasure import collect_daily_treasure
 
 def start_working():
     do_work = [
@@ -19,6 +19,7 @@ def start_working():
         collectGold,
         Shop.open_shop,
         Arena.enter_battle,
+        collect_daily_treasure,
         Heroic.race,
         TV.open_tv,
         # More work can be added here
