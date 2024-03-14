@@ -8,18 +8,27 @@ class Close:
     [res] = get_monitors()
     mon_quarters = get_monitor_quarters()
     
+    def _get_popup_red_btn():
+        last_col = Close.mon_quarters['lastCol']
+        top_right = Close.mon_quarters['top_right']
+        top_right[2] = last_col[2]
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), [[C.APP_CLOSE_TOWER, *top_right], [C.APP_CLOSE_ANOTHER_RED, *top_right]])
+            for btn in result_list:
+                if exists(btn): return btn
+        return [-1]
+
     def get_red_btn():
         last_col = Close.mon_quarters['lastCol']
         big_red_btn = getImagePositionRegion(C.APP_CLOSE_OFFERS, *last_col, .8, 1)
 
         if exists(big_red_btn):
-            top_right = Close.mon_quarters['top_right']
-            top_right[2] = big_red_btn[0] - 50 # if red button found, try to find a new button before that position
-            popup_close_btn = getImagePositionRegion(C.APP_CLOSE_TOWER, *top_right, .8, 1)
-            if exists(popup_close_btn): 
-                print("Popup clos ebtn found", popup_close_btn)
-                return popup_close_btn
-        return big_red_btn
+            red_btn = Close._get_popup_red_btn()
+            if exists(red_btn): return red_btn
+        
+        red_btn = Close._get_popup_red_btn()
+        return exists(red_btn) and red_btn or big_red_btn
 
     @staticmethod
     def get_btn():

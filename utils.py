@@ -186,7 +186,6 @@ def dragMapToCenter():
     if not exists(artifact):
         print('Cannot move the map since there is no point of reference')
         return [-1]
-    print('artifact is ', artifact)
     dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2)])
     return artifact
     
@@ -205,6 +204,15 @@ def move_to_bottom():
     [res] = get_monitors()
     dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) - 300])
     pyautogui.mouseUp()
+
+def move_to_left():
+    artifact = dragMapToCenter()
+    if not exists(artifact): return [-1]
+    [res] = get_monitors()
+    delay(.5)
+    dragMap(artifact, [_get_int(res.width / 2)- 500, artifact[1]])
+    pyautogui.mouseUp()
+    dragMap(artifact, [artifact[0] - 300, artifact[1]])
 
 def getMovePositions():
     return [

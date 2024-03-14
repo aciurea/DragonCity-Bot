@@ -3,6 +3,7 @@ from arena import Arena
 from close import check_if_ok
 from collectFood import collect_food
 from collectGold import collectGold
+from habitat import Habitat
 from heroic import Heroic
 from open import open_app, close_app
 from shop import Shop
@@ -22,6 +23,7 @@ def start_working():
         Heroic.race,
         Arena.enter_battle,
         TV.open_tv,
+        Habitat.buy_habitat,
         # More work can be added here
         # collect daily chest
         # fight in league

@@ -16,10 +16,13 @@ _BASE_UTILS = './img/utils/'
 _BASE_WRONG_POPUPS = './img/wrong_popups/'
 _BASE_APP_CLOSE = './img/close_buttons/'
 _BASE_APP_POPUP = './img/popups/'
+_BASE_HABITAT = './img/habitat/'
 
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
 
+#Habitat
+HABITAT_INFO = get_path(_BASE_HABITAT + 'info')
 
 # Start Arena
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
@@ -110,6 +113,7 @@ APP_CLOSE_SETTINGS = get_path(f'{_BASE_APP_CLOSE}settings')
 APP_CLOSE_TOWER = get_path(f'{_BASE_APP_CLOSE}tower')
 APP_LOOSE = get_path(f'{_BASE_APP_CLOSE}loose')
 APP_CLOSE_BACK = get_path(f'{_BASE_APP_CLOSE}back')
+APP_CLOSE_ANOTHER_RED = get_path(f'{_BASE_APP_CLOSE}another_red')
 
 ## End section close buttons
 
