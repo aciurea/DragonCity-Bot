@@ -18,9 +18,9 @@ def start_working():
         collect_food,
         collectGold,
         Shop.open_shop,
-        Arena.enter_battle,
         collect_daily_treasure,
         Heroic.race,
+        Arena.enter_battle,
         TV.open_tv,
         # More work can be added here
         # collect daily chest

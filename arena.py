@@ -64,18 +64,16 @@ class Arena:
         moveAndClick(new_pos)
 
     @staticmethod
-    def change_defetead_dragon(times = 0):
-        times = 4
-        while times > 0:
-            times -= 1
+    def change_defetead_dragon():
+        start =  time.time()
 
+        while time.time() - start < 60: # 1 minute
             defeated_dragon_btn = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
             select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
 
             if not exists(defeated_dragon_btn) and not exists(select_new_dragon_btn):
                 check_if_ok()
-                print('Dragons are ready for fight')
-                return
+                return print('Dragons are ready for fight')
 
             if exists(defeated_dragon_btn):
                 new_pos = [defeated_dragon_btn[0] - 20, defeated_dragon_btn[1] + 150]
@@ -87,9 +85,7 @@ class Arena:
 
             filter_dragons = getImagePositionRegion(C.ARENA_FILTER_DRAGONS, *Arena.mon_quarters['4thRow'], .8, 1)
             
-            if not exists(filter_dragons): 
-                print('Filter dragons button not found')
-                return
+            if not exists(filter_dragons): return print('Filter dragons button not found')
             moveAndClick(filter_dragons)
             delay(1)
             Arena.order_by_power()
@@ -97,9 +93,12 @@ class Arena:
 
             new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
             
-            if not exists(new_dragon): 
-                raise Exception('No dragons available')
+            if not exists(new_dragon): raise Exception('No dragons available')
             moveAndClick(new_dragon)
+            # TODO remove it
+            temp = [1812, 969]
+            delay(.1)
+            moveAndClick(temp)
             delay(1)
         raise Exception('No more dragons to fight. Exit immediatelly')
 
@@ -107,7 +106,6 @@ class Arena:
     def get_fight_btn():
         return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 2)
 
-    
     def get_screenshot_for_rewards_collection():
         return getImagePositionRegion(Arena.dump_screenshot_for_rewards, 1000, 350, 1500, 550, .8, 1)
     
@@ -130,6 +128,8 @@ class Arena:
             delay(1)
         moveAndClick(fight_tab)
 
+    def get_fight_spin():
+        return getImagePositionRegion(C.ARENA_FIGHT_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
 
     @staticmethod
     def enter_battle():
@@ -161,6 +161,8 @@ class Arena:
             Arena.check_and_collect_rewards()
 
             moveAndClick(start_fight)
+            delay(1)
+            moveAndClick(Arena.get_fight_spin())
 
             Arena.wait_for_tabble_to_start()
             Battle.fight()
@@ -230,7 +232,6 @@ class Arena:
             [C.ARENA_DUAL_PERFECEPTION, *Arena.mon_quarters['bottom_right']],
             [C.ARENA_DUAL_PARLIAMENT, *Arena.mon_quarters['bottom_right']],
         ]
-
         
         times = 2
         while times > 0:
@@ -244,5 +245,3 @@ class Arena:
                         break
                 delay(3)
                   
-                
-
