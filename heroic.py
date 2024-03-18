@@ -25,7 +25,12 @@ class Heroic:
         return exists(getImagePositionRegion(C.HEROIC_ARENA, *mon['1stCol'], .8, 1))
     
     def _start_fight():
-        delay(.5)
+        delay(1)
+
+        in_progress = getImagePositionRegion(C.HEROIC_IN_PROGRESS, *Heroic.mon['full'], .8, 1)
+
+        if exists(in_progress): return print('Heroic fight no ready yet.')
+
         fight_btn = getImagePositionRegion(C.HEROIC_START_FIGHT_BTN, 0, 0, Heroic.res.width, Heroic.res.height, .9, 1)
 
         if exists(fight_btn):
@@ -44,7 +49,7 @@ class Heroic:
         check_if_ok()
 
     def fight_in_heroic_arena():
-        fight_btn = getImagePositionRegion(C.HEROIC_FIGHT, *Heroic.mon['top_right'], 0.8, 1)
+        fight_btn = getImagePositionRegion(C.HEROIC_FIGHT, *Heroic.mon['full'], 0.8, 1)
         if exists(fight_btn):
             moveAndClick(fight_btn)
             delay(.5)
@@ -66,6 +71,6 @@ class Heroic:
            Heroic.claim_node()
            
            if not Heroic.fight_in_heroic_arena():
-                work = random.choice([heroic_collect, Breed.breed])
-                work()
+                for work in [heroic_collect, Breed.breed]:
+                    work()
         else: print('Not in heroic race')
