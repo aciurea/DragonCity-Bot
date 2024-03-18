@@ -1,8 +1,7 @@
 from close import check_if_ok
 from move import moveAndClick
 from popup import Popup
-from test import delay
-from utils import dragMapToCenter
+from utils import delay, dragMapToCenter
 
 class Daily_Treasure:
     def collect_daily_treasure():

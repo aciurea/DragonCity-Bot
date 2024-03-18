@@ -69,7 +69,8 @@ class TV:
             moveAndClick(rewards_btn)
             delay(1)
             rewards_btn = getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)
-            if not TV.watch_add(): return print("Failed video")
+            if not TV.watch_add():
+                return print("Failed video")
             delay(2)
             TV.collect_reward()
             delay(1)
