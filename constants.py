@@ -21,6 +21,10 @@ _BASE_HABITAT = './img/habitat/'
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
 
+LEAGUE_OPONENT = get_path(_BASE_BATTLE + 'league_oponent')
+LEAGUE_CLAIM = get_path(_BASE_BATTLE + 'claim')
+LEAGUE_NOT_READY = get_path(_BASE_BATTLE + 'no_new_combats')
+
 #Habitat
 HABITAT_INFO = get_path(_BASE_HABITAT + 'info')
 
@@ -48,6 +52,7 @@ ARENA_SKIP = get_path(_BASE_ARENA + 'skip')
 ARENA_REPORT_ACCEPT = get_path(_BASE_ARENA + 'report_accept')
 ARENA_CLAIM_RUSH = get_path(_BASE_ARENA + 'claim_rush')
 
+ARENA_DURIAN = get_path(_BASE_ARENA + 'durian')
 ARENA_SELECT_DRAGON = get_path(_BASE_ARENA + 'select_dragon')
 
 
@@ -179,10 +184,13 @@ HEROIC_ARENA = get_path(_BASE_HEROIC + 'heroic')
 HEROIC_SELECT_BTN = get_path(_BASE_HEROIC + 'select')
 HEROIC_DRAGON = get_path(_BASE_HEROIC + 'dragon')
 HEROIC_OK = get_path(_BASE_HEROIC + 'ok')
+
 HEROIC_FOOD = get_path(_BASE_HEROIC + 'food')
 HEROIC_BREED = get_path(_BASE_HEROIC + 'breed')
 HEROIC_HATCH = get_path(_BASE_HEROIC + 'hatch')
 HEROIC_FEED = get_path(_BASE_HEROIC + 'feed')
+HEROIC_LEAGUE = get_path(_BASE_HEROIC + 'league')
+
 HEROIC_COMPLETED = get_path(_BASE_HEROIC + 'completed')
 HEROIC_GREEN_CLAIM_BTN = get_path(_BASE_HEROIC + 'claim')
 HEROIC_NO_CLAIM_BTN_2 = get_path(_BASE_HEROIC + 'no_claim2')
@@ -190,6 +198,7 @@ HEROIC_NO_CLAIM_BTN_1 = get_path(_BASE_HEROIC + 'no_claim')
 HEROIC_FIGHT = get_path(_BASE_HEROIC + 'fight')
 HEROIC_NOT_READY = get_path(_BASE_HEROIC + 'not_ready_yet')
 HEROIC_START_FIGHT_BTN = get_path(_BASE_HEROIC + 'start_fight')
+HEROIC_IN_PROGRESS = get_path(_BASE_HEROIC + 'in_progress')
 HEROIC_CLAIM = get_path(_BASE_HEROIC + 'claim')
 
 # End Heroic

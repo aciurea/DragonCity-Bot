@@ -1,86 +1,39 @@
-import time
-from utils import ThreadWithValue, delay, exists, get_in_progress, getImagePositionRegion, moveAndClick, closePopup
+from battle import Battle
+from close import check_if_ok
+from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, moveAndClick
 import constants as C
 
-def getRewards():
-    ## TODO update the starting position
-    # thread1 = ThreadWithReturnValue(target=getImagePositionRegion, args=('./img/battle/play_video.png', 800, 300, 1400, 800)).start()
-    thread2 = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/claim.png', 300, 500, 1000, 800)).start()
-    # video = thread1.join()
-    greenClaim = thread2.join()
-    # if not exists(video):
-    #     return print('Video not found ')
+class League:
+    battle_pos = [790, 1250]
+    league_pos = [735, 625]
+    claim_pos = [910, 1140]
+    mon_quarters = get_monitor_quarters()
 
-    # moveAndClick(video)
-    # delay(1)
-    # if not exists(video_error()): 
-    #     moveAndClick([802, 352]) # position to play the video
-    #     checkIfCanClaim()
-    #     closeVideo()
-    # else: 
-    #     delay(1)
-    moveAndClick(greenClaim, 'Claim button for rewards after battle not found')
-    claim_btn_league_finished = getImagePositionRegion('./img/battle/claim.png', 600, 600, 1000, 800, .8, 5)
-    if exists(claim_btn_league_finished):
-        moveAndClick(claim_btn_league_finished)
-    
-def sortFirst(val): return val[0]
-
-def getStrongAttacks(avoid, attacks):
-    if not exists(avoid): return attacks
-
-    newAttacks = []
-    threshold = 120
-  
-    for attack in attacks:
-        if (abs(attack[0] - avoid[0]) > threshold):
-            newAttacks.append(attack)
-    return newAttacks
-
-def goToFight():
-    attack = getImagePositionRegion(C.FIGHT_PLAY, 50, 100, 110, 210, .8, 10)
-    st = time.time()
-    moveAndClick(attack)
-    while exists(get_in_progress() or time.time() - st < 120):
+    def enter_league():
+        dragMapToCenter()
+        delay(.2)
+        moveAndClick(dragMapToCenter())
         delay(.5)
-
-def goToLeague():
-    # League is positioned in the first half of the screen on the right hand side,so the rest can be skipped
-    list = [ 
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/no_new_combats.png', 1200, 100, 1600, 300)).start(),
-        ThreadWithValue(target=getImagePositionRegion,args=('./img/battle/refill.png', 1100, 100, 1600, 400)).start(),
-    ]
-
-    thread2 = ThreadWithValue(target=getImagePositionRegion, args=('./img/battle/league_oponent.png', 0, 300, 1600, 800)).start()
+        moveAndClick(League.battle_pos)
+        delay(.5)
+        moveAndClick(League.league_pos)
+        delay(2)
+        League.open_battle()
+        check_if_ok()
     
-    for thread in list:
-        noMoreBattles = thread.join()
-        if exists(noMoreBattles):
-            print('No More battle available. Close the popup')
-            return closePopup()
+    def open_battle():
+        if not exists(getImagePositionRegion(C.LEAGUE_NOT_READY, *League.mon_quarters['top_right'], .8, 1)): return print('League not ready.')
 
-    oponent = thread2.join()
-
-    if not exists(oponent):
-        return print('League Openent not found')
-
-    moveAndClick(oponent)
-    delay(5) # wait for the battle to start
-    goToFight()
-    delay(1)
-    print('Battle finished since I have no attacks, go and take the rewards')
-    getRewards()
-    delay(2)
-    goToLeague()
-
-
-def openLeaguePanel():
-    league = getImagePositionRegion('./img/battle/league.png', 350, 250, 600, 450)
-
-    if not exists(league):
-        return print('League button not found!')
-
-    print('Start league battle...')
-    moveAndClick(league)
-    delay(1)
-    goToLeague()
+        position = League.mon_quarters['2ndHorHalf']
+        position[1] -= 150
+        oponent = getImagePositionRegion(C.LEAGUE_OPONENT, *position, .8, 1)
+        
+        while exists(oponent):
+            moveAndClick(oponent)
+            delay(3)
+            Battle.fight()
+            moveAndClick(League.claim_pos)
+            delay(.5)
+            moveAndClick(getImagePositionRegion(C.LEAGUE_CLAIM, *League.mon_quarters['full'], .8, 2))
+            delay(.5)
+            oponent = getImagePositionRegion(C.LEAGUE_OPONENT, *position, .8, 1)

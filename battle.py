@@ -88,8 +88,9 @@ class Battle:
     def fight():
         start = time.time()
         is_last_dragon = False
+        delay(3)
 
-        while is_in_time(start, limit=180) < 180: # minutes is more than enough
+        while is_in_time(start, limit=180) < 180: # 3 minutes is more than enough
             if not Battle.is_fight_in_progress(): return 
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
@@ -100,6 +101,7 @@ class Battle:
             # Arena battles have very strong dragons.
             attacks_per_dragon = 3
             while attacks_per_dragon > 0:
+                if not Battle.is_fight_in_progress(): return 
                 attacks_per_dragon -= 1
 
                 # dragon is defetead
@@ -113,16 +115,13 @@ class Battle:
                     print('Dragon is the last one')
                     break # exit the loop since is the last dragon and no need for play and pause
 
-                # attack is ok, play and pause
                 play = Battle.get_play_button()
                 moveAndClick(play)
                 delay(.5)
                 moveAndClick(play) # pause
 
-                # wait for opponent to attack
                 Battle.wait_for_oponent_to_attack()
 
-            # check if is last dragon and just hit the play button
             if is_last_dragon:
                 play_btn = Battle.get_play_button()
                 if exists(play_btn): moveAndClick(play_btn)
