@@ -1,10 +1,10 @@
-import random
 from screeninfo import get_monitors
 from arena import Arena
 from battle import Battle
 from breed import Breed
-from close import check_if_ok
+from close import Close, check_if_ok
 from collectFood import heroic_collect
+from league import League
 from move import center_map
 from popup import Popup
 from utils import delay, exists, get_int, get_monitor_quarters, getImagePositionRegion, moveAndClick
@@ -54,7 +54,7 @@ class Heroic:
             moveAndClick(fight_btn)
             delay(.5)
             Heroic._start_fight()
-        check_if_ok()
+            check_if_ok()
         return exists(fight_btn)
     
     def claim_node():
@@ -68,9 +68,22 @@ class Heroic:
 
     def race():
         if Heroic.is_heroic_race():
-           Heroic.claim_node()
+            popup_btn = Close.get_popup_red_btn()
+            if exists(popup_btn):
+                moveAndClick(popup_btn)
+                delay(1)
+            Heroic.claim_node()
+            Heroic.fight_in_heroic_arena()
+            delay(.5)
            
-           if not Heroic.fight_in_heroic_arena():
-                for work in [heroic_collect, Breed.breed]:
-                    work()
+            missions = [C.HEROIC_FOOD, C.HEROIC_BREED, C.HEROIC_HATCH, C.HEROIC_FEED, C.HEROIC_LEAGUE]
+            actions = [heroic_collect, lambda: Breed.breed('breed'), lambda: Breed.breed('hatch'), lambda: Breed.breed('feed'), League.enter_league]
+            work_to_do = []
+            for index, mission in enumerate(missions):
+               pos = getImagePositionRegion(mission, *Heroic.mon['full'], 0.8, 1)
+               print(pos)
+               if exists(pos): work_to_do.append(actions[index])
+            check_if_ok()
+            for work in work_to_do: work()
+           
         else: print('Not in heroic race')
