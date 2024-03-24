@@ -12,6 +12,12 @@ def moveTo(position):
 def fast_click(pos):
     pyautogui.click(*pos)
 
+def multiple_click(pos, times= 5):
+    while times > 0:
+        fast_click(pos)
+        delay(.1)
+        times -= 1
+
 def moveAndClick(pos, msg = 'Nothing to click'):
     if not exists(pos): return print(msg)
     moveTo(pos)

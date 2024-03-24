@@ -129,6 +129,8 @@ def get_monitor_quarters():
         "lastCol": [res.width - horizontal_piece, 0, res.width, res.height],
         "1stHorHalf": [0, 0, res.width, piece * 2],
         "2ndHorHalf": [0, piece * 2, res.width, res.height],
+        "1stVerHalf": [0, 0, horizontal_piece * 4, res.height],
+        "2ndVerHalf": [horizontal_piece * 4, 0, res.width, res.height],
         "full": [0, 0, res.width, res.height]
     }
 
@@ -208,11 +210,8 @@ def move_to_bottom():
 def move_to_left():
     artifact = dragMapToCenter()
     if not exists(artifact): return [-1]
-    [res] = get_monitors()
-    delay(.5)
-    dragMap(artifact, [_get_int(res.width / 2)- 500, artifact[1]])
     pyautogui.mouseUp()
-    dragMap(artifact, [artifact[0] - 300, artifact[1]])
+    dragMap(artifact, [artifact[0] - 400, artifact[1] - 150])
 
 def getMovePositions():
     return [

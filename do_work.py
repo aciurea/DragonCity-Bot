@@ -6,6 +6,7 @@ from collectGold import collectGold
 from habitat import Habitat
 from heroic import Heroic
 from open import open_app, close_app
+from orbs import Orbs
 from shop import Shop
 from towers import activate_towers
 from tv import TV
@@ -18,6 +19,7 @@ def start_working():
         activate_towers,
         collect_food,
         collectGold,
+        Orbs.collect_orbs,
         Shop.open_shop,
         collect_daily_treasure,
         Heroic.race,

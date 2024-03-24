@@ -17,6 +17,7 @@ _BASE_WRONG_POPUPS = './img/wrong_popups/'
 _BASE_APP_CLOSE = './img/close_buttons/'
 _BASE_APP_POPUP = './img/popups/'
 _BASE_HABITAT = './img/habitat/'
+_BASE_ORBS = './img/orbs/'
 
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
@@ -24,6 +25,10 @@ ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
 LEAGUE_OPONENT = get_path(_BASE_BATTLE + 'league_oponent')
 LEAGUE_CLAIM = get_path(_BASE_BATTLE + 'claim')
 LEAGUE_NOT_READY = get_path(_BASE_BATTLE + 'no_new_combats')
+
+# ORBS
+ORBS_CLAIM = get_path(_BASE_ORBS + 'claim')
+#END ORBS
 
 #Habitat
 HABITAT_INFO = get_path(_BASE_HABITAT + 'info')

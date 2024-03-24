@@ -85,5 +85,5 @@ def activate_towers():
     Towers.greedy_tower()
     Towers.gems_towers()
     Towers.gold_tower()
-    Towers.power_tower()
+    # Towers.power_tower()
     Towers.food_tower()

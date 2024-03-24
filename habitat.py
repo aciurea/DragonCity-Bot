@@ -1,5 +1,5 @@
 from close import Close, check_if_ok
-from move import fast_click, moveAndClick
+from move import fast_click, moveAndClick, multiple_click
 from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, move_to_left
 import constants as C
 import mouse
@@ -15,16 +15,17 @@ class Habitat:
     ok = [1395, 1265]
     cancel = [1153, 1255]
     habitats_on_map = [
-                    [1817, 716],
-                    [1844, 656],
-                    [1929, 605],
-                    [1874, 761],
-                    [1925, 683],
-                    [1989, 640],
-                    [1947, 797], 
-                    [1859, 857], 
-                    [2065, 677], 
-                    [2113, 727],
+                    [1757, 707],
+                    [1803, 638],
+                    [1868, 604],
+                    [1809, 749],
+                    [1856, 679],
+                    [1968, 625],
+                    [1896, 790],
+                    [1937, 726],
+                    [2002, 681],
+                    [2046, 742],
+                    [2075, 648]
                 ]
     height_diff = 35
 
@@ -39,17 +40,19 @@ class Habitat:
                 delay(.5)
             # click on current position, in order to be able to move the map
             fast_click(mouse.get_position())
+            delay(.5)
             move_to_left()
             moveAndClick(habitat_pos)
             delay(.5)
 
     def buy_habitat():
+        # TODO check the claim btn when leveling up
         if not Habitat.store_habitat(): return
 
         for habitat_pos in Habitat.habitats_on_map:
             Habitat.prepare_habitat_to_buy(habitat_pos)
             moveAndClick(Habitat.ok)
-        
+
     def store_habitat():
         Habitat.prepare_habitat_to_buy(Habitat.habitats_on_map[0])
         delay(.5)
@@ -58,10 +61,13 @@ class Habitat:
         for habitat_pos in Habitat.habitats_on_map:
             # collect first
             moveAndClick([habitat_pos[0], habitat_pos[1] - Habitat.height_diff])
-            delay(.5)
+            delay(1)
             if exists(Close.get_popup_red_btn()):
                 check_if_ok()
                 return False
+            
+            multiple_click([habitat_pos[0], habitat_pos[1] - Habitat.height_diff], times=5)
+
             # store habitat
             info = getImagePositionRegion(C.HABITAT_INFO, *Habitat.mon_quarters['4thRow'], .8, 1)
             if exists(info):

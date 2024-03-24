@@ -1,5 +1,6 @@
+import time
 from battle import Battle
-from close import check_if_ok
+from close import Close, check_if_ok
 from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, moveAndClick
 import constants as C
 
@@ -20,20 +21,30 @@ class League:
         delay(2)
         League.open_battle()
         check_if_ok()
-    
+
     def open_battle():
-        if not exists(getImagePositionRegion(C.LEAGUE_NOT_READY, *League.mon_quarters['top_right'], .8, 1)): return print('League not ready.')
+        if exists(getImagePositionRegion(C.LEAGUE_NOT_READY, *League.mon_quarters['top_right'], .8, 2)): 
+            return print('League not ready.')
 
         position = League.mon_quarters['2ndHorHalf']
         position[1] -= 150
         oponent = getImagePositionRegion(C.LEAGUE_OPONENT, *position, .8, 1)
+        start = time.time()
         
-        while exists(oponent):
-            moveAndClick(oponent)
-            delay(3)
-            Battle.fight()
-            moveAndClick(League.claim_pos)
-            delay(.5)
-            moveAndClick(getImagePositionRegion(C.LEAGUE_CLAIM, *League.mon_quarters['full'], .8, 2))
-            delay(.5)
-            oponent = getImagePositionRegion(C.LEAGUE_OPONENT, *position, .8, 1)
+        while time.time() - start < 360:
+            if exists(getImagePositionRegion(C.LEAGUE_NOT_READY, *League.mon_quarters['top_right'], .8, 2)): 
+                return print('League not ready.')
+            if exists(oponent):
+                moveAndClick(oponent)
+                delay(1)
+                if exists(Close.get_popup_red_btn()):
+                    moveAndClick(Close.get_popup_red_btn())
+                    return
+                delay(2)
+                Battle.fight()
+                moveAndClick(League.claim_pos)
+                delay(.5)
+                moveAndClick(getImagePositionRegion(C.LEAGUE_CLAIM, *League.mon_quarters['full'], .8, 2))
+                delay(.5)
+                oponent = getImagePositionRegion(C.LEAGUE_OPONENT, *position, .8, 1)
+            else: return print('No oponent found.')

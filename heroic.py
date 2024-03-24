@@ -80,7 +80,7 @@ class Heroic:
             actions = [heroic_collect, lambda: Breed.breed('breed'), lambda: Breed.breed('hatch'), lambda: Breed.breed('feed'), League.enter_league]
             work_to_do = []
             for index, mission in enumerate(missions):
-               pos = getImagePositionRegion(mission, *Heroic.mon['full'], 0.8, 1)
+               pos = getImagePositionRegion(mission, *Heroic.mon['2ndVerHalf'], 0.8, 1)
                print(pos)
                if exists(pos): work_to_do.append(actions[index])
             check_if_ok()
