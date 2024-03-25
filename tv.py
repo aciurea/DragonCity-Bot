@@ -1,6 +1,6 @@
 
 import time
-from close import check_if_ok
+from close import Close, check_if_ok
 from utils import (
                 delay,
                 dragMapToCenter,
@@ -35,6 +35,7 @@ class TV:
             if TV.failed_video(): return False
             if TV.is_ready_to_close():
                 close_btn = TV.get_watched_video_close_btn()
+                delay(3) # some videos display a close button which is similar to the one that will close the video.
                 moveAndClick([close_btn[0] + 5, close_btn[1] + 10])
                 return True
             delay(1)
@@ -52,6 +53,8 @@ class TV:
             moveAndClick(last_claim)
         
         Popup.check_popup_chest()
+        moveAndClick(Close.get_popup_red_btn())
+
     
     def get_rewards_btn():
         rewards_btn = getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)
@@ -69,12 +72,10 @@ class TV:
             moveAndClick(rewards_btn)
             delay(1)
             rewards_btn = getImagePositionRegion(C.TV_GET_REWARDS_BTN, *TV.mon_quarters["4thRow"], .8, 1)
-            if not TV.watch_add():
-                return print("Failed video")
+            if not TV.watch_add(): return print("Failed video")
             delay(2)
             TV.collect_reward()
             delay(1)
 
             rewards_btn = TV.get_rewards_btn()
-            delay(3)
         check_if_ok()

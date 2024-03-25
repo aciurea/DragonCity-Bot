@@ -66,6 +66,7 @@ class Arena:
     @staticmethod
     def change_defetead_dragon():
         start =  time.time()
+        # is_no_durian = True
 
         while time.time() - start < 60: # 1 minute
             defeated_dragon_btn = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
@@ -73,6 +74,9 @@ class Arena:
 
             if not exists(defeated_dragon_btn) and not exists(select_new_dragon_btn):
                 check_if_ok()
+                # if is_no_durian:
+                #     print('No at least one durian available. Raising exception to stop the script.')
+                #     raise Exception('No at least one durian available. Raising exception to stop the script.')
                 return print('Dragons are ready for fight')
 
             if exists(defeated_dragon_btn):
@@ -91,8 +95,11 @@ class Arena:
             Arena.order_by_power()
             delay(1)
 
+            # Dragons are too strong. For 10 category, raise exception if durian is not available.
+            # durian = getImagePositionRegion(C.ARENA_DURIAN, *Arena.mon_quarters['2ndRow'], .8, 1)
+            # if exists(durian): is_no_durian = False
+
             new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
-            
             if not exists(new_dragon): raise Exception('No dragons available')
             moveAndClick(new_dragon)
             # TODO remove it
@@ -131,6 +138,12 @@ class Arena:
     def get_fight_spin():
         return getImagePositionRegion(C.ARENA_FIGHT_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
 
+    def do_free_spin():
+        free_spin = getImagePositionRegion(C.ARENA_FREE_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
+        if exists(free_spin):
+            moveAndClick(free_spin)
+            delay(5)
+
     @staticmethod
     def enter_battle():
         arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
@@ -155,13 +168,14 @@ class Arena:
                 raise Exception('Time limit exceded on arena. Closing the app....')
 
             Arena.skip_strong_dragons()
-            Arena.prepare_fight()
-            print('dragons prepared')
+            try: Arena.prepare_fight()
+            except: return
             Arena.save_screenshot_for_rewards_collection()
             Arena.check_and_collect_rewards()
 
             moveAndClick(start_fight)
             delay(1)
+            Arena.do_free_spin()
             moveAndClick(Arena.get_fight_spin())
 
             Arena.wait_for_tabble_to_start()
@@ -244,4 +258,3 @@ class Arena:
                         moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
                         break
                 delay(3)
-                  

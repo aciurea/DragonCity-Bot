@@ -11,7 +11,7 @@ class Close:
     def get_popup_red_btn():
         last_col = Close.mon_quarters['lastCol']
         top_right = Close.mon_quarters['top_right']
-        top_right[2] = last_col[2]
+        top_right[2] = last_col[0]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), [[C.APP_CLOSE_TOWER, *top_right], [C.APP_CLOSE_ANOTHER_RED, *top_right]])

@@ -46,6 +46,8 @@ ARENA_CLAIM_BTN = get_path(_BASE_ARENA + 'claim')
 ARENA = get_path(_BASE_ARENA + 'arena')
 ARENA_FIGHT = get_path(_BASE_ARENA + 'fight')
 ARENA_FIGHT_SPIN = get_path(_BASE_ARENA + 'fight_spin')
+ARENA_FREE_SPIN = get_path(_BASE_ARENA + 'free_spin')
+
 ARENA_SPEED = get_path(_BASE_ARENA + 'speed')
 ARENA_DEFETEAD_DRAGON = get_path(_BASE_ARENA + 'defeated_dragon')
 ARENA_CHANGE = get_path(_BASE_ARENA + 'change_dragon')

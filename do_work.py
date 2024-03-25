@@ -5,6 +5,7 @@ from collectFood import collect_food
 from collectGold import collectGold
 from habitat import Habitat
 from heroic import Heroic
+from league import League
 from open import open_app, close_app
 from orbs import Orbs
 from shop import Shop
@@ -20,6 +21,7 @@ def start_working():
         collect_food,
         collectGold,
         Orbs.collect_orbs,
+        League.enter_league,
         Shop.open_shop,
         collect_daily_treasure,
         Heroic.race,
