@@ -1,4 +1,5 @@
 
+from alliance import Alliance
 from arena import Arena
 from close import check_if_ok
 from collectFood import collect_food
@@ -28,9 +29,8 @@ def start_working():
         Arena.enter_battle,
         TV.open_tv,
         Habitat.buy_habitat,
+        Alliance.open_alliance,
         # More work can be added here
-        # collect daily chest
-        # fight in league
         # Tree of life
         close_app
     ]

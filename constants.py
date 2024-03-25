@@ -18,6 +18,12 @@ _BASE_APP_CLOSE = './img/close_buttons/'
 _BASE_APP_POPUP = './img/popups/'
 _BASE_HABITAT = './img/habitat/'
 _BASE_ORBS = './img/orbs/'
+_BASE_ALLIANCE = './img/alliance/'
+
+#Alliance
+ALLIANCE_CONTINUE = get_path(_BASE_ALLIANCE + 'continue')
+ALLIANCE_CLAIM = get_path(_BASE_ALLIANCE + 'claim')
+#End Alliance
 
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
 ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')

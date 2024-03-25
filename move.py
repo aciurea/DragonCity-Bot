@@ -12,7 +12,7 @@ def moveTo(position):
 def fast_click(pos):
     pyautogui.click(*pos)
 
-def multiple_click(pos, times= 5):
+def multiple_click(pos, times=5):
     while times > 0:
         fast_click(pos)
         delay(.1)
