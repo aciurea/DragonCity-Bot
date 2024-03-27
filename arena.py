@@ -1,7 +1,7 @@
 import time
 from battle import Battle
 from close import check_if_ok
-from move import moveTo
+from move import multiple_click
 from popup import Popup
 from utils import (
                 delay,
@@ -36,7 +36,7 @@ class Arena:
         collect = getImagePositionRegion(C.ARENA_CHEST_COLLECT, *Arena.mon_quarters['1stRow'], .8, 1)
 
         if exists(collect):
-            Popup.multiple_click(collect)
+            multiple_click(collect)
             delay(1)
             Popup.check_popup_chest()
             check_if_ok()
@@ -142,8 +142,10 @@ class Arena:
         free_spin = getImagePositionRegion(C.ARENA_FREE_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
         if exists(free_spin):
             moveAndClick(free_spin)
-            delay(5)
-
+            delay(10)
+        fight_spin = Arena.get_fight_spin()
+        if exists(fight_spin): moveAndClick(fight_spin)
+            
     @staticmethod
     def enter_battle():
         arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
@@ -176,9 +178,6 @@ class Arena:
             moveAndClick(start_fight)
             delay(1)
             Arena.do_free_spin()
-            moveAndClick(Arena.get_fight_spin())
-
-            Arena.wait_for_tabble_to_start()
             Battle.fight()
             
             delay(3)
@@ -189,15 +188,6 @@ class Arena:
             start_fight = Arena.get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
-
-    def wait_for_tabble_to_start():
-        start = time.time()
-        # wait for 25 seconds to start fight. If not, then the application crashes so throw an exception
-
-        while time.time() - start < 25:
-            if Battle.is_fight_in_progress(): return
-            delay(1)
-        raise Exception('Time limit exceded on arena. Closing the app....')
 
     def claim_rush():
         rush = getImagePositionRegion(C.ARENA_CLAIM_RUSH, *Arena.mon_quarters['4thRow'], .8, 1)

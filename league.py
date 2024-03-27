@@ -37,10 +37,9 @@ class League:
             if exists(oponent):
                 moveAndClick(oponent)
                 delay(1)
-                if exists(Close.get_popup_red_btn()):
-                    moveAndClick(Close.get_popup_red_btn())
-                    return
-                delay(2)
+                red_btn = Close.get_popup_red_btn()
+                if exists(red_btn): return moveAndClick(red_btn)
+
                 Battle.fight()
                 moveAndClick(League.claim_pos)
                 delay(.5)

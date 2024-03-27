@@ -27,7 +27,7 @@ class Habitat:
                     [2046, 742],
                     [2075, 648]
                 ]
-    height_diff = 35
+    height_diff = 15
 
     def prepare_habitat_to_buy(habitat_pos):
             dragMapToCenter()
@@ -42,7 +42,7 @@ class Habitat:
             fast_click(mouse.get_position())
             delay(.5)
             move_to_left()
-            moveAndClick(habitat_pos)
+            moveAndClick([habitat_pos[0], habitat_pos[1]])
             delay(.5)
 
     def buy_habitat():
@@ -52,6 +52,9 @@ class Habitat:
         for habitat_pos in Habitat.habitats_on_map:
             Habitat.prepare_habitat_to_buy(habitat_pos)
             moveAndClick(Habitat.ok)
+
+    def get_continue():
+        return getImagePositionRegion(C.HABITAT_CONTINUE, *Habitat.mon_quarters['4thRow'], .8, 1)
 
     def store_habitat():
         Habitat.prepare_habitat_to_buy(Habitat.habitats_on_map[0])
@@ -67,6 +70,14 @@ class Habitat:
                 return False
             
             multiple_click([habitat_pos[0], habitat_pos[1] - Habitat.height_diff], times=5)
+
+            continue_btn = Habitat.get_continue()
+            if exists(continue_btn):
+                moveAndClick(continue_btn)
+                check_if_ok()
+                delay(.5)
+                multiple_click([habitat_pos[0], habitat_pos[1] - Habitat.height_diff], times=5)
+
 
             # store habitat
             info = getImagePositionRegion(C.HABITAT_INFO, *Habitat.mon_quarters['4thRow'], .8, 1)

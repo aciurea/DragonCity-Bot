@@ -1,4 +1,5 @@
 from screeninfo import get_monitors
+from breed import Breed
 from close import check_if_ok
 from move import center_map, drag_map_to_the_bottom, moveAndClick, multiple_click
 from popup import Popup
@@ -31,3 +32,4 @@ class Alliance:
             Popup.check_popup_chest()
             delay(5)
         check_if_ok()
+        Breed.breed('breed', 30)

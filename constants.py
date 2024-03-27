@@ -38,6 +38,9 @@ ORBS_CLAIM = get_path(_BASE_ORBS + 'claim')
 
 #Habitat
 HABITAT_INFO = get_path(_BASE_HABITAT + 'info')
+HABITAT_CONTINUE = get_path(_BASE_HABITAT + 'continue')
+
+# End Habitat
 
 # Start Arena
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
@@ -85,7 +88,7 @@ ARENA_DUAL_PARLIAMENT = get_path(_BASE_ARENA + 'dual_parliament')
 # Start Fight
 FIGHT_SWAP = get_path(f'{_BASE_BATTLE}swap')
 FIGHT_PLAY = get_path(f'{_BASE_BATTLE}play')
-FIGHT_IN_PROGRESS = get_path(f'{_BASE_BATTLE}fight_in_progress')
+FIGHT_X3 = get_path(f'{_BASE_BATTLE}fight_in_progress')
 FIGHT_GOOD_LIFE = get_path(f'{_BASE_BATTLE}low_life')
 FIGHT_TAB = get_path(f'{_BASE_BATTLE}fight_tab')
 FIGHT_SELECT_DRAGON = get_path(f'{_BASE_BATTLE}select_dragon')

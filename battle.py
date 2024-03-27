@@ -7,6 +7,7 @@ from utils import (
                 _get_int,
                 delay,
                 exists,
+                get_grid_monitor,
                 get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
@@ -19,21 +20,53 @@ import concurrent.futures
 jsonPos = get_json_file('arena.json')
 
 class Battle:
+    grid = get_grid_monitor()
     mon_quarters = get_monitor_quarters()
     [ res ] = get_monitors()
     one_third = _get_int(res.width / 3)
     
     @staticmethod
     def is_fight_in_progress():
-        if exists(getImagePositionRegion(C.FIGHT_IN_PROGRESS, *Popup.mon_quarters['1stCol'], .8, 1)):
-            return True
+        if exists(Battle.get_x3()): return True
 
-        return exists(Battle.get_new_dragon_btn())
+        return exists(Battle.get_select_btn())
 
-    @staticmethod
-    def get_play_button():
-        return getImagePositionRegion(C.FIGHT_PLAY, *Popup.mon_quarters['1stCol'], .8, 1)
+    def get_x3():
+        grid = Battle.grid
+        position = [grid['x0'], grid['y1'], grid['x1'], grid['y2']]
+
+        return getImagePositionRegion(C.FIGHT_X3, *position, .8, 1)
     
+    def get_select_btn():
+        grid = Battle.grid
+        position = [grid['x0'], grid['y4'], grid['x8'], grid['y6']]
+
+        return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *position, .8, 1)        
+
+    def get_play_button():
+        grid = Battle.grid
+        position = [grid['x0'], grid['y0'], grid['x1'], grid['y2']]
+
+        return getImagePositionRegion(C.FIGHT_PLAY, *position, .8, 1)
+    
+    def has_battle_started():
+        work = [Battle.get_play_button,Battle.get_x3, Battle.get_select_btn]
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            btns = executor.map(lambda func: func(), work)
+            for btn in btns:
+                if exists(btn): return True
+        return False
+    
+    def wait_for_battle_to_start():
+        start = time.time()
+        time_limit = 25
+        while time.time() - start < time_limit:
+            if Battle.has_battle_started(): return print('Ready for fighting')
+            else: print('Fight not ready')
+            delay(1)
+        raise Exception('Time limit exceded on arena. Closing the app....')
+        
     @staticmethod
     def get_new_dragon_btn():
         lst = []
@@ -86,9 +119,10 @@ class Battle:
 
     @staticmethod
     def fight():
+        Battle.wait_for_battle_to_start()
+
         start = time.time()
         is_last_dragon = False
-        delay(3)
 
         while is_in_time(start, limit=180) < 180: # 3 minutes is more than enough
             if not Battle.is_fight_in_progress(): return 
