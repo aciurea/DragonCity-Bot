@@ -9,6 +9,7 @@ from heroic import Heroic
 from league import League
 from open import open_app, close_app
 from orbs import Orbs
+from quest import Quest
 from shop import Shop
 from towers import activate_towers
 from tv import TV
@@ -21,6 +22,7 @@ def start_working():
         activate_towers,
         collect_food,
         collectGold,
+        Quest.open_quest,
         Orbs.collect_orbs,
         League.enter_league,
         Shop.open_shop,

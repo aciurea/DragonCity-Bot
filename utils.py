@@ -42,10 +42,6 @@ class ThreadWithValue(Thread):
         Thread.join(self, *args)
         return self._return
 
-def go_back():
-    back_btn = getImagePositionRegion('./img/app_start/back.png', 0, 0, 150, 150, .8, 2)
-    moveAndClick(back_btn)
-
 # It retries 10 times which means 5 seconds for the image to appear
 def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10, speed=0.5):
     image = imagesearcharea(path, x1, y1, x2, y2, precision)
@@ -110,6 +106,22 @@ def _get_int(num):
 
 def get_int(num):
     return int(round(num))
+
+def get_grid_monitor():
+    [ res ] = get_monitors()
+    resolution = {}
+    h_step = res.width / 8
+    v_step = res.height / 6
+    i = 0
+
+    while i <= 8:
+        resolution['x' + str(i)] = get_int(i * h_step)
+        if i <= 6:
+            resolution['y' + str(i)] = get_int(i * v_step)
+        i += 1
+    
+    return resolution
+
 
 def get_monitor_quarters():
     [ res ] = get_monitors()
