@@ -59,6 +59,7 @@ ARENA_FREE_SPIN = get_path(_BASE_ARENA + 'free_spin')
 
 ARENA_SPEED = get_path(_BASE_ARENA + 'speed')
 ARENA_DEFETEAD_DRAGON = get_path(_BASE_ARENA + 'defeated_dragon')
+ARENA_DEFETEAD_DRAGON_SELECT_TEAM = get_path(_BASE_ARENA + 'defeated_dragon_select_team')
 ARENA_CHANGE = get_path(_BASE_ARENA + 'change_dragon')
 ARENA_FILTER_DRAGONS = get_path(_BASE_ARENA + 'filter_dragons')
 ARENA_NEW_DRAGON = get_path(_BASE_ARENA + 'new_dragon')

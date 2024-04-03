@@ -8,7 +8,7 @@ class Gold:
     @staticmethod
     def collectGold():
         dragMapToCenter()
-        multiple_click(jsonPos["STACKED_HABITTATS"], times=70)
+        multiple_click(jsonPos["STACKED_HABITTATS"], times=70, time_between_clicks=0.01)
         check_if_ok()
 
 def collectGold():

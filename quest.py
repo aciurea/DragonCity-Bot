@@ -7,7 +7,11 @@ import constants as C
 
 
 class Quest:
-    quests_pos = [[530, 800], [1330, 800], [2100, 800]]
+    quests_pos = [
+        [2100, 800]
+        #  [530, 800],
+        # [1330, 800], 
+        ]
     battle_pos = [790, 1250]
     quest_pos = [1278, 710]
     scroll_pos = [2503, 810]

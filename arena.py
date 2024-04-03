@@ -6,19 +6,19 @@ from popup import Popup
 from utils import (
                 delay,
                 exists,
+                get_grid_monitor,
                 get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
                 moveAndClick)
 import constants as C
 import concurrent.futures
-import pyautogui
-import os
 
 jsonPos = get_json_file('arena.json')
 
 class Arena:
     mon_quarters = get_monitor_quarters()
+    grid = get_grid_monitor()
     dump_screenshot_for_rewards = "dump_for_rewards.png"
 
     @staticmethod
@@ -44,7 +44,7 @@ class Arena:
 
     @staticmethod
     def prepare_fight():
-        if exists(getImagePositionRegion(C.ARENA_SPEED, *Arena.mon_quarters['bottom_left'], .8, 1)):
+        if exists(Arena.get_dragon_defeated_pos()):
             change_btn = getImagePositionRegion(C.ARENA_CHANGE, *Arena.mon_quarters['bottom_left'], .8, 1)
             if not exists(change_btn): return print('Change button not found')
             moveAndClick(change_btn)
@@ -63,29 +63,32 @@ class Arena:
         new_pos = [order_by_power_des[0] + 50, order_by_power_des[1] + 50]
         moveAndClick(new_pos)
 
+    def get_dragon_defeated_pos():
+        pos = [Arena.grid['x0'], Arena.grid['y2'], Arena.grid['x8'], Arena.grid['y5']]
+        
+        return getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *pos, .8, 1)
+    
+    def is_defeated_dragon_in_select_team():
+        pos = [Arena.grid['x0'], Arena.grid['y3'], Arena.grid['x7'], Arena.grid['y5']]
+        
+        return exists(getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON_SELECT_TEAM, *pos, .8, 1))
+    
+    def get_select_dragon_btn():
+        pos = [Arena.grid['x0'], Arena.grid['y4'], Arena.grid['x7'], Arena.grid['y5']]
+
+        return getImagePositionRegion(C.ARENA_SELECT_DRAGON, *pos, .8, 1)
+
     @staticmethod
     def change_defetead_dragon():
         start =  time.time()
-        # is_no_durian = True
 
         while time.time() - start < 60: # 1 minute
-            defeated_dragon_btn = getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *Arena.mon_quarters['3rdRow'], .8, 1)
-            select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
-
-            if not exists(defeated_dragon_btn) and not exists(select_new_dragon_btn):
+            if not Arena.is_defeated_dragon_in_select_team():
                 check_if_ok()
-                # if is_no_durian:
-                #     print('No at least one durian available. Raising exception to stop the script.')
-                #     raise Exception('No at least one durian available. Raising exception to stop the script.')
                 return print('Dragons are ready for fight')
-
-            if exists(defeated_dragon_btn):
-                new_pos = [defeated_dragon_btn[0] - 20, defeated_dragon_btn[1] + 150]
-                moveAndClick(new_pos)
-                delay(1)
-            elif exists(select_new_dragon_btn):
-                moveAndClick(select_new_dragon_btn)
-                delay(1)
+            select_new_dragon_btn = Arena.get_select_dragon_btn()
+            moveAndClick(select_new_dragon_btn)
+            delay(1)
 
             filter_dragons = getImagePositionRegion(C.ARENA_FILTER_DRAGONS, *Arena.mon_quarters['4thRow'], .8, 1)
             
@@ -94,10 +97,6 @@ class Arena:
             delay(1)
             Arena.order_by_power()
             delay(1)
-
-            # Dragons are too strong. For 10 category, raise exception if durian is not available.
-            # durian = getImagePositionRegion(C.ARENA_DURIAN, *Arena.mon_quarters['2ndRow'], .8, 1)
-            # if exists(durian): is_no_durian = False
 
             new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
             if not exists(new_dragon): raise Exception('No dragons available')
@@ -115,16 +114,6 @@ class Arena:
 
     def get_screenshot_for_rewards_collection():
         return getImagePositionRegion(Arena.dump_screenshot_for_rewards, 1000, 350, 1500, 550, .8, 1)
-    
-    def save_screenshot_for_rewards_collection():
-        screenshot = pyautogui.screenshot(region=(1000, 350, 500, 200))
-        screenshot.save(Arena.dump_screenshot_for_rewards)
-
-    def remove_screenshot_for_rewards_collection():
-        try:
-            os.remove(Arena.dump_screenshot_for_rewards)
-        except:
-            print('No screenshot to remove')
 
     def wait_for_the_fight_tab():
         start = time.time()
@@ -166,13 +155,12 @@ class Arena:
 
         while exists(start_fight):
             if (time.time() - start_time) > time_limit: 
-                Arena.remove_screenshot_for_rewards_collection()
                 raise Exception('Time limit exceded on arena. Closing the app....')
-
+            
+            print('Start new Arena battle')
             Arena.skip_strong_dragons()
             try: Arena.prepare_fight()
             except: return
-            Arena.save_screenshot_for_rewards_collection()
             Arena.check_and_collect_rewards()
 
             moveAndClick(start_fight)
@@ -196,12 +184,12 @@ class Arena:
         moveAndClick(rush)
         delay(2)
         moveAndClick([1250, 1215])
-        delay(2)
+        delay(5)
 
         times = 5
         while times > 0:
             times -= 1
-            Popup.check_popup_chest
+            Popup.check_popup_chest()
             delay(2)
 
     @staticmethod

@@ -24,14 +24,14 @@ def start_working():
         collectGold,
         Quest.open_quest,
         Orbs.collect_orbs,
-        League.enter_league,
         Shop.open_shop,
         collect_daily_treasure,
         Heroic.race,
         Arena.enter_battle,
         TV.open_tv,
-        Habitat.buy_habitat,
+        # Habitat.buy_habitat,
         Alliance.open_alliance,
+        League.enter_league,
         # More work can be added here
         # Tree of life
         close_app

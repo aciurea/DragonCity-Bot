@@ -27,7 +27,7 @@ class Habitat:
                     [2046, 742],
                     [2075, 648]
                 ]
-    height_diff = 15
+    height_diff = 35
 
     def prepare_habitat_to_buy(habitat_pos):
             dragMapToCenter()
