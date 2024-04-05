@@ -4,6 +4,7 @@ from arena import Arena
 from close import check_if_ok
 from collectFood import collect_food
 from collectGold import collectGold
+from daily_collect import Daily_Collect
 from habitat import Habitat
 from heroic import Heroic
 from league import League
@@ -32,6 +33,7 @@ def start_working():
         Habitat.buy_habitat,
         Alliance.open_alliance,
         League.enter_league,
+        Daily_Collect.collect,
         # More work can be added here
         # Tree of life
         close_app

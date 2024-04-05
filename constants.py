@@ -19,6 +19,12 @@ _BASE_APP_POPUP = './img/popups/'
 _BASE_HABITAT = './img/habitat/'
 _BASE_ORBS = './img/orbs/'
 _BASE_ALLIANCE = './img/alliance/'
+_BASE_DAILY = './img/daily/'
+
+# daily
+DAILY_STREAK = get_path(_BASE_DAILY + 'daily_streak')
+DAILY_CLAIM_BROWSER = get_path(_BASE_DAILY + 'claim_browser')
+DAILY_CLAIM_AFTER_BROWSER = get_path(_BASE_DAILY + 'claim_after_browser')
 
 #Alliance
 ALLIANCE_CONTINUE = get_path(_BASE_ALLIANCE + 'continue')
