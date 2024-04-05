@@ -93,6 +93,7 @@ FIGHT_X3 = get_path(f'{_BASE_BATTLE}fight_in_progress')
 FIGHT_GOOD_LIFE = get_path(f'{_BASE_BATTLE}low_life')
 FIGHT_TAB = get_path(f'{_BASE_BATTLE}fight_tab')
 FIGHT_SELECT_DRAGON = get_path(f'{_BASE_BATTLE}select_dragon')
+FIGHT_ATTACK_READY = get_path(f'{_BASE_BATTLE}attack_ready')
 
 
 # End Fight

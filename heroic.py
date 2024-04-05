@@ -45,7 +45,7 @@ class Heroic:
             delay(1)
             moveAndClick([get_int(0.4892307 * Heroic.res.width), get_int(0.909375 * Heroic.res.height)])
             delay(5)
-            Battle.fight()
+            Battle.fight(change_dragon=False)
         check_if_ok()
 
     def fight_in_heroic_arena():

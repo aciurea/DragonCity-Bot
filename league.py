@@ -40,7 +40,7 @@ class League:
                 red_btn = Close.get_popup_red_btn()
                 if exists(red_btn): return moveAndClick(red_btn)
 
-                Battle.fight()
+                Battle.fight(change_dragon=False)
                 moveAndClick(League.claim_pos)
                 delay(.5)
                 moveAndClick(getImagePositionRegion(C.LEAGUE_CLAIM, *League.mon_quarters['full'], .8, 2))

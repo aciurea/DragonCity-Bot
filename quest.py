@@ -40,6 +40,6 @@ class Quest:
                 go_to = getImagePositionRegion(C.QUEST_GO_TO_BATTLE, *get_monitor_quarters()['full'], .8, 2)
                 if exists(go_to): 
                     moveAndClick(go_to)
-                    Battle.fight()
+                    Battle.fight(change_dragon=False)
                     Popup.check_popup_chest()
         check_if_ok()

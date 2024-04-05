@@ -29,7 +29,7 @@ def start_working():
         Heroic.race,
         Arena.enter_battle,
         TV.open_tv,
-        # Habitat.buy_habitat,
+        Habitat.buy_habitat,
         Alliance.open_alliance,
         League.enter_league,
         # More work can be added here

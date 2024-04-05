@@ -2,13 +2,11 @@ import random
 import time
 
 from screeninfo import get_monitors
-from popup import Popup
 from utils import (
                 _get_int,
                 delay,
                 exists,
                 get_grid_monitor,
-                get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
                 is_in_time,
@@ -17,20 +15,12 @@ import constants as C
 import concurrent.futures
 
 
-jsonPos = get_json_file('arena.json')
-
 class Battle:
     grid = get_grid_monitor()
     mon_quarters = get_monitor_quarters()
     [ res ] = get_monitors()
     one_third = _get_int(res.width / 3)
     
-    @staticmethod
-    def is_fight_in_progress():
-        if exists(Battle.get_x3()): return True
-
-        return exists(Battle.get_select_btn())
-
     def get_x3():
         grid = Battle.grid
         position = [grid['x0'], grid['y1'], grid['x1'], grid['y2']]
@@ -49,8 +39,14 @@ class Battle:
 
         return getImagePositionRegion(C.FIGHT_PLAY, *position, .8, 1)
     
-    def has_battle_started():
-        work = [Battle.get_play_button,Battle.get_x3, Battle.get_select_btn]
+    def _get_attack_ready():
+        grid = Battle.grid
+        position = [grid['x6'], grid['y5'], grid['x8'], grid['y6']]
+
+        return getImagePositionRegion(C.FIGHT_ATTACK_READY, *position, .8, 1)
+    
+    def is_in_battle():
+        work = [Battle.get_play_button, Battle.get_x3, Battle.get_select_btn]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             btns = executor.map(lambda func: func(), work)
@@ -60,48 +56,52 @@ class Battle:
     
     def wait_for_battle_to_start():
         start = time.time()
-        time_limit = 25
+        time_limit = 15
         while time.time() - start < time_limit:
-            if Battle.has_battle_started(): return print('Ready for fighting')
+            if Battle.is_in_battle(): return print('Ready for fighting')
             else: print('Fight not ready')
             delay(1)
         raise Exception('Time limit exceded on arena. Closing the app....')
         
     @staticmethod
     def get_new_dragon_btn():
-        lst = []
-        pos = Battle.mon_quarters['4thRow']
-        second = pos[:]
-        second[0] = Battle.one_third
-        third =  pos[:]
-        third[0] = Battle.one_third * 2
+        grid = Battle.grid
+        y0 = grid['y4']
+        y1 = grid['y6']
+        pos = [
+                [grid['x0'], y0, grid['x2'], y1], 
+                [grid['x3'], y0, grid['x4'], y1],
+                [grid['x5'], y0, grid['x7'], y1]
+            ]
 
         btns = [
-            [C.FIGHT_SELECT_DRAGON, *pos],
-            [C.FIGHT_SELECT_DRAGON, *second], # start from 1 third.
-            [C.FIGHT_SELECT_DRAGON, *third], # start from 2nd third.
+            [C.FIGHT_SELECT_DRAGON, *pos[0]],
+            [C.FIGHT_SELECT_DRAGON, *pos[1]], # start from 1 third.
+            [C.FIGHT_SELECT_DRAGON, *pos[2]], # start from 2nd third.
         ]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 6), btns)
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
             lst = [btn for btn in result_list if exists(btn)]
 
-        if lst:
-            return random.choice(lst)
-
-        return [-1]
+        return random.choice(lst) if lst else [-1]
     
     @staticmethod
     def get_swap_button():
-        return getImagePositionRegion(C.FIGHT_SWAP, *Battle.mon_quarters['bottom_left'], .8, 1)
+        grid = Battle.grid
+        pos = [grid['x0'], grid['y4'], grid['x1'], grid['y5']]
+
+        return getImagePositionRegion(C.FIGHT_SWAP, *pos, .8, 1)
 
     @staticmethod
     def wait_for_oponent_to_attack():
         start = time.time()
-      
-        while time.time() - start < 7:  # wait for 7 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
-            if exists(Battle.get_swap_button()): return # oponend finished attacking
-            if exists(Battle.get_new_dragon_btn()): return # dragon is defetead.
+        work = [Battle._get_attack_ready, Battle.get_select_btn]
+        while time.time() - start < 10:  # wait for 10 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                btns = executor.map(lambda func: func(), work)
+                for btn in btns:
+                    if exists(btn): return
             delay(1)
     
     @staticmethod
@@ -115,33 +115,38 @@ class Battle:
         if not exists(new_dragon): return print('Dragon not found')
 
         moveAndClick(new_dragon)
-        print('Dragon was changed')
+
+    def _battle_with_no_change_dragon():
+        start = time.time()
+        moveAndClick(Battle.get_play_button())
+        while is_in_time(start, limit = 120):
+            if not Battle.is_in_battle(): return 
+            delay(3)
+
 
     @staticmethod
-    def fight():
+    def fight(change_dragon=True):
         Battle.wait_for_battle_to_start()
+
+        if not change_dragon: return Battle._battle_with_no_change_dragon()
 
         start = time.time()
         is_last_dragon = False
 
-        while is_in_time(start, limit=180) < 180: # 3 minutes is more than enough
-            if not Battle.is_fight_in_progress(): return 
+        while is_in_time(start, limit = 180): # 3 minutes is more than enough
+            if not Battle.is_in_battle(): return 
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
                 continue 
 
-            # This flow is specifically for arena where you want to use all the dragons power and not wait for a dragon to get defeated in order to change it.
-            # This flow might save the dragon for a next fight.
-            # Arena battles have very strong dragons.
             attacks_per_dragon = 3
             while attacks_per_dragon > 0:
-                if not Battle.is_fight_in_progress(): return 
                 attacks_per_dragon -= 1
+                if not Battle.is_in_battle(): return 
+                Battle.wait_for_oponent_to_attack()
 
                 # dragon is defetead
-                if exists(Battle.get_new_dragon_btn()):
-                    print('Dragon is defeated')
-                    break
+                if exists(Battle.get_select_btn()): break
 
                 # dragon is the last one
                 if not exists(Battle.get_swap_button()):
@@ -151,21 +156,17 @@ class Battle:
 
                 play = Battle.get_play_button()
                 moveAndClick(play)
-                delay(.5)
+                delay(.25)
                 moveAndClick(play) # pause
-
-                Battle.wait_for_oponent_to_attack()
+                delay(1.5)
 
             if is_last_dragon:
                 play_btn = Battle.get_play_button()
                 if exists(play_btn): moveAndClick(play_btn)
-                # Try again to find the select btn
-                else:
-                    select_btn = Battle.get_new_dragon_btn()
-                    if not exists(select_btn): raise 'Select button not found! Exit'
-                    moveAndClick(select_btn)
-                    delay(2)
-                    moveAndClick(Battle.get_play_button())
+                else: 
+                    if not Battle.is_in_battle(): return print('Dragon was the last one but I am not in the battle anymore!')
+                    raise Exception('Dragon is the last one but couldnt continue the battle.')
             else:
+                Battle.wait_for_oponent_to_attack()
                 Battle.change_dragon()
         print('Fight is over!')

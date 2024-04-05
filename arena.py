@@ -201,14 +201,7 @@ class Arena:
         else:
             moveAndClick(jsonPos["STATIC_CLAIM_BATTLE"])
             print('Collect button not found')
-
-        start = time.time()
-        seconds_limit_to_collect_rewards = 7
-
-        while (time.time() - start < seconds_limit_to_collect_rewards
-            and not exists(Arena.get_screenshot_for_rewards_collection())):
-            delay(1)
-        Arena.remove_screenshot_for_rewards_collection()
+        delay(3)
 
     @staticmethod
     def close_buying_dragon_powers():
@@ -218,8 +211,7 @@ class Arena:
 
     @staticmethod
     def skip_strong_dragons():
-        strong_dragons = [
-            [C.ARENA_HIGH_ARCANA, *Arena.mon_quarters['bottom_right']],
+        strong_dragons = [ 
             [C.ARENA_HAXED_VAMPIRE, *Arena.mon_quarters['bottom_right']],
             [C.ARENA_DUAL_PERFECEPTION, *Arena.mon_quarters['bottom_right']],
             [C.ARENA_DUAL_PARLIAMENT, *Arena.mon_quarters['bottom_right']],

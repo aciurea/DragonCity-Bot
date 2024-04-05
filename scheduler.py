@@ -15,4 +15,4 @@ while True:
             one_hour = 3600
             print("Waiting for 1 hour... ", datetime.now().time())
             # Wait for 30 minutes (1800 seconds)
-            delay(one_hour / 2)
+            delay(one_hour)
