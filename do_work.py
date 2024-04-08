@@ -1,6 +1,7 @@
 
 from alliance import Alliance
 from arena import Arena
+from breed import Breed
 from close import check_if_ok
 from collectFood import collect_food
 from collectGold import collectGold
@@ -11,6 +12,7 @@ from league import League
 from open import open_app, close_app
 from orbs import Orbs
 from quest import Quest
+from runner import Runner
 from shop import Shop
 from towers import activate_towers
 from tv import TV
@@ -23,7 +25,6 @@ def start_working():
         activate_towers,
         collect_food,
         collectGold,
-        Quest.open_quest,
         Orbs.collect_orbs,
         Shop.open_shop,
         collect_daily_treasure,
@@ -33,7 +34,10 @@ def start_working():
         Habitat.buy_habitat,
         Alliance.open_alliance,
         League.enter_league,
+        Runner.run,
         Daily_Collect.collect,
+        # lambda: Breed.breed('breed', 100),
+        # Quest.open_quest,
         # More work can be added here
         # Tree of life
         close_app

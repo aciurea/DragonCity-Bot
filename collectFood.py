@@ -93,7 +93,7 @@ class FoodCollector:
 def collect_food(isHeroicRace = False):
     return FoodCollector.collectFood(isHeroicRace)  
  
-def heroic_collect(times = 20):
+def heroic_collect(times = 15):
     while times > 0:
         times -= 1
         collect_food(isHeroicRace=True)

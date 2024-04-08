@@ -45,6 +45,9 @@ class Battle:
 
         return getImagePositionRegion(C.FIGHT_ATTACK_READY, *position, .8, 1)
     
+    def get_no_btn():
+        return getImagePositionRegion(C.ARENA_NO, *Battle.mon_quarters['full'], .8, 1) # TODO update it with grid to be faster 
+    
     def is_in_battle():
         work = [Battle.get_play_button, Battle.get_x3, Battle.get_select_btn]
 
@@ -110,7 +113,6 @@ class Battle:
         if exists(swap_btn):
             moveAndClick(swap_btn)
             delay(1)
-
         new_dragon = Battle.get_new_dragon_btn()
         if not exists(new_dragon): return print('Dragon not found')
 
@@ -152,6 +154,8 @@ class Battle:
                 if not exists(Battle.get_swap_button()):
                     is_last_dragon = True
                     print('Dragon is the last one')
+                    no = Battle.get_no_btn()
+                    if exists(no): moveAndClick(no)
                     break # exit the loop since is the last dragon and no need for play and pause
 
                 play = Battle.get_play_button()

@@ -1,12 +1,13 @@
 from screeninfo import get_monitors
 from move import moveAndClick, moveTo
-from utils import delay, exists, get_int, get_monitor_quarters, getImagePositionRegion
+from utils import delay, exists, get_grid_monitor, get_int, get_monitor_quarters, getImagePositionRegion
 import constants as C
 import concurrent.futures
 
 class Close:
     [res] = get_monitors()
     mon_quarters = get_monitor_quarters()
+    grid = get_grid_monitor()
     
     def get_popup_red_btn():
         last_col = Close.mon_quarters['lastCol']
@@ -32,6 +33,7 @@ class Close:
 
     @staticmethod
     def get_btn():
+        g = Close.grid
         red_btn = Close.get_red_btn()
         if exists(red_btn): return red_btn
 
@@ -39,9 +41,9 @@ class Close:
         high_priority_btns = [
             [C.APP_CLOSE_DIVINE, *top_right],
             [C.APP_CLOSE_GEMS, *top_right],
-            [C.APP_CLOSE_PIGGY, *top_right],
-            [C.APP_CLOSE_SETTINGS, *top_right],
-            [C.APP_CLOSE_BACK, *Close.mon_quarters['1stRow']],
+            [C.APP_CLOSE_PIGGY, *[g['x5'], g['y0'], g['x7'], g['y2']]],
+            [C.APP_CLOSE_SETTINGS, *[g['x6'], g['y0'], g['x7'], g['y1']]],
+            [C.APP_CLOSE_BACK, *[g['x0'], g['y0'], g['x1'], g['y1']]],
         ]
     
         with concurrent.futures.ThreadPoolExecutor() as executor:

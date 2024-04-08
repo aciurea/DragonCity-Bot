@@ -150,7 +150,7 @@ class Arena:
         delay(1)
 
         start_fight = Arena.get_fight_btn()
-        time_limit = 300 # if doesn't end in 5 minutes, we stop the script.
+        time_limit = 420 # if doesn't end in 5 minutes, we stop the script.
         start_time = time.time()
 
         while exists(start_fight):

@@ -20,11 +20,22 @@ _BASE_HABITAT = './img/habitat/'
 _BASE_ORBS = './img/orbs/'
 _BASE_ALLIANCE = './img/alliance/'
 _BASE_DAILY = './img/daily/'
+_BASE_RUNNER = './img/runner/'
 
-# daily
+# RUNNER
+RUNNER_ICO = get_path(_BASE_RUNNER + 'ico')
+RUNNER_CLAIM = get_path(_BASE_RUNNER + 'claim')
+
+
+# END RUNNER
+
+# DAILY
 DAILY_STREAK = get_path(_BASE_DAILY + 'daily_streak')
 DAILY_CLAIM_BROWSER = get_path(_BASE_DAILY + 'claim_browser')
 DAILY_CLAIM_AFTER_BROWSER = get_path(_BASE_DAILY + 'claim_after_browser')
+
+# END DAILY
+
 
 #Alliance
 ALLIANCE_CONTINUE = get_path(_BASE_ALLIANCE + 'continue')
@@ -49,6 +60,7 @@ HABITAT_CONTINUE = get_path(_BASE_HABITAT + 'continue')
 # End Habitat
 
 # Start Arena
+ARENA_NO = get_path(_BASE_ARENA + 'no') # TODO move it to battle
 ARENA_ATTACK_REPORT = get_path(_BASE_ARENA + 'attack_report')
 ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
 
