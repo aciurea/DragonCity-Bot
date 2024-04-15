@@ -1,3 +1,5 @@
+from datetime import datetime
+import time
 from screeninfo import get_monitors
 from breed import Breed
 from close import check_if_ok
@@ -12,6 +14,24 @@ class Alliance:
     _height = 33.33 / 100
     [res] = get_monitors()
     alliance_pos = [_width * res.width, _height * res.height]
+    alliances_work = [
+       { "start":'2024-04-12 19:00:00', "end": '2024-04-15 19:00:00', "work": lambda: Breed.breed('hatch', 5) },
+       { "start":'2024-04-16 19:00:00', "end": '2024-04-19 19:00:00', "work": lambda: Breed.breed('breed', 30) },
+       { "start":'2024-04-20 19:00:00', "end": '2024-04-22 19:00:00', "work": lambda: print('nothing to do on alliance. Is Arena time') },
+       { "start": '2024-04-23 19:00:00', "end": '2024-04-25 19:00:00', "work": lambda: Breed.breed('hatch', 30) },
+       { "start": '2024-04-26 19:00:00', "end": '2024-04-29 19:00:00', "work": lambda: print('nothing to do on alliance. Is League time') },
+       { "start": '2024-04-30 19:00:00', "end": '2024-05-02 19:00:00', "work": lambda: Breed.breed('breed', 30) },
+    ]
+
+    def get_work():
+        current_date = datetime.now()
+        print(current_date)
+
+        for alliance in Alliance.alliances_work:
+            start = datetime.strptime(alliance['start'], '%Y-%m-%d %H:%M:%S')
+            end = datetime.strptime(alliance['end'], '%Y-%m-%d %H:%M:%S')
+            if start < current_date < end: return alliance['work']
+        return lambda: print('nothing to do on alliance. Is rest time')
 
     def get_continue_btn():
         return getImagePositionRegion(C.ALLIANCE_CONTINUE, *get_monitor_quarters()['2ndHorHalf'], .8, 2)
@@ -33,4 +53,5 @@ class Alliance:
             Popup.check_popup_chest()
             delay(10)
         check_if_ok()
-        # Breed.breed('breed', 30)
+        Alliance.last_time_started = time.time()
+        Alliance.get_work()()

@@ -1,7 +1,10 @@
+import time
 from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, moveAndClick
 import constants as C
 
 class Towers:
+    last_time_started = 0
+    wait_time = 3600 * 4
     mon = get_monitor_quarters()
 
     @staticmethod
@@ -82,8 +85,12 @@ class Towers:
         print('Power collected')
 
 def activate_towers():
+    if time.time() - Towers.last_time_started < Towers.wait_time: return
+
     Towers.greedy_tower()
     Towers.gems_towers()
     Towers.gold_tower()
     # Towers.power_tower()
     Towers.food_tower()
+    Towers.last_time_started = time.time()
+    print('Finish activating towers')

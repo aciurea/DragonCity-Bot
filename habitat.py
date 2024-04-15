@@ -1,3 +1,4 @@
+import time
 from close import Close, check_if_ok
 from move import fast_click, moveAndClick, multiple_click
 from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, move_to_left
@@ -14,6 +15,8 @@ class Habitat:
     legendary_habitat = [1275, 1085]
     ok = [1395, 1265]
     cancel = [1153, 1255]
+    last_time_started = 0
+    wait_time = 3600 * 3
     habitats_on_map = [
                     [1757, 707],
                     [1803, 638],
@@ -46,12 +49,15 @@ class Habitat:
             delay(.5)
 
     def buy_habitat():
+        if time.time() - Habitat.last_time_started < Habitat.wait_time: return
+
         # TODO check the claim btn when leveling up
         if not Habitat.store_habitat(): return
 
         for habitat_pos in Habitat.habitats_on_map:
             Habitat.prepare_habitat_to_buy(habitat_pos)
             moveAndClick(Habitat.ok)
+        Habitat.last_time_started = time.time()
 
     def get_continue():
         return getImagePositionRegion(C.HABITAT_CONTINUE, *Habitat.mon_quarters['4thRow'], .8, 1)

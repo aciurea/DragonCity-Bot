@@ -26,7 +26,8 @@ class FoodCollector:
     def _get_farm_position():
         if FoodCollector.FARM_POS is None or not exists(FoodCollector.FARM_POS):
             FoodCollector.FARM_POS = getImagePositionRegion(C.FOOD_FARM, *FoodCollector.jsonPos['foodFarm'])
-            FoodCollector.FARM_POS = [FoodCollector.FARM_POS[0] + 5, FoodCollector.FARM_POS[1] + 10] # add some correction due to screenshot image.
+            if exists(FoodCollector.FARM_POS):
+                FoodCollector.FARM_POS = [FoodCollector.FARM_POS[0] + 5, FoodCollector.FARM_POS[1] + 10] # add some correction due to screenshot image.
         return FoodCollector.FARM_POS
 
     @staticmethod
@@ -75,20 +76,22 @@ class FoodCollector:
             delay(.5)
 
     @staticmethod
-    def collectFood(isHeroicRace=False, regrow=regrowFood):
+    def collectFood(isHeroicRace=False):
         center_map()
         is_artifact_pos_correctly = is_artifact_at_pos(drag_map_to_the_top())
 
         FoodCollector.clear_cache()
         if(len(FoodCollector.FOOD_POS) > 0): FoodCollector.collect_food_by_cached_pos()
         else: FoodCollector.collect_each_farm_and_store_pos(is_artifact_pos_correctly)
+
         check_if_ok()
-        regrow()
+        FoodCollector.regrowFood()
         FoodCollector._run_times += 1
 
         if isHeroicRace:
             time_to_collect = 24
             delay(time_to_collect)
+        print('Food collected')
 
 def collect_food(isHeroicRace = False):
     return FoodCollector.collectFood(isHeroicRace)  

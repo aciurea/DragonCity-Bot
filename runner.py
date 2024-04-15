@@ -10,7 +10,10 @@ class Runner:
     runner_pos = [1138, 305]
     expand_pos = [1188, 1252]
     collapse_pos = [1221, 426]
-    work = [lambda: Breed.breed('breed', 50)]
+    work = [
+            lambda: Breed.breed('feed', 15),
+            heroic_collect
+            ]
 
     def is_runner():
         grid = get_grid_monitor()
@@ -42,3 +45,6 @@ class Runner:
             delay(1)
             for work in Runner.work:
                 work()
+
+
+# Runner.run()

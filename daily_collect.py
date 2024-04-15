@@ -1,12 +1,13 @@
 import time
 from mem_edit import Process
 import psutil
+from pyautogui import scroll
 
 from close import check_if_ok
 from collectFood import collect_food
-from move import center_map, moveAndClick, multiple_click
+from move import center_map, moveAndClick, moveTo, multiple_click
 from popup import Popup
-from utils import delay, exists, get_grid_monitor, get_monitor_quarters, getImagePositionRegion, scroll
+from utils import delay, exists, get_grid_monitor, get_monitor_quarters, getImagePositionRegion
 import constants as C
 
 
@@ -28,10 +29,10 @@ class Daily_Collect:
         center_map()
         moveAndClick(Daily_Collect.news_pos)
         delay(2)
-        scroll(Daily_Collect.pos_to_start_scroll, [Daily_Collect.news_pos[0], 0])
+        moveTo(Daily_Collect.pos_to_start_scroll)
+        
+        scroll(-10_000)
         delay(.5)
-        scroll(Daily_Collect.pos_to_start_scroll, [Daily_Collect.news_pos[0], 0])
-        delay(3)
         # scroll to the top
 
     def _kill_browser():

@@ -1,32 +1,32 @@
+import time
+
+from pyautogui import scroll
 from close import check_if_ok
-from move import fast_click
-from utils import dragMapToCenter, get_json_file, moveAndClick, delay, scroll
+from move import center_map, moveTo, multiple_click
+from utils import get_json_file, moveAndClick, delay
 
 class Shop:
+    last_time_started = 0
+    wait_time = 3600 * 3 
     pos = get_json_file('shop.json')
-
-    def buy_orbs(key):
-        times = 6
-        while times > 0:
-            times -= 1
-            fast_click(Shop.pos[key])
 
     def go_to_orbs():
         scroll_pos = Shop.pos['vertical_scroll']
-        scroll(scroll_pos, [0, scroll_pos[1]])
-        delay(1)
-        fast_click([0, scroll_pos[1]])
+        moveTo(scroll_pos)
+        scroll(-10_000)
+        delay(.5)
 
     def open_shop():
-        dragMapToCenter()
+        if time.time() - Shop.last_time_started < Shop.wait_time: return
+
+        center_map()
         moveAndClick(Shop.pos['shop'])
         delay(.5)
         moveAndClick(Shop.pos['orbs'])
         delay(.5)
         Shop.go_to_orbs()
         
-        delay(1)
-
-        Shop.buy_orbs('buy_heroic')
-        Shop.buy_orbs('buy_legendary')
+        multiple_click(Shop.pos['buy_heroic'], 6)
+        multiple_click(Shop.pos['buy_legendary'], 6)
         check_if_ok()
+        Shop.last_time_started = time.time()
