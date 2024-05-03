@@ -2,6 +2,7 @@
 from alliance import Alliance
 from arena import Arena
 from breed import Breed
+from claim_all import claim_all
 from close import check_if_ok
 from collectFood import collect_food
 from collectGold import collectGold
@@ -22,22 +23,23 @@ from daily_treasure import collect_daily_treasure
 def start_working():
     do_work = [
         open_app,
+        claim_all,
         activate_towers,
         collect_food,
         collectGold,
         Orbs.collect_orbs,
         Shop.open_shop,
         collect_daily_treasure,
-        Heroic.race,
         Arena.enter_battle,
-        TV.open_tv,
-        Habitat.buy_habitat,
-        Alliance.open_alliance,
         League.enter_league,
+        Heroic.race,
+        TV.open_tv,
+        # Habitat.buy_habitat,
         Runner.run,
         Daily_Collect.collect,
+        Alliance.open_alliance,
         # lambda: Breed.breed('breed', 100),
-        # Quest.open_quest,
+        Quest.open_quest,
         # More work can be added here
         # Tree of life
         close_app

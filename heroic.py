@@ -35,8 +35,8 @@ class Heroic:
 
         if exists(fight_btn):
             moveAndClick(fight_btn)
-            delay(.5)
-            select_new_dragon_btn = getImagePositionRegion(C.ARENA_SELECT_DRAGON, *Arena.mon_quarters['full'], .8, 1)
+            delay(1.5)
+            select_new_dragon_btn = getImagePositionRegion(C.HEROIC_SELECT_BTN, *Arena.mon_quarters['full'], .8, 1)
             moveAndClick(select_new_dragon_btn)
             delay(1)
             new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)

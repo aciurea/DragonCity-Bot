@@ -51,7 +51,7 @@ def drag_map_to_the_top():
     [res] = get_monitors()
     next_pos = [get_int(res.width / 2), get_int(res.height / 2) - 300]
     _drag_map(artifact, next_pos)
-    delay(1)
+    delay(.5)
     return next_pos
     
 def drag_map_to_the_bottom():
