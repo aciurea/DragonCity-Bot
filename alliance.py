@@ -15,12 +15,12 @@ class Alliance:
     [res] = get_monitors()
     alliance_pos = [_width * res.width, _height * res.height]
     alliances_work = [
-       { "start":'2024-04-12 19:00:00', "end": '2024-04-15 19:00:00', "work": lambda: Breed.breed('hatch', 5) },
-       { "start":'2024-04-16 19:00:00', "end": '2024-04-19 19:00:00', "work": lambda: Breed.breed('breed', 30) },
-       { "start":'2024-04-20 19:00:00', "end": '2024-04-22 19:00:00', "work": lambda: print('nothing to do on alliance. Is Arena time') },
-       { "start": '2024-04-23 19:00:00', "end": '2024-04-25 19:00:00', "work": lambda: Breed.breed('hatch', 30) },
-       { "start": '2024-04-26 19:00:00', "end": '2024-04-29 19:00:00', "work": lambda: print('nothing to do on alliance. Is League time') },
-       { "start": '2024-04-30 19:00:00', "end": '2024-05-02 19:00:00', "work": lambda: Breed.breed('breed', 30) },
+       { "start":'2024-05-03 19:00:00', "end": '2024-05-06 19:00:00', "work": lambda: Breed.breed('hatch', 30) },
+       { "start":'2024-05-07 19:00:00', "end": '2024-05-09 19:00:00', "work": lambda: print('nothing to do on alliance. Is Arena time') },
+       { "start":'2024-05-10 19:00:00', "end": '2024-05-13 19:00:00', "work": lambda: Breed.breed('breed', 30) },
+       { "start": '2024-05-14 19:00:00', "end": '2024-05-17 19:00:00', "work": lambda: print('nothing to do on alliance. Is League time') },
+       { "start": '2024-05-18 19:00:00', "end": '2024-05-20 19:00:00', "work": lambda: Breed.breed('breed', 30)  },
+       { "start": '2024-05-30 19:00:00', "end": '2024-05-02 19:00:00', "work": lambda: Breed.breed('breed', 30) },
     ]
 
     def get_work():
