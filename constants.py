@@ -33,7 +33,7 @@ RUNNER_CLAIM = get_path(_BASE_RUNNER + 'claim')
 DAILY_STREAK = get_path(_BASE_DAILY + 'daily_streak')
 DAILY_CLAIM_BROWSER = get_path(_BASE_DAILY + 'claim_browser')
 DAILY_CLAIM_AFTER_BROWSER = get_path(_BASE_DAILY + 'claim_after_browser')
-
+DAILY_STORE = get_path(_BASE_DAILY + 'store')
 # END DAILY
 
 
@@ -124,7 +124,6 @@ GOLD_2 = get_path(_BASE_GOLD+'gold_2')
 FOOD_FARM = get_path(_BASE_FOOD + 'farm')
 FOOD_FARM_WINTER = get_path(_BASE_FOOD + 'farm_winter')
 FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
-FOOD_REGROW_SINGLE = get_path(_BASE_FOOD + 'regrow_single')
 FOOD_IMG = get_path(_BASE_FOOD + 'food')
 
 ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
@@ -155,6 +154,7 @@ APP_CLOSE_TOWER = get_path(f'{_BASE_APP_CLOSE}tower')
 APP_LOOSE = get_path(f'{_BASE_APP_CLOSE}loose')
 APP_CLOSE_BACK = get_path(f'{_BASE_APP_CLOSE}back')
 APP_CLOSE_ANOTHER_RED = get_path(f'{_BASE_APP_CLOSE}another_red')
+APP_CLAIM_ALL = get_path(f'{_BASE_APP_CLOSE}claim_all')
 
 ## End section close buttons
 
