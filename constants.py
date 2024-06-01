@@ -40,6 +40,8 @@ DAILY_STORE = get_path(_BASE_DAILY + 'store')
 #Alliance
 ALLIANCE_CONTINUE = get_path(_BASE_ALLIANCE + 'continue')
 ALLIANCE_CLAIM = get_path(_BASE_ALLIANCE + 'claim')
+ALLIANCE_HATCH = get_path(_BASE_ALLIANCE + 'hatch')
+ALLIANCE_BREED = get_path(_BASE_ALLIANCE + 'breed')
 #End Alliance
 
 GOALS_CLOSE_BTN = get_path(_BASE_WRONG_POPUPS + 'goals_close')
@@ -229,6 +231,7 @@ HEROIC_BREED = get_path(_BASE_HEROIC + 'breed')
 HEROIC_HATCH = get_path(_BASE_HEROIC + 'hatch')
 HEROIC_FEED = get_path(_BASE_HEROIC + 'feed')
 HEROIC_LEAGUE = get_path(_BASE_HEROIC + 'league')
+HEROIC_FREE_SPIN = get_path(_BASE_HEROIC + 'free_spin')
 
 HEROIC_COMPLETED = get_path(_BASE_HEROIC + 'completed')
 HEROIC_GREEN_CLAIM_BTN = get_path(_BASE_HEROIC + 'claim')

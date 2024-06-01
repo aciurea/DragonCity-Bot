@@ -14,23 +14,16 @@ class Alliance:
     _height = 33.33 / 100
     [res] = get_monitors()
     alliance_pos = [_width * res.width, _height * res.height]
-    alliances_work = [
-       { "start":'2024-05-03 19:00:00', "end": '2024-05-06 19:00:00', "work": lambda: Breed.breed('hatch', 30) },
-       { "start":'2024-05-07 19:00:00', "end": '2024-05-09 19:00:00', "work": lambda: print('nothing to do on alliance. Is Arena time') },
-       { "start":'2024-05-10 19:00:00', "end": '2024-05-13 19:00:00', "work": lambda: Breed.breed('breed', 30) },
-       { "start": '2024-05-14 19:00:00', "end": '2024-05-17 19:00:00', "work": lambda: print('nothing to do on alliance. Is League time') },
-       { "start": '2024-05-18 19:00:00', "end": '2024-05-20 19:00:00', "work": lambda: Breed.breed('breed', 30)  },
-       { "start": '2024-05-30 19:00:00', "end": '2024-05-02 19:00:00', "work": lambda: Breed.breed('breed', 30) },
-    ]
 
     def get_work():
-        current_date = datetime.now()
-        print(current_date)
+        if exists(getImagePositionRegion(C.ALLIANCE_HATCH, *get_monitor_quarters()['2ndHorHalf'], .8, 2)):
+            print('alliance hatch work to do')
+            return lambda: Breed.breed('hatch', 30)
 
-        for alliance in Alliance.alliances_work:
-            start = datetime.strptime(alliance['start'], '%Y-%m-%d %H:%M:%S')
-            end = datetime.strptime(alliance['end'], '%Y-%m-%d %H:%M:%S')
-            if start < current_date < end: return alliance['work']
+        if exists(getImagePositionRegion(C.ALLIANCE_BREED, *get_monitor_quarters()['2ndHorHalf'], .8, 2)):
+            print('alliance breed work to do')
+            return lambda: Breed.breed('breed', 30)
+        
         return lambda: print('nothing to do on alliance. Is rest time')
 
     def get_continue_btn():
@@ -52,6 +45,6 @@ class Alliance:
             delay(1)
             Popup.check_popup_chest()
             delay(10)
+        work = Alliance.get_work()
         check_if_ok()
-        Alliance.last_time_started = time.time()
-        Alliance.get_work()()
+        work()
