@@ -33,11 +33,17 @@ class Alliance:
         return getImagePositionRegion(C.ALLIANCE_CLAIM, *get_monitor_quarters()['4thRow'], .8, 2)
     
     def open_alliance():
-        center_map()
+        if not exists(center_map()):
+            check_if_ok()
         drag_map_to_the_bottom()
         multiple_click(Alliance.alliance_pos, 3)
         delay(10)
-        moveAndClick(Alliance.get_continue_btn())
+        cont = Alliance.get_continue_btn()
+        if exists(cont):
+            moveAndClick(cont)
+            delay(1)
+            check_if_ok()
+            return
         delay(.5)
         claim_btn = Alliance.get_claim_btn()
         if exists(claim_btn):
