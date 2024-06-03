@@ -47,18 +47,19 @@ class Breed:
         return exists(getImagePositionRegion(C.HATCHERY, *Breed.mon_quarters['bottom_right'], .8, 2))
     
     def clear_hatchery():
-        center_map()
+        if not exists(center_map()): 
+            return check_if_ok()
         Hatch.sell_egg()
 
     def do_work(btn):
         moveAndClick(btn)
         if Breed._is_hatchery_full():
             moveAndClick(Breed._hatchery_full_close_btn)
-            center_map()
+            if not exists(center_map()): return check_if_ok()
             return Breed.clear_hatchery()
     
         if Breed.did_breed():
-            center_map()
+            if not exists(center_map()): return check_if_ok()
             moveAndClick(btn)
 
         Breed._re_breed()
@@ -75,7 +76,7 @@ class Breed:
         Breed.clear_hatchery()
 
         for breed_place in [Breed.rock_pos, Breed.tree_pos]:
-            center_map()
+            if not exists(center_map()): return check_if_ok()
             moveAndClick(breed_place)
             delay(1)
         check_if_ok()
@@ -93,7 +94,7 @@ class Breed:
             times -= 1
             
             for breed_place in [Breed.rock_pos, Breed.tree_pos]:
-                center_map()
+                if not exists(center_map()): return check_if_ok()
                 moveAndClick(breed_place)
                 Breed._re_breed()
                 delay(.5)
@@ -104,7 +105,7 @@ class Breed:
             else: Hatch.place_egg(work_type)
             # collect phase
             for breed_place in [Breed.rock_pos, Breed.tree_pos]:
-                center_map()
+                if not exists(center_map()): return check_if_ok()
                 moveAndClick(breed_place)
                 delay(1)
             check_if_ok()

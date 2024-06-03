@@ -77,7 +77,7 @@ class FoodCollector:
 
     @staticmethod
     def collectFood(isHeroicRace=False):
-        center_map()
+        if not exists(center_map()): return check_if_ok()
         is_artifact_pos_correctly = is_artifact_at_pos(drag_map_to_the_top())
 
         FoodCollector.clear_cache()

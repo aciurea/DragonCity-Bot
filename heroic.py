@@ -7,7 +7,7 @@ from collectFood import heroic_collect
 from league import League
 from move import center_map
 from popup import Popup
-from utils import delay, exists, get_int, get_monitor_quarters, getImagePositionRegion, moveAndClick
+from utils import delay, exists, get_int, get_monitor_quarters, getImagePositionRegion, moveAndClick, get_grid_monitor
 import constants as C
 
 class Heroic:
@@ -18,7 +18,8 @@ class Heroic:
     @staticmethod
     def is_heroic_race():
         mon = get_monitor_quarters()
-        center_map()
+        if not exists(center_map()):
+            check_if_ok()
         moveAndClick(Heroic.heroic_arena)
         delay(.5)
 
@@ -66,6 +67,24 @@ class Heroic:
             Popup.check_popup_chest()
             delay(1)
 
+    def free_spin():
+        moveAndClick([2352, 1294])
+        delay(1)
+        grid = get_grid_monitor()
+        pos = [
+            grid['x5'],
+            grid['y4'],
+            grid['x7'],
+            grid['y6']
+        ]
+        free_spin_btn = getImagePositionRegion(C.HEROIC_FREE_SPIN, *pos, 0.8, 1)
+
+        if exists(free_spin_btn):
+            moveAndClick(free_spin_btn)
+            delay(10)
+        moveAndClick([2352, 1294])
+        delay(.5)
+
     def race():
         if Heroic.is_heroic_race():
             popup_btn = Close.get_popup_red_btn()
@@ -75,14 +94,16 @@ class Heroic:
             Heroic.claim_node()
             Heroic.fight_in_heroic_arena()
             delay(.5)
-           
+            Heroic.free_spin()
+
             missions = [C.HEROIC_FOOD, C.HEROIC_BREED, C.HEROIC_HATCH, C.HEROIC_FEED, C.HEROIC_LEAGUE]
             actions = [heroic_collect, lambda: Breed.breed('breed'), lambda: Breed.breed('hatch'), lambda: Breed.breed('feed'), League.enter_league]
             work_to_do = []
             for index, mission in enumerate(missions):
                pos = getImagePositionRegion(mission, *Heroic.mon['2ndVerHalf'], 0.8, 1)
-               print(pos)
-               if exists(pos): work_to_do.append(actions[index])
+               if exists(pos): 
+                print('Mission is ', mission)
+                work_to_do.append(actions[index])
             check_if_ok()
             for work in work_to_do: work()
            

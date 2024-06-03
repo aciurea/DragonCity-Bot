@@ -58,7 +58,8 @@ class Hatch:
         
       
     def place_egg(work_type):
-        center_map()
+        if not exists(center_map()):
+            return check_if_ok()
         moveAndClick(Hatch.hatchery_pos)
         egg = Hatch._get_terra_egg()
         if exists(egg):

@@ -3,7 +3,7 @@ import time
 from pyautogui import scroll
 from close import check_if_ok
 from move import center_map, moveTo, multiple_click
-from utils import get_json_file, moveAndClick, delay
+from utils import get_json_file, moveAndClick, delay, exists
 
 class Shop:
     last_time_started = 0
@@ -19,7 +19,8 @@ class Shop:
     def open_shop():
         if time.time() - Shop.last_time_started < Shop.wait_time: return
 
-        center_map()
+        if not exists(center_map()):
+           return check_if_ok()
         moveAndClick(Shop.pos['shop'])
         delay(.5)
         moveAndClick(Shop.pos['orbs'])

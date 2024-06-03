@@ -16,7 +16,6 @@ class Daily_Collect:
     news_pos = [2443, 297]
     pos_to_start_scroll = [442, 1243]
     grid = get_grid_monitor()
-    last_time_started = 0
     wait_time = 3600 * 2  
 
     def _get_daily_streak(times = 10):
@@ -36,7 +35,8 @@ class Daily_Collect:
             return Daily_Collect._get_daily_streak(times - 1)
 
     def _go_to_daily_streak():
-        center_map()
+        if not exists(center_map()):
+            return check_if_ok()
         moveAndClick(Daily_Collect.news_pos)
         delay(2)
 
@@ -46,7 +46,7 @@ class Daily_Collect:
         p = psutil.Process(pid)
         p.terminate()
 
-    def _get_claim_btn_browser(times = 5, amount=500):
+    def _get_claim_btn_browser(times = 10, amount=300):
         if times == 0: return [-1]
         mon = get_monitor_quarters()
         daily_claim = getImagePositionRegion(C.DAILY_CLAIM_BROWSER, *mon['full'], .8, 1)
@@ -64,7 +64,6 @@ class Daily_Collect:
         return getImagePositionRegion(C.DAILY_STORE, *mon['full'], .8, 1)
 
     def collect():
-        if time.time() - Daily_Collect.last_time_started < Daily_Collect.wait_time: return
         print('Tried to collect the daily streak')
         
         Daily_Collect._go_to_daily_streak()
@@ -86,8 +85,11 @@ class Daily_Collect:
             if exists(store_btn):
                 multiple_click(store_btn)
                 delay(5)
-                scroll(10_000)
-                multiple_click(Daily_Collect._get_claim_btn_browser(times=7, amount=2_000), 2)
+            free_daily_claim_btn = Daily_Collect._get_claim_btn_browser(times=25, amount=1_000)
+            if exists(free_daily_claim_btn): 
+                multiple_click(free_daily_claim_btn, 2)
+                delay(2)
+
             Daily_Collect._kill_browser()
             delay(10)
             Popup.check_popup_chest()
@@ -98,4 +100,3 @@ class Daily_Collect:
             collect_food()
             Popup.check_popup_chest()
             check_if_ok()
-        Daily_Collect.last_time_started = time.time()

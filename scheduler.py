@@ -4,15 +4,11 @@ from datetime import datetime
 
 from utils import delay
 
-while True:
-    try:
-        print("Starting the application...")
-        start_working()
-    except Exception as e:
-        close_app()
-        print("Exit: ", e)
-    finally:
-            one_hour = 3600
-            print("Waiting for 1 hour... ", datetime.now().time())
-            # Wait for 30 minutes (1800 seconds)
-            delay(one_hour)
+try:
+    print("Starting the application...")
+    start_working()
+except Exception as e:
+    print('[Error is]: ', e)
+finally:
+    close_app()
+    raise Exception("Application has finished working. Exiting... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

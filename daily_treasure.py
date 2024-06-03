@@ -2,7 +2,7 @@ import time
 from close import check_if_ok
 from move import center_map, moveAndClick
 from popup import Popup
-from utils import delay
+from utils import delay, exists
 
 class Daily_Treasure:
     wait_time = 3600 * 3
@@ -12,6 +12,9 @@ class Daily_Treasure:
         if time.time() - Daily_Treasure.last_time_started < Daily_Treasure.wait_time: return
         print('Collecting daily treasure')
         center = center_map()
+        if not exists(center): 
+            return check_if_ok()
+            
         moveAndClick(center)
         treasure_pos = [2245, 1275]
         delay(1)
