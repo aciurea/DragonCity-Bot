@@ -158,7 +158,7 @@ class Arena:
                 raise Exception('Time limit exceded on arena. Closing the app....')
             
             print('Start new Arena battle')
-            Arena.skip_strong_dragons()
+            # Arena.skip_strong_dragons()
             try: Arena.prepare_fight()
             except: return
             Arena.check_and_collect_rewards()
