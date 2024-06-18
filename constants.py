@@ -34,6 +34,7 @@ DAILY_STREAK = get_path(_BASE_DAILY + 'daily_streak')
 DAILY_CLAIM_BROWSER = get_path(_BASE_DAILY + 'claim_browser')
 DAILY_CLAIM_AFTER_BROWSER = get_path(_BASE_DAILY + 'claim_after_browser')
 DAILY_STORE = get_path(_BASE_DAILY + 'store')
+DAILY_BROWSER = get_path(_BASE_DAILY + 'daily_browser')
 # END DAILY
 
 
@@ -170,6 +171,7 @@ APP_START_BIG_CLOSE = get_path(_BASE_APP_START + 'big_close')
 APP_START_NO = get_path(_BASE_APP_START + 'no')
 APP_START_BUY_NOW = get_path(f'{_BASE_APP_START}buy_now')
 APP_START_BUY_NOW_2 = get_path(f'{_BASE_APP_START}buy_now2')
+APP_START_ENJOY = get_path(f'{_BASE_APP_START}enjoy')
 
 
 APP_START_EXTRA_CLAIM = get_path(_BASE_APP_START + 'extra_claim')

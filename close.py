@@ -80,7 +80,7 @@ class Close:
 
     @staticmethod
     def _is_enjoy_popup():
-        return exists(getImagePositionRegion(C.ENJOY_POPUP, *Close.mon_quarters['top_left'], .8, 1))
+        return exists(getImagePositionRegion(C.ENJOY_POPUP, *Close.mon_quarters['full'], .8, 1))
 
 def check_if_ok():
     return Close.check_if_ok()

@@ -17,7 +17,8 @@ class Quest:
     scroll_pos = [2503, 810]
 
     def open_quest():
-        center_map()
+        if not exists(center_map()):
+           return check_if_ok()
         delay(.2)
         moveAndClick(center_map())
         delay(.5)

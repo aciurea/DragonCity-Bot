@@ -31,6 +31,7 @@ def zoom_out():
     pyautogui.scroll(-10000)
 
 def open_app(i = 0):
+    print('Started new cycle...')
     close_app()
     delay(2)
     if(i == 5):
@@ -76,19 +77,30 @@ def _clean_all_popups():
         
         Popup.check_popup_chest()
         check_extra_bonus()
+        _check_enjoy_btn()
         delay(2)
 
     print('APP STARTED SUCCESSFULY')
 
+def _check_enjoy_btn():
+    print('inside enjoy....')
+    btn = getImagePositionRegion(C.APP_START_ENJOY, *mon_quarters['2ndHorHalf'], .8, 1)
+
+    if exists(btn): moveAndClick(btn)
+        
 def _check_if_app_started():
-    screeshot = pyautogui.screenshot(region=(0, 0, 200, 200))
-    screeshot.save('screenshot.png')
-    start = time.time()
-    time_limit = 30
-    while((time.time() - start) < time_limit):
-        image = getImagePositionRegion("screenshot.png", 0, 0, 201, 201, .8, 1)
-        if not exists(image):
-            os.remove('screenshot.png')
-            return [-1]
-        delay(1)
+    try:
+        screeshot = pyautogui.screenshot(region=(0, 0, 200, 200))
+        screeshot.save('screenshot.png')
+        start = time.time()
+        time_limit = 30
+        while((time.time() - start) < time_limit):
+            image = getImagePositionRegion("screenshot.png", 0, 0, 201, 201, .8, 1)
+            if not exists(image):
+                os.remove('screenshot.png')
+                return [-1]
+            delay(1)
+    except Exception as e:
+        delay(5)
+        print(f'Error occurred: {str(e)}')
 

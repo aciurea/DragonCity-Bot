@@ -81,7 +81,7 @@ class FoodCollector:
         is_artifact_pos_correctly = is_artifact_at_pos(drag_map_to_the_top())
 
         FoodCollector.clear_cache()
-        if(len(FoodCollector.FOOD_POS) > 0): FoodCollector.collect_food_by_cached_pos()
+        if(len(FoodCollector.FOOD_POS) > 0 and isHeroicRace == True): FoodCollector.collect_food_by_cached_pos()
         else: FoodCollector.collect_each_farm_and_store_pos(is_artifact_pos_correctly)
 
         # check_if_ok() TODO move it somewhere else

@@ -61,11 +61,14 @@ class Daily_Collect:
     
     def _get_store_btn():
         mon = get_monitor_quarters()
-        return getImagePositionRegion(C.DAILY_STORE, *mon['full'], .8, 1)
+        return getImagePositionRegion(C.DAILY_STORE, *mon['1stRow'], .8, 1)
+
+    def _get_daily_streak_browser():
+        mon = get_monitor_quarters()
+        return getImagePositionRegion(C.DAILY_BROWSER, *mon['1stRow'], .8, 1)
 
     def collect():
-        print('Tried to collect the daily streak')
-        
+        found_daily_btn = False        
         Daily_Collect._go_to_daily_streak()
         daily_streak = Daily_Collect._get_daily_streak()
 
@@ -74,9 +77,16 @@ class Daily_Collect:
             delay(1)
             moveAndClick(Daily_Collect.claim_btn_pos)
             delay(5)
+            daily_browser = Daily_Collect._get_daily_streak_browser()
+
+            if exists(daily_browser):
+                print('Found daily browser')
+                moveAndClick(daily_browser)
+                delay(3)
             claim_btn = Daily_Collect._get_claim_btn_browser()
 
             if exists(claim_btn): 
+                found_daily_btn = True
                 multiple_click(claim_btn, 2)
                 delay(2)
                 multiple_click(claim_btn, 2)
@@ -85,18 +95,38 @@ class Daily_Collect:
             if exists(store_btn):
                 multiple_click(store_btn)
                 delay(5)
-            free_daily_claim_btn = Daily_Collect._get_claim_btn_browser(times=25, amount=1_000)
+                scroll(3000)
+            free_daily_claim_btn = Daily_Collect._get_claim_btn_browser(times=20, amount=1_000)
             if exists(free_daily_claim_btn): 
+                found_daily_btn = True
                 multiple_click(free_daily_claim_btn, 2)
                 delay(2)
 
             Daily_Collect._kill_browser()
+            if found_daily_btn == False:
+                check_if_ok()
+                return
+            delay(10)
+            Daily_Collect.wait_to_claim()
+            Daily_Collect.wait_to_claim()
+          
+    def wait_to_claim():
+        Popup.check_popup_chest()
+        check_if_ok()
+
+        times = 5
+        claim_after_browser = Daily_Collect._get_claim_after_browser()
+
+        while not exists(claim_after_browser) and times > 0:
+            print('I am here...')
+            collect_food()
+            delay(29)
+            times -= 1
             delay(10)
             Popup.check_popup_chest()
             check_if_ok()
-            collect_food()
-            collect_food()
-            moveAndClick(Daily_Collect._get_claim_after_browser())
-            collect_food()
-            Popup.check_popup_chest()
-            check_if_ok()
+            times -= 1
+        moveAndClick(claim_after_browser)
+        Popup.check_popup_chest()
+        check_if_ok()
+        

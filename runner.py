@@ -11,7 +11,7 @@ class Runner:
     expand_pos = [1188, 1252]
     collapse_pos = [1221, 426]
     work = [
-            lambda: Breed.breed('feed', 15),
+            lambda: Breed.breed('feed', 10),
             heroic_collect
             ]
 
@@ -28,7 +28,8 @@ class Runner:
         return getImagePositionRegion(C.RUNNER_CLAIM, *pos, 0.8, 1)
 
     def run():
-        center_map()
+        if not exists(center_map()):
+            check_if_ok()
         multiple_click(Runner.runner_pos, 5)
         delay(1)
         if Runner.is_runner():
