@@ -150,7 +150,7 @@ class Arena:
         delay(1)
 
         start_fight = Arena.get_fight_btn()
-        time_limit = 420 # if doesn't end in 5 minutes, we stop the script.
+        time_limit = 600 # if doesn't end in 10 minutes, we stop the script.
         start_time = time.time()
 
         while exists(start_fight):
@@ -194,7 +194,7 @@ class Arena:
 
     @staticmethod
     def collect_arena_battle_rewards():
-        collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['4thRow'], .8, 1)
+        collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['full'], .8, 2)
 
         if exists(collect_btn):
             moveAndClick(collect_btn)

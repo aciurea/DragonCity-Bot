@@ -52,5 +52,5 @@ class Alliance:
             Popup.check_popup_chest()
             delay(10)
         work = Alliance.get_work()
-        check_if_ok()
+        check_if_ok() 
         work()

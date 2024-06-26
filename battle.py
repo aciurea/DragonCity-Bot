@@ -13,6 +13,7 @@ from utils import (
                 moveAndClick)
 import constants as C
 import concurrent.futures
+from close import check_if_ok
 
 
 class Battle:
@@ -21,7 +22,7 @@ class Battle:
     [ res ] = get_monitors()
     one_third = _get_int(res.width / 3)
     
-    def get_x3():
+    def get_speed_btn():
         grid = Battle.grid
         position = [grid['x0'], grid['y1'], grid['x1'], grid['y2']]
 
@@ -49,7 +50,7 @@ class Battle:
         return getImagePositionRegion(C.ARENA_NO, *Battle.mon_quarters['full'], .8, 1) # TODO update it with grid to be faster 
     
     def is_in_battle():
-        work = [Battle.get_play_button, Battle.get_x3, Battle.get_select_btn]
+        work = [Battle.get_play_button, Battle.get_speed_btn, Battle.get_select_btn]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             btns = executor.map(lambda func: func(), work)
@@ -115,7 +116,6 @@ class Battle:
             delay(1)
         new_dragon = Battle.get_new_dragon_btn()
         if not exists(new_dragon): return print('Dragon not found')
-
         moveAndClick(new_dragon)
 
     def _battle_with_no_change_dragon():
@@ -125,31 +125,28 @@ class Battle:
             if not Battle.is_in_battle(): return 
             delay(3)
 
-
     @staticmethod
     def fight(change_dragon=True):
         Battle.wait_for_battle_to_start()
-
         if not change_dragon: return Battle._battle_with_no_change_dragon()
-
         start = time.time()
         is_last_dragon = False
 
-        while is_in_time(start, limit = 180): # 3 minutes is more than enough
+        while is_in_time(start, limit = 300): # 3 minutes is more than enough
             if not Battle.is_in_battle(): return 
             if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
                 continue 
-
             attacks_per_dragon = 3
             while attacks_per_dragon > 0:
                 attacks_per_dragon -= 1
-                if not Battle.is_in_battle(): return 
+                if not Battle.is_in_battle(): 
+                    print('Not in battle....')
+                    return 
                 Battle.wait_for_oponent_to_attack()
 
                 # dragon is defetead
                 if exists(Battle.get_select_btn()): break
-
                 # dragon is the last one
                 if not exists(Battle.get_swap_button()):
                     is_last_dragon = True

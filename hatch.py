@@ -2,6 +2,7 @@ from screeninfo import get_monitors
 from move import center_map, moveAndClick
 import constants as C
 from timers import delay
+from close import check_if_ok
 
 from utils import exists, get_int, get_monitor_quarters, getImagePositionRegion
 
@@ -59,7 +60,8 @@ class Hatch:
       
     def place_egg(work_type):
         if not exists(center_map()):
-            return check_if_ok()
+            check_if_ok()
+            return
         moveAndClick(Hatch.hatchery_pos)
         egg = Hatch._get_terra_egg()
         if exists(egg):

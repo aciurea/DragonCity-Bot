@@ -44,6 +44,7 @@ class Close:
             [C.APP_CLOSE_PIGGY, *[g['x5'], g['y0'], g['x7'], g['y2']]],
             [C.APP_CLOSE_SETTINGS, *[g['x6'], g['y0'], g['x7'], g['y1']]],
             [C.APP_CLOSE_BACK, *[g['x0'], g['y0'], g['x1'], g['y1']]],
+            [C.APP_NO, *[g['x0'], g['y1'], g['x7'], g['y6']]],
         ]
     
         with concurrent.futures.ThreadPoolExecutor() as executor:

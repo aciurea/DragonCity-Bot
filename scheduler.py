@@ -8,7 +8,7 @@ try:
     print("Starting the application...")
     start_working()
 except Exception as e:
-    print('[Error is]: ', e)
+    print('[Error is]: ', datetime.now().strftime("%Y-%m-%d %H:%M:%S"), e)
 finally:
     close_app()
-    raise Exception("Application has finished working. Exiting... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    raise Exception("Exit ... ")

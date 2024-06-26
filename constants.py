@@ -158,6 +158,7 @@ APP_LOOSE = get_path(f'{_BASE_APP_CLOSE}loose')
 APP_CLOSE_BACK = get_path(f'{_BASE_APP_CLOSE}back')
 APP_CLOSE_ANOTHER_RED = get_path(f'{_BASE_APP_CLOSE}another_red')
 APP_CLAIM_ALL = get_path(f'{_BASE_APP_CLOSE}claim_all')
+APP_NO = get_path(f'{_BASE_APP_CLOSE}no')
 
 ## End section close buttons
 
