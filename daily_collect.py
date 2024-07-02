@@ -118,7 +118,6 @@ class Daily_Collect:
         claim_after_browser = Daily_Collect._get_claim_after_browser()
 
         while not exists(claim_after_browser) and times > 0:
-            print('I am here...')
             collect_food()
             delay(29)
             times -= 1
