@@ -210,9 +210,12 @@ TV_PRAIZES = get_path(_BASE_TV + 'prizes')
 
 ## Quest
 QUEST_GO_TO_BATTLE = get_path(_BASE_BATTLE + 'go_to_battle')
+QUEST_GO_TO_BATTLE_2 = get_path(_BASE_BATTLE + 'go_to_battle_2')
+QUEST_BATTLE_BTN = get_path(_BASE_BATTLE + 'quest_battle_btn')
 
 ## End Quest
 
+BATTLE_BATTLE_BTN = get_path(_BASE_BATTLE + 'battle_btn')
 BATTLE_QUEST_BTN = get_path(_BASE_BATTLE + 'quest')
 BATTLE_NEXT_QUEST = get_path(_BASE_BATTLE + 'next_quest')
 BATTLE_GREEN_CLAIM = get_path(_BASE_BATTLE + 'claim')

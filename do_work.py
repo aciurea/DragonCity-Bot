@@ -31,14 +31,16 @@ def start_working():
         Shop.open_shop,
         collect_daily_treasure,
         # League.enter_league,
-        Heroic.race,
-        Arena.enter_battle,
         Alliance.open_alliance,
-
+        Heroic.race,
         Daily_Collect.collect,
+        Arena.enter_battle,
+        Quest.open_quest,
+
         # TV.open_tv,
-        # Habitat.buy_habitat,
         # Runner.run,
+        # Habitat.buy_habitat,
+
         # lambda: Breed.breed(),
         # Quest.open_quest,
         # More work can be added here

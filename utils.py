@@ -144,7 +144,8 @@ def get_monitor_quarters():
         "2ndHorHalf": [0, piece * 2, res.width, res.height],
         "1stVerHalf": [0, 0, horizontal_piece * 4, res.height],
         "2ndVerHalf": [horizontal_piece * 4, 0, res.width, res.height],
-        "full": [0, 0, res.width, res.height]
+        "full": [0, 0, res.width, res.height],
+        "center": [_get_int(res.width / 2), _get_int(res.height / 2)]
     }
 
 def is_in_time(start, limit):

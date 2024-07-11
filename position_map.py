@@ -8,7 +8,7 @@ import constants as C
 
 class Position_Map:
     [res] = get_monitors()
-    center = [get_int(res.width / 2), get_int(res.height / 2)]
+    _center = [get_int(res.width / 2), get_int(res.height / 2)]
 
     @staticmethod
     def center_map(times = 2):
@@ -25,7 +25,7 @@ class Position_Map:
         
         if Position_Map._is_centered(artifact): return artifact
 
-        Position_Map._drag_map(artifact, Position_Map.center)
+        Position_Map._drag_map(artifact, Position_Map._center)
         return artifact
 
     @staticmethod
@@ -75,7 +75,7 @@ class Position_Map:
     
     @staticmethod
     def _is_centered(artifact):
-        return artifact[0] == Position_Map.center[0] and artifact[1] == Position_Map.center[1]
+        return artifact[0] == Position_Map._center[0] and artifact[1] == Position_Map._center[1]
 
     @staticmethod
     def _drag_map(artifact, next = [800, 450]):
