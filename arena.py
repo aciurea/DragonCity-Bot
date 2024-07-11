@@ -208,23 +208,4 @@ class Arena:
         if exists(Arena.get_fight_btn()): return 
 
         check_if_ok() # first we hit the close button
-
-    @staticmethod
-    def skip_strong_dragons():
-        strong_dragons = [ 
-            [C.ARENA_HAXED_VAMPIRE, *Arena.mon_quarters['bottom_right']],
-            [C.ARENA_DUAL_PERFECEPTION, *Arena.mon_quarters['bottom_right']],
-            [C.ARENA_DUAL_PARLIAMENT, *Arena.mon_quarters['bottom_right']],
-        ]
         
-        times = 2
-        while times > 0:
-            times -= 1
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
-            
-                for is_strong_dragon in result_list:
-                    if exists(is_strong_dragon):
-                        moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
-                        break
-                delay(3)

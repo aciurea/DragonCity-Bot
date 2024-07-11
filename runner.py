@@ -12,7 +12,8 @@ class Runner:
     collapse_pos = [1221, 426]
     work = [
             lambda: Breed.breed('feed', 10),
-            heroic_collect
+            heroic_collect,
+            lambda: Breed.breed('hatch', 10),
             ]
 
     def is_runner():
