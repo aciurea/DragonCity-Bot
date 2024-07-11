@@ -51,6 +51,7 @@ def check_extra_bonus():
     btns = [
         [C.APP_START_EXTRA_CLAIM, *mon_quarters['2ndHorHalf']],
         [C.APP_START_ENJOY_CLAIM, *mon_quarters['2ndHorHalf']],
+        [C.APP_START_ARENA_CLAIM, *mon_quarters['2ndHorHalf']],
     ]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
