@@ -62,7 +62,8 @@ def exists(value):
     return (value != None and value[0] != None) and value[0] != -1 
 
 def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
-    image = imagesearcharea(path, 0, 0, 1600, 900, precision)
+    res = get_monitors()
+    image = imagesearcharea(path, 0, 0, res[0].width, res[0].height, precision)
 
     while (not exists(image)):
         tries -= 1

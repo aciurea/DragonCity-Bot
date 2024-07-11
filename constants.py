@@ -287,3 +287,4 @@ TREE_RARITY_LEGENDARY = get_path(_BASE_TREE + 'legendary')
 
 
 UTILS_CLOSE_BTN = get_path(f'{_BASE_UTILS}close')
+UTILS_ARTIFACT = get_path(f'{_BASE_UTILS}artifact')

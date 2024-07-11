@@ -1,13 +1,21 @@
 import mouse
 import pyautogui
 from screeninfo import get_monitors
+import time
 
 from timers import delay
 from utils import exists, get_int, getImagePosition
 
 def moveTo(position):
     mouse.move(*position)
-    delay(0.1)
+    curr_time = time.time()
+    tolerance = 2
+
+    while time.time() - curr_time < 0.3:
+        current_pos = mouse.get_position()
+        if abs(current_pos[0] - position[0]) < tolerance and abs(current_pos[1] - position[1]) < tolerance:
+            break
+        delay(0.01)
 
 def fast_click(pos):
     pyautogui.click(*pos)
@@ -43,6 +51,7 @@ def center_map():
         return [-1]
     _drag_map(artifact, [get_int(res.width / 2), get_int(res.height / 2)])
     return artifact
+
 
 def drag_map_to_the_top():
     artifact = _get_artifact_pos()
@@ -90,6 +99,7 @@ def _drag_map(artifact, next = [800, 450]):
     pyautogui.moveTo(*next, 0)
     delay(1)
     pyautogui.mouseUp()
+    delay(0.01)
     pyautogui.mouseUp()
 
 def is_artifact_at_pos(pos):
