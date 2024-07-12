@@ -133,6 +133,7 @@ FIGHT_TAB = get_path(f'{_BASE_BATTLE}fight_tab')
 FIGHT_SELECT_DRAGON = get_path(f'{_BASE_BATTLE}select_dragon')
 FIGHT_ATTACK_READY = get_path(f'{_BASE_BATTLE}attack_ready')
 FIGHT_DOUBLE_DAMAGE = get_path(f'{_BASE_BATTLE}double_damage')
+FIGHT_INSIDE_DOUBLE_DAMAGE = get_path(f'{_BASE_BATTLE}inside_double_damage')
 
 
 # End Fight

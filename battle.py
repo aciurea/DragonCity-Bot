@@ -134,7 +134,7 @@ class Battle:
 
         while is_in_time(start, limit = 300): # 3 minutes is more than enough
             if not Battle.is_in_battle(): return 
-            if is_last_dragon: # to not try to change it, just continue checking if fight is in progress until it ends
+            if is_last_dragon: # do not try to change it, just continue checking if fight is in progress until it ends
                 delay(2)
                 continue 
             attacks_per_dragon = 3
@@ -156,6 +156,10 @@ class Battle:
                     break # exit the loop since is the last dragon and no need for play and pause
 
                 play = Battle.get_play_button()
+                
+                # try to select dragon with double damage
+                Battle._check_and_select_dragon_with_double_damage()
+                
                 moveAndClick(play)
                 delay(.25)
                 moveAndClick(play) # pause
@@ -171,3 +175,31 @@ class Battle:
                 Battle.wait_for_oponent_to_attack()
                 Battle.change_dragon()
         print('Fight is over!')
+        
+        
+    @staticmethod
+    def _check_and_select_dragon_with_double_damage(tries = 2):
+        if tries == 0: return
+        inside_double_damage = Battle._get_inside_double_damage()
+        
+        if exists(inside_double_damage): return print('Dragon already has double damage')
+        
+        swap_btn = Battle.get_swap_button()
+        if not exists(swap_btn): return print('Check select double attack Swap button not found')
+        
+        moveAndClick(swap_btn)
+        delay(1)
+        double_damage = Battle._get_double_damage_btn()
+        
+        if not exists(double_damage): return print('No double damage button found')
+        Battle.change_dragon()
+        delay(1)
+        return Battle._check_and_select_dragon_with_double_damage(tries - 1)
+        
+    @staticmethod
+    def _get_inside_double_damage():
+        return getImagePositionRegion(C.FIGHT_INSIDE_DOUBLE_DAMAGE, *Battle.mon_quarters['4thRow'], .8, 2)
+        
+    @staticmethod 
+    def _get_double_damage_btn():
+        return getImagePositionRegion(C.FIGHT_DOUBLE_DAMAGE, *Battle.mon_quarters['2ndHorHalf'], .8, 2)
