@@ -22,6 +22,12 @@ _BASE_ALLIANCE = './img/alliance/'
 _BASE_DAILY = './img/daily/'
 _BASE_RUNNER = './img/runner/'
 _BASE_EVENTS_COLLECTION = './img/event_collection/'
+_BASE_WIZARD = './img/wizard/'
+
+# WIZARD start
+WIZARD_PLAY_BTN = get_path(_BASE_WIZARD + 'play_btn')
+WIZARD_GEMS_BTN = get_path(_BASE_WIZARD + 'gem')
+# WIZARD end
 
 
 # EVENTS collection
@@ -126,6 +132,7 @@ FIGHT_GOOD_LIFE = get_path(f'{_BASE_BATTLE}low_life')
 FIGHT_TAB = get_path(f'{_BASE_BATTLE}fight_tab')
 FIGHT_SELECT_DRAGON = get_path(f'{_BASE_BATTLE}select_dragon')
 FIGHT_ATTACK_READY = get_path(f'{_BASE_BATTLE}attack_ready')
+FIGHT_DOUBLE_DAMAGE = get_path(f'{_BASE_BATTLE}double_damage')
 
 
 # End Fight
