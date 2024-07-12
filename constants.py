@@ -21,6 +21,17 @@ _BASE_ORBS = './img/orbs/'
 _BASE_ALLIANCE = './img/alliance/'
 _BASE_DAILY = './img/daily/'
 _BASE_RUNNER = './img/runner/'
+_BASE_EVENTS_COLLECTION = './img/event_collection/'
+
+
+# EVENTS collection
+EVENTS_COLLECTION_BTN = get_path(_BASE_EVENTS_COLLECTION + 'events_btn')
+EVENTS_CLAIM_BTN = get_path(_BASE_EVENTS_COLLECTION + 'claim_btn')
+EVENTS_CLAIM_BTN_2 = get_path(_BASE_EVENTS_COLLECTION + 'claim_btn_2')
+EVENTS_ENJOY_BTN = get_path(_BASE_EVENTS_COLLECTION + 'enjoy_btn')
+
+
+# End of EVENTS collection
 
 # RUNNER
 RUNNER_ICO = get_path(_BASE_RUNNER + 'ico')
