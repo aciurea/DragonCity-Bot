@@ -1,6 +1,7 @@
 from utils import getImagePositionRegion, get_monitor_quarters, exists, delay
 from move import moveAndClick
 from popup import Popup
+from close import check_if_ok
 from pyautogui import scroll
 
 import time
@@ -32,6 +33,7 @@ class Events_Collection:
                 delay(1)
                 Events_Collection._collect_event()
             scroll(-1_000)
+        check_if_ok()
 
     def _collect_event():
         curr_time = time.time()

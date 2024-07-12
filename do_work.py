@@ -19,6 +19,7 @@ from towers import activate_towers
 from tv import TV
 from utils import dragMapToCenter
 from daily_treasure import collect_daily_treasure
+from events_collection import Events_Collection
 
 def start_working():
     do_work = [
@@ -36,6 +37,7 @@ def start_working():
         Daily_Collect.collect,
         Arena.enter_battle,
         Quest.open_quest,
+        Events_Collection.collect_events,
 
         # TV.open_tv,
         # Runner.run,
