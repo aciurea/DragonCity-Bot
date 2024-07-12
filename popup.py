@@ -8,20 +8,22 @@ from timers import delay
 
 jsonPos = get_json_file('popup.json')
 
+_percent = [.490625, .79652]
+
 class Popup:
     [res] = get_monitors()
     mon_quarters = get_monitor_quarters()
-    _percent = [.490625, .79652]
-    _enjoy_claim_static_pos = [get_int(res.width * Popup._percent[0]) , get_int(res.height * Popup._percent[1])]
+    _enjoy_claim_static_pos = [get_int(res.width * _percent[0]) , get_int(res.height * _percent[1])]
 
     @staticmethod
     def _get_chest():
         sections = [
-            [C.POPUP_TAP, *Popup.mon_quarters['3rdRow']],
+            [C.POPUP_LEFT_HEADER, *Popup.mon_quarters['1stHorHalf']],
+            [C.POPUP_TAP, *Popup.mon_quarters['2ndHorHalf']],
         ]
     
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), sections)
+            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 2), sections)
             for btn in result_list:
                 if exists(btn): return btn
             return [-1]

@@ -149,8 +149,7 @@ ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
 
 POPUP_CLAIM = get_path(f'{_BASE_APP_POPUP}claim')
 POPUP_TAP = get_path(f'{_BASE_APP_POPUP}tap')
-POPUP_LEFT_CORNER = get_path(f'{_BASE_APP_POPUP}left_corner')
-POPUP_HEADER = get_path(f'{_BASE_APP_POPUP}left_header')
+POPUP_LEFT_HEADER = get_path(f'{_BASE_APP_POPUP}left_header')
 
 # End section popups
 
