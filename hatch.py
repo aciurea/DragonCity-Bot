@@ -7,7 +7,7 @@ from close import check_if_ok
 from utils import exists, get_int, get_monitor_quarters, getImagePositionRegion
 
 class Hatch:
-    [res] = get_monitors()
+    res = get_monitors()[0]
     mon_quarters = get_monitor_quarters()
     hatchery_pos = [get_int(0.346153 * res.width), get_int(0.639375 * res.height)]
     terra_habitat = [get_int(0.625 * res.width), get_int(0.704375 * res.height)]

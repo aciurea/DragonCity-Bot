@@ -11,7 +11,7 @@ jsonPos = get_json_file('popup.json')
 _percent = [.490625, .79652]
 
 class Popup:
-    [res] = get_monitors()
+    res = get_monitors()[0]
     mon_quarters = get_monitor_quarters()
     _enjoy_claim_static_pos = [get_int(res.width * _percent[0]) , get_int(res.height * _percent[1])]
 

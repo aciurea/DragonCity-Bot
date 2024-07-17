@@ -1,7 +1,9 @@
 from close import check_if_ok
-from move import center_map, drag_map_to_the_top, is_artifact_at_pos, moveAndClick
+from move import is_artifact_at_pos, moveAndClick
 from timers import delay
 from utils import (exists, getImagePositionRegion, get_grid_monitor)
+from position_map import Position_Map
+
 import constants as C
 import time
 
@@ -77,8 +79,8 @@ class FoodCollector:
 
     @staticmethod
     def collectFood(isHeroicRace=False):
-        if not exists(center_map()): return check_if_ok()
-        is_artifact_pos_correctly = is_artifact_at_pos(drag_map_to_the_top())
+        if not exists(Position_Map.center_map()): return check_if_ok()
+        is_artifact_pos_correctly = is_artifact_at_pos(Position_Map.drag_map_to_the_top())
 
         FoodCollector.clear_cache()
         if(len(FoodCollector.FOOD_POS) > 0 and isHeroicRace == True): FoodCollector.collect_food_by_cached_pos()

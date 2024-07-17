@@ -5,7 +5,7 @@ import constants as C
 import concurrent.futures
 
 class Close:
-    [res] = get_monitors()
+    res = get_monitors()[0]
     mon_quarters = get_monitor_quarters()
     grid = get_grid_monitor()
     
@@ -75,7 +75,7 @@ class Close:
 
     @staticmethod
     def _close_enjoy_popup():
-        [res] = get_monitors()
+        res = get_monitors()[0]
         pos = [get_int(0.4269230769 * res.width), get_int(0.775625 * res.height)]
         moveAndClick(pos)
 

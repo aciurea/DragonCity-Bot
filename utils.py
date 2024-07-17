@@ -109,7 +109,7 @@ def get_int(num):
     return int(round(num))
 
 def get_grid_monitor():
-    [ res ] = get_monitors()
+    res = get_monitors()[0]
     resolution = {}
     h_step = res.width / 8
     v_step = res.height / 6
@@ -125,7 +125,7 @@ def get_grid_monitor():
 
 
 def get_monitor_quarters():
-    [ res ] = get_monitors()
+    res = get_monitors()[0]
     piece = _get_int(res.height / 4)
     horizontal_piece = _get_int(res.width / 8)
 
@@ -193,7 +193,7 @@ def dragMap(artifact, next = [800, 450]):
     pyautogui.mouseUp()
 
 def dragMapToCenter():
-    [res] = get_monitors()
+    res = get_monitors()[0]
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
     if(artifact[0] == _get_int(res.width / 2) and artifact[1] == _get_int(res.height / 2)):
         moveAndClick(artifact)
@@ -210,14 +210,14 @@ def move_to_top():
     print('artifact is', artifact)
     if not exists(artifact): return [-1]
     print('move to top')
-    [res] = get_monitors()
+    res = get_monitors()[0]
     dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) + 350])
 
 def move_to_bottom():
     artifact = dragMapToCenter()
     if not exists(artifact): return [-1]
     print('move to bottom')
-    [res] = get_monitors()
+    res = get_monitors()[0]
     dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) - 300])
     pyautogui.mouseUp()
 

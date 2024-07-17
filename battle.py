@@ -1,5 +1,6 @@
 import random
 import time
+import pyautogui as pyt
 
 from screeninfo import get_monitors
 from utils import (
@@ -19,7 +20,7 @@ from close import check_if_ok
 class Battle:
     grid = get_grid_monitor()
     mon_quarters = get_monitor_quarters()
-    [ res ] = get_monitors()
+    res = get_monitors()[0]
     one_third = _get_int(res.width / 3)
     
     def get_speed_btn():
@@ -127,11 +128,14 @@ class Battle:
 
     @staticmethod
     def fight(change_dragon=True):
+        Battle._save_oponent_dragon()
         Battle.wait_for_battle_to_start()
+
         if not change_dragon: return Battle._battle_with_no_change_dragon()
         start = time.time()
         is_last_dragon = False
-
+        first_time_checking_oponent = True
+        
         while is_in_time(start, limit = 300): # 3 minutes is more than enough
             if not Battle.is_in_battle(): return 
             if is_last_dragon: # do not try to change it, just continue checking if fight is in progress until it ends
@@ -158,7 +162,9 @@ class Battle:
                 play = Battle.get_play_button()
                 
                 # try to select dragon with double damage
-                Battle._check_and_select_dragon_with_double_damage()
+                if first_time_checking_oponent == True or Battle._is_openent_dragon_defeated():
+                    Battle._check_and_select_dragon_with_double_damage()
+                    first_time_checking_oponent = False
                 
                 moveAndClick(play)
                 delay(.25)
@@ -174,27 +180,56 @@ class Battle:
             else:
                 Battle.wait_for_oponent_to_attack()
                 Battle.change_dragon()
+        
+        Battle._clean_image()
         print('Fight is over!')
         
         
     @staticmethod
-    def _check_and_select_dragon_with_double_damage(tries = 2):
-        if tries == 0: return
-        inside_double_damage = Battle._get_inside_double_damage()
-        
-        if exists(inside_double_damage): return print('Dragon already has double damage')
-        
+    def _save_oponent_dragon():
+        try:
+            screenshot = pyt.screenshot(region=(2020, 104, 200, 140))
+            screenshot.save('oponent_dragon.png')
+        except: print('Failed to save the screenshot')
+    
+    @staticmethod
+    def _clean_image():
+        try: os.remove('oponent_dragon.png')
+        except: print('Failed to remove the image')
+
+    @staticmethod
+    def _is_openent_dragon_defeated():
+        image = getImagePositionRegion('oponent_dragon.png', 2020, 104, 2220, 245, .8, 1)
+        if exists(image): return False
+        else:
+            Battle._save_oponent_dragon()
+            return True
+    
+    @staticmethod
+    def _check_and_select_dragon_with_double_damage():
+        tries = 2
         swap_btn = Battle.get_swap_button()
-        if not exists(swap_btn): return print('Check select double attack Swap button not found')
+        if not exists(swap_btn): 
+            print('Check select double attack Swap button not found')
+            return False
         
-        moveAndClick(swap_btn)
-        delay(1)
-        double_damage = Battle._get_double_damage_btn()
+        while tries >= 0:
+            inside_double_damage = Battle._get_inside_double_damage()
         
-        if not exists(double_damage): return print('No double damage button found')
-        Battle.change_dragon()
-        delay(1)
-        return Battle._check_and_select_dragon_with_double_damage(tries - 1)
+            if exists(inside_double_damage):
+                print('Dragon already has critical damage') 
+                return True
+            
+            moveAndClick(swap_btn)
+            delay(1)
+            double_damage = Battle._get_double_damage_btn()
+            
+            if not exists(double_damage): 
+                print('No critical damage button found')
+                return False
+            Battle.change_dragon()
+            delay(1)
+            tries -= 1
         
     @staticmethod
     def _get_inside_double_damage():

@@ -26,7 +26,7 @@ def close_app():
     except: print('Cannot kill the application')
 
 def zoom_out():
-    [ res ] = get_monitors()
+    res = get_monitors()[0]
     moveTo([res.width / 2, res.height / 2])
     pyautogui.scroll(-10000)
 

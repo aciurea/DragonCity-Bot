@@ -10,7 +10,7 @@ from screeninfo import get_monitors
 
 class Wizard:
     _mon_quarters = get_monitor_quarters()
-    [res] = get_monitors()
+    res = get_monitors()[0]
     _quit_pos = [get_int(0.30585 * res.width), get_int(0.81 * res.height)]
     wizard_static_pos = [get_int(res.width * .82929) , get_int(res.height * .334027)]
 

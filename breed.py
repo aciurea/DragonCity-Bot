@@ -10,7 +10,7 @@ import constants as C
 
 
 class Breed:
-    [res] = get_monitors()
+    res = get_monitors()[0]
     artifact_center_pos = [res.width / 2, res.height / 2]
     rock_pos = [get_int(0.405769 * res.width), get_int(0.7375 * res.height)]
     tree_pos = [get_int(0.29 * res.width), get_int(0.691 * res.height)]
