@@ -12,21 +12,16 @@ import time
 from mem_edit import Process
 import datetime
 import concurrent.futures
-
-import re
-import cv2
-from pytesseract import pytesseract
-from PIL import ImageGrab, Image
-
+from mail import Mail
 
 res = get_monitors()[0]
 
 jsonPos = {
     "POPUP_ICON": [get_int(res.width * 0.82421875), get_int(res.height * 0.121527)],
+    "STATIC_CLOSE": [2048, 135]
 }
 
 mon_quarters = get_monitor_quarters()
-
 
 def _check_if_is_special_offer():
     clock = getImagePositionRegion(C.APP_START_CLOCK, *mon_quarters['1stVerHalf'], .8, 2)
@@ -52,6 +47,7 @@ def open_app(i = 0):
     delay(2)
     if(i == 5):
         print('Cannot start the application ad ', datetime.datetime.now().strftime("%X"))
+        Mail.send('Cannot start the application ad ' + datetime.datetime.now().strftime("%X"), subject='[Error] START APPLICATION')
         return False
     
    # your app model id
@@ -78,28 +74,54 @@ def check_extra_bonus():
                     return check_extra_bonus()
     return [-1]
 
+def _click_on_enjoy():
+    x_start = 920
+    y_start = 980
+    x_end = 1820
+    y_end = 1370
+    
+    current_pos = [x_start, y_start]
+    x_size = 90
+    y_size = 50
+    
+    while current_pos[1] <= y_end:
+        while current_pos[0] <= x_end:
+            moveAndClick(current_pos)
+            current_pos[0] += x_size
+
+        current_pos[0] = x_start
+        current_pos[1] += y_size
+        
 
 def _clean_all_popups():
+    delay(1)
     start = time.time()
     app_time_to_close_all_buttons = 40
     while(not exists(_get_artifact_pos())):
         zoom_out()
-        if(time.time() - start > app_time_to_close_all_buttons): return open_app()
+        if(time.time() - start > app_time_to_close_all_buttons): 
+            _click_on_enjoy()
+            Popup.check_popup_chest()
+            return open_app()
+        
+        if exists(_check_if_is_special_offer()):
+            print('is special offer')
+            moveAndClick(jsonPos["STATIC_CLOSE"])
+            delay(1)
+            continue
         
         close_btn = Close.get_btn()
-        if(exists(close_btn)): 
+        if exists(close_btn): 
+            print('close btn clicked')
             moveAndClick(close_btn)
             delay(1)
             continue
         else: 
-            if exists(_check_if_is_special_offer()):
-                # click on static close button
-                moveAndClick(_check_if_is_special_offer())
-                delay(1)
-                continue
-            # else click on more positions of the dynamic buttons that have been added.
-            moveAndClick(jsonPos["POPUP_ICON"])
-        
+            print('STATIC closed')
+            moveAndClick(jsonPos["POPUP_ICON"]) 
+            delay(2)
+            Close.check_if_ok()
+            
         Popup.check_popup_chest()
         check_extra_bonus()
         _check_enjoy_btn()

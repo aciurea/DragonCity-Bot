@@ -6,14 +6,15 @@ import constants as C
 import concurrent.futures
 from timers import delay
 
-class Popup:
-    res = get_monitors()[0]
-    _percent = { "claim_btn": [.490625, .79652], "tap_btn": [.494140625, .694] }
+res = get_monitors()[0]
+_percent = { "claim_btn": [.490625, .79652], "tap_btn": [.494140625, .694] }
 
-    _jsonPos =  { 
-        "TAP_BTN": [get_int(res.width * _percent["tap_btn"][0]), get_int(res.height * _percent["tap_btn"][1])],
-        "CLAIM_BTN": [get_int(res.width * _percent["claim_btn"][0]), get_int(res.height * _percent["claim_btn"][1])],
-    }
+_jsonPos =  { 
+    "TAP_BTN": [get_int(res.width * _percent["tap_btn"][0]), get_int(res.height * _percent["tap_btn"][1])],
+    "CLAIM_BTN": [get_int(res.width * _percent["claim_btn"][0]), get_int(res.height * _percent["claim_btn"][1])],
+}
+
+class Popup:
     mon_quarters = get_monitor_quarters()
 
     @staticmethod

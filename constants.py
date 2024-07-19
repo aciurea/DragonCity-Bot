@@ -27,6 +27,9 @@ _BASE_WIZARD = './img/wizard/'
 # WIZARD start
 WIZARD_PLAY_BTN = get_path(_BASE_WIZARD + 'play_btn')
 WIZARD_GEMS_BTN = get_path(_BASE_WIZARD + 'gem')
+WIZARD_CLAIM_BTN = get_path(_BASE_WIZARD + 'claim')
+WIZARD_RED_CLAIM = get_path(_BASE_WIZARD + 'red_claim')
+WIZARD_YELLOW_CLAIM = get_path(_BASE_WIZARD + 'yellow_claim')
 # WIZARD end
 
 

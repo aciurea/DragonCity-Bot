@@ -20,6 +20,7 @@ from tv import TV
 from utils import dragMapToCenter
 from daily_treasure import collect_daily_treasure
 from events_collection import Events_Collection
+from wizard import Wizard
 
 def start_working():
     do_work = [
@@ -38,6 +39,7 @@ def start_working():
         Arena.enter_battle,
         Quest.open_quest,
         Events_Collection.collect_events,
+        Wizard.open_wizard,
 
         # TV.open_tv,
         # Runner.run,

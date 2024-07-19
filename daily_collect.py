@@ -91,19 +91,19 @@ class Daily_Collect:
         Popup.check_popup_chest()
         check_if_ok()
 
-        times = 5
+        times = 3
 
         while times > 0:
             claim_after_browser = Daily_Collect._get_claim_after_browser()
             
             if exists(claim_after_browser):
                 moveAndClick(claim_after_browser)
-                delay(1)
+                delay(3)
                 Popup.check_popup_chest()
-                check_if_ok()
+                delay(2)
                 continue
             
             collect_food()
-            delay(29)
+            delay(27)
             check_if_ok()
             times -= 1

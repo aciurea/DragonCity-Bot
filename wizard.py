@@ -22,14 +22,18 @@ class Wizard:
         delay(1)
         play_btn = Wizard._get_play_btn()
 
-        if not exists(play_btn): return print('Wizard Play button not found')
+        if not exists(play_btn):
+            check_if_ok()
+            return print('Wizard Already played')
+
         moveAndClick(play_btn)
         delay(10)
         Wizard._play_wizard()
+        check_if_ok()
     
     @staticmethod
     def _play_wizard():
-        times = 5
+        times = 2
     
         balls = [[842, 665],
                 [1126, 777],
@@ -38,20 +42,51 @@ class Wizard:
         ]
         
         while times >= 0:
-            if exists(Wizard._get_wizard_gem()):
+            if not exists(Wizard._get_claim_btn()):
                 check_if_ok()
                 delay(1)
                 moveAndClick(Wizard._quit_pos)
                 return
+            
             times -= 1
             ball = random.choice(balls)
             multiple_click(ball)
-
-        # TODO claim the current rewards if any
+            delay(2)
+            
+            claim_btn = Wizard._get_claim_btn()
+            
+            if not exists(claim_btn):
+                check_if_ok()
+            
+            moveAndClick(claim_btn)
+            delay(1)
+            claim_and_quit = Wizard._get_claim_and_quit()
+            
+            if not exists(claim_and_quit):
+                moveAndClick([955, 1181])
                 
+            moveAndClick(Wizard._get_claim_and_quit())
+            claim_all = Wizard._get_claim_all_btn()
+            
+            if not exists(claim_all):
+                moveAndClick([1150, 1129])
+            moveAndClick(claim_all)
+        
     @staticmethod
-    def _get_wizard_gem():
-        return getImagePositionRegion(C.WIZARD_GEMS_BTN, *Wizard._mon_quarters['2ndHorHalf'], .8, 2)
+    def _get_claim_all_btn():
+        return getImagePositionRegion(C.WIZARD_YELLOW_CLAIM, *Wizard._mon_quarters['4thRow'], .8, 2)
+    
+    @staticmethod
+    def _get_claim_and_quit():
+        return getImagePositionRegion(C.WIZARD_RED_CLAIM, *Wizard._mon_quarters['4thRow'], .8, 2)
+        
+    @staticmethod
+    def _get_claim_btn():
+        return getImagePositionRegion(C.WIZARD_CLAIM_BTN, *Wizard._mon_quarters['4thRow'], .8, 2)
+            
+    # @staticmethod
+    # def _get_wizard_gem():
+    #     return getImagePositionRegion(C.WIZARD_GEMS_BTN, *Wizard._mon_quarters['2ndHorHalf'], .8, 2)
     
     @staticmethod
     def _get_play_btn():
