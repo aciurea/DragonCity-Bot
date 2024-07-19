@@ -7,15 +7,31 @@ import constants as C
 from move import _get_artifact_pos, moveAndClick, moveTo
 from popup import Popup
 from timers import delay
-from utils import exists, get_json_file, get_monitor_quarters, getImagePositionRegion
+from utils import exists, get_monitor_quarters, getImagePositionRegion, get_int
 import time
 from mem_edit import Process
 import datetime
 import concurrent.futures
 
-jsonPos = get_json_file('open.json')
+import re
+import cv2
+from pytesseract import pytesseract
+from PIL import ImageGrab, Image
+
+
+res = get_monitors()[0]
+
+jsonPos = {
+    "POPUP_ICON": [get_int(res.width * 0.82421875), get_int(res.height * 0.121527)],
+}
 
 mon_quarters = get_monitor_quarters()
+
+
+def _check_if_is_special_offer():
+    clock = getImagePositionRegion(C.APP_START_CLOCK, *mon_quarters['1stVerHalf'], .8, 2)
+    
+    return clock
 
 def close_app():
     try:
@@ -75,7 +91,14 @@ def _clean_all_popups():
             moveAndClick(close_btn)
             delay(1)
             continue
-        else: moveAndClick(jsonPos["POPUP_ICON"])
+        else: 
+            if exists(_check_if_is_special_offer()):
+                # click on static close button
+                moveAndClick(_check_if_is_special_offer())
+                delay(1)
+                continue
+            # else click on more positions of the dynamic buttons that have been added.
+            moveAndClick(jsonPos["POPUP_ICON"])
         
         Popup.check_popup_chest()
         check_extra_bonus()

@@ -7,14 +7,18 @@ from utils import (
                 delay,
                 exists,
                 get_grid_monitor,
-                get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
+                get_int,
                 moveAndClick)
 import constants as C
 import concurrent.futures
 
-jsonPos = get_json_file('arena.json')
+
+jsonPos = {
+    "STATIC_CLAIM_BATTLE": [1265, 1295],
+    "CLOSE_ATTACK": [1980, 370]
+}
 
 class Arena:
     mon_quarters = get_monitor_quarters()
