@@ -7,7 +7,7 @@ import pyautogui
 import constants as C
 
 class Position_Map:
-    [res] = get_monitors()
+    res = get_monitors()[0]
     _center = [get_int(res.width / 2), get_int(res.height / 2)]
 
     @staticmethod

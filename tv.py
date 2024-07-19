@@ -5,7 +5,6 @@ from utils import (
                 delay,
                 dragMapToCenter,
                 exists,
-                get_json_file,
                 get_monitor_quarters,
                 getImagePositionRegion,
                 moveAndClick
@@ -15,7 +14,7 @@ import constants as C
 from popup import Popup
 
 class TV:
-    jsonPos = get_json_file('tv.json')
+    jsonPos = { "TV": [1040, 655] }
     mon_quarters = get_monitor_quarters()
 
     def get_watched_video_close_btn():

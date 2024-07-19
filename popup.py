@@ -1,19 +1,20 @@
 import time
 from screeninfo import get_monitors
 from move import moveAndClick, multiple_click
-from utils import exists, get_json_file, get_monitor_quarters, getImagePositionRegion, get_int
+from utils import exists, get_monitor_quarters, getImagePositionRegion, get_int
 import constants as C
 import concurrent.futures
 from timers import delay
 
-jsonPos = get_json_file('popup.json')
-
-_percent = [.490625, .79652]
-
 class Popup:
     res = get_monitors()[0]
+    _percent = { "claim_btn": [.490625, .79652], "tap_btn": [.494140625, .694] }
+
+    _jsonPos =  { 
+        "TAP_BTN": [get_int(res.width * _percent["tap_btn"][0]), get_int(res.height * _percent["tap_btn"][1])],
+        "CLAIM_BTN": [get_int(res.width * _percent["claim_btn"][0]), get_int(res.height * _percent["claim_btn"][1])],
+    }
     mon_quarters = get_monitor_quarters()
-    _enjoy_claim_static_pos = [get_int(res.width * _percent[0]) , get_int(res.height * _percent[1])]
 
     @staticmethod
     def _get_chest():
@@ -35,7 +36,7 @@ class Popup:
         if exists(claim_btn):
             multiple_click(claim_btn, 3)
             print('Chest opened!')
-        else: moveAndClick(Popup._enjoy_claim_static_pos)
+        else: moveAndClick(_jsonPos['CLAIM_BTN'])
         delay(5) # Opening popup is kind of slow, just wait 5 seconds to be safe.
         
     @staticmethod
@@ -45,7 +46,7 @@ class Popup:
           multiple_click(tab_btn, times=10)
         else:
             print("Tap not found")
-            multiple_click(jsonPos['TAP_BTN'], times=10)
+            multiple_click(_jsonPos['TAP_BTN'], times=10)
         Popup._claim_chest()
 
     @staticmethod

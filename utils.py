@@ -10,7 +10,6 @@ from PIL import ImageGrab, Image
 import constants as C
 import random
 import time
-import json
 import concurrent.futures
 import datetime
 from screeninfo import get_monitors
@@ -284,6 +283,7 @@ def _get_text_chat(ref):
         (x, y, w, h) = cv2.boundingRect(contour)
         roi = thresh[y:y + h, x:x + w]
         digit = pytesseract.image_to_string(Image.fromarray(roi), config="--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789")
+        
         digit = digit.replace(" ", "")
         if(len(digit) > 0 and len(digit) > 6):
             return digit[:-1]
@@ -316,11 +316,6 @@ def get_window_size():
     default_size = [1600, 900]
   
     return default_size  if (window_handle != None) else GetWindowRect(window_handle)
-
-def get_json_file(file_name): 
-    resolution = get_screen_resolution()
-    with open(f'positions/{resolution}/{file_name}') as f:
-        return json.load(f)
 
 def get_time_to_midnight():
     dt = datetime.datetime.now()

@@ -11,7 +11,7 @@ from utils import delay, exists, get_int, get_monitor_quarters, getImagePosition
 import constants as C
 
 class Heroic:
-    [res] = get_monitors()
+    res = get_monitors()[0]
     heroic_arena = [get_int(0.56730769 * res.width), get_int(0.32 * res.height)]
     mon = get_monitor_quarters()
 

@@ -1,8 +1,11 @@
 from close import check_if_ok
 from move import multiple_click
-from utils import  dragMapToCenter, get_json_file
+from utils import  dragMapToCenter, get_int
 
-jsonPos = get_json_file('collectGold.json')
+from screeninfo import get_monitors
+
+res = get_monitors()[0]
+jsonPos = { "STACKED_HABITTATS": [get_int(res.width * 0.2109375), get_int(res.height * 0.4027)] }
 
 class Gold:
     @staticmethod

@@ -186,6 +186,7 @@ APP_START_ENJOY = get_path(f'{_BASE_APP_START}enjoy')
 APP_START_ARENA_CLAIM = get_path(_BASE_APP_START + 'arena_claim')
 APP_START_EXTRA_CLAIM = get_path(_BASE_APP_START + 'extra_claim')
 APP_START_ENJOY_CLAIM = get_path(_BASE_APP_START + 'enjoy_claim')
+APP_START_CLOCK = get_path(_BASE_APP_START + 'clock')
 
 # End App start
 

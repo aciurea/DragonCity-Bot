@@ -3,13 +3,19 @@ import time
 from pyautogui import scroll
 from close import check_if_ok
 from move import moveTo, multiple_click
-from utils import get_json_file, moveAndClick, delay, exists
+from utils import moveAndClick, delay, exists
 from position_map import Position_Map
 
 class Shop:
     last_time_started = 0
     wait_time = 3600 * 3 
-    pos = get_json_file('shop.json')
+    pos = {
+        "shop": [2440, 1250],
+        "orbs": [1280, 1090],
+        "vertical_scroll": [2560, 865],
+        "buy_heroic": [2220, 670],
+        "buy_legendary": [2215, 1190]
+    }
 
     def go_to_orbs():
         scroll_pos = Shop.pos['vertical_scroll']
