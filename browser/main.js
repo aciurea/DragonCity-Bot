@@ -8,34 +8,34 @@ const delay = (time) => {
     
 };
 
+const URLs = Object.freeze({
+    store: "https://www.dragoncitygame.com/",
+    dailyStreak: "https://www.dragoncitygame.com/dragon-city-daily-streak",
+});
+const key = "finished";
+const url = "url";
+
 (async () => {
-    let times = 7;
+    const storedUrl = sessionStorage.getItem(url);
+    
+    if(storedUrl === null) {
+        sessionStorage.setItem(url, URLs.dailyStreak);
+        window.location.href = URLs.dailyStreak;
+        console.log('redirect to dailyStreak');
+        return;
+    } else sessionStorage.setItem(url, URLs.store);
+    
+    await delay(2_000);
 
-    while (times > 0) {
-        times--;
-        const elements = document.querySelectorAll('[data-testid="list-view-buy-button"]');
+    const elements = document.querySelectorAll('[data-testid="list-view-buy-button"]');
 
-        if(!elements?.length) {
-            await delay(1000);
-            continue;
-        }
-
-        elements?.forEach((el) => {
-            if(!el?.textContent?.includes("€")) {
-                console.log('clicking on element');
-                el?.click();
-            } else {
-                console.log(el?.textContent);
-            }
-        });
-
-        times = 0;
-    }
-
-    await delay(1000)
-    const key = "dc-automation";
+    elements?.forEach((el) => {
+        if(!el?.textContent?.includes("€")) el?.click();
+        else console.log(el?.textContent);
+    });
+ 
     if(sessionStorage.getItem(key) === "true") return;
 
-    window.location.href = "https://www.dragoncitygame.com/";
     sessionStorage.setItem(key, "true");
+    window.location.href = URLs.store;
 })();
