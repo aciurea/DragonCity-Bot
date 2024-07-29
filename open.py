@@ -46,8 +46,8 @@ def open_app(i = 0):
     close_app()
     delay(2)
     if(i == 5):
-        print('Cannot start the application ad ', datetime.datetime.now().strftime("%X"))
-        Mail.send('Cannot start the application ad ' + datetime.datetime.now().strftime("%X"), subject='[Error] START APPLICATION')
+        dd = datetime.datetime.now().strftime("%X")
+        Mail.send('Cannot start the application ' + dd, subject='[Error] START APPLICATION')
         return False
     
    # your app model id

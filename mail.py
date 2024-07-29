@@ -18,6 +18,6 @@ class Mail:
             subject=subject,
             text=message
         )
-        client = mt.MailtrapClient(token=os.getenv(API_TOKEN))
+        client = mt.MailtrapClient(token=os.getenv("TOKEN"))
         client.send(mail)
         

@@ -11,8 +11,9 @@ try:
     start_working()
 except Exception as e:
     print('[Error is]: ', e)
-    error = e
+    error = '[Error is]: ' + str(e)
 finally:
-    print("Exit ... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    Mail.send("" if error == False else str(error) + " " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    dd = "Exit ... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    message = ("" if error == False else error) + " " + dd
+    Mail.send(message=message, subject="DC")
     close_app()
