@@ -30,23 +30,20 @@ def start_working():
         collect_food,
         collectGold,
         Orbs.collect_orbs,
+        Events_Collection.collect_events,
         Shop.open_shop,
         collect_daily_treasure,
-        League.enter_league,
+        # League.enter_league,
         Alliance.open_alliance,
-        # Heroic.race,
+        Heroic.race,
         Daily_Collect.collect,
         Arena.enter_battle,
         Quest.open_quest,
-        Events_Collection.collect_events,
+        # Runner.run,
         Wizard.open_wizard,
 
         # TV.open_tv,
-        # Runner.run,
         # Habitat.buy_habitat,
-
-        # lambda: Breed.breed(),
-        # Quest.open_quest,
         # More work can be added here
         # Tree of life
         close_app
