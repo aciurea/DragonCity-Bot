@@ -2,6 +2,7 @@ from do_work import start_working
 from open import close_app
 from datetime import datetime
 
+from git import update_project
 from utils import delay
 from mail import Mail
 
@@ -17,3 +18,4 @@ except Exception as e:
     message = '[Error is]: ' + str(e) + " " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     Mail.send(message=message, subject="DC")
 close_app()
+update_project()
