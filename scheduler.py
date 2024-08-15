@@ -10,8 +10,9 @@ try:
     print("Starting the application...")
     message = "started the work " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     Mail.send(message, subject="DC")
-    start_working()
-    message="[Success] ... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    work_message = start_working()
+
+    message="[Success] ... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S \n\n") + work_message
     Mail.send(message=message, subject="DC")
 except Exception as e:
     print('[Error is]: ', e)

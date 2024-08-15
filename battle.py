@@ -4,7 +4,7 @@ import pyautogui as pyt
 
 from screeninfo import get_monitors
 from utils import (
-                _get_int,
+                get_int,
                 delay,
                 exists,
                 get_grid_monitor,
@@ -21,7 +21,7 @@ class Battle:
     grid = get_grid_monitor()
     mon_quarters = get_monitor_quarters()
     res = get_monitors()[0]
-    one_third = _get_int(res.width / 3)
+    one_third = get_int(res.width / 3)
     
     def get_speed_btn():
         grid = Battle.grid
