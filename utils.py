@@ -3,7 +3,7 @@ from win32gui import FindWindow, GetWindowRect
 import pyautogui
 import time
 import mouse
-from python_imagesearch.imagesearch import (imagesearch, imagesearcharea)
+from python_imagesearch.imagesearch import (imagesearch, imagesearcharea, imagesearch_count)
 import cv2
 from pytesseract import pytesseract
 from PIL import ImageGrab, Image
@@ -22,24 +22,6 @@ def get_screen_resolution():
 def get_path(path):
     return path+'.png'
 
-class ThreadWithValue(Thread):
-    def __init__(self, group=None, target=None, name=None,
-                 args=(), kwargs={}, Verbose=None):
-        Thread.__init__(self, group, target, name, args, kwargs)
-        self._return = None
-
-    def start(self) -> None:
-        super().start()
-        return self
-
-    def run(self):
-        if self._target is not None:
-            self._return = self._target(*self._args,
-                                        **self._kwargs)
-
-    def join(self, *args):
-        Thread.join(self, *args)
-        return self._return
 
 # It retries 10 times which means 5 seconds for the image to appear
 def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries=10, speed=0.5):
@@ -51,6 +33,8 @@ def getImagePositionRegion(path, x1, y1, x2=1600, y2=900, precision=0.8, retries
         retries -=1
         delay(speed)
     return [image[0] + x1, image[1] + y1]
+
+def getImagePositonCount(path): return imagesearch_count(path, precision=0.98)
 
 def delay(seconds):
     if seconds < 0:
@@ -73,39 +57,27 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
     return image
 
-def check_if_not_ok():
-    mon = get_monitor_quarters()
-    btns_pos = [
-
-        [C.DIVINE_PASS_CLOSE_BTN, *mon['top_right'], .8, 1],
-        ['./img/app_start/back.png', *mon['top_left'], .8, 1],
-        [C.HALLOW_CLOSE_BTN, *mon['top_right'], .8, 1],
-        [C.SETTINGS_CLOSE_BTN, *mon['top_right'], .8, 1],
-        [C.BIG_CLOSE_BTN, *mon['top_right'], .8, 1],
-        # [C.BOOK_CLOSE_BTN, *mon['top_right'], .8, 1],
-        # [C.BOOK_CLOSE_BTN, *mon['top_right'], .8, 1],
-
-
-        # ['./img/app_start/back.png', mon['top_left'], .8, 1],
-        # ['./img/utils/close.png', 800, 0, 1600, 500, .8, 2],
-        # ['./img/app_start/no.png', 610, 635, 800, 735 , .8, 2],
-        # [C.APP_START_DIVINE_CLOSE,  1000, 0, 1400, 200, 0.8, 2],
-    ]
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        btns = executor.map(lambda args: getImagePositionRegion(*args), btns_pos)
-
-        for btn in btns:
-            if exists(btn):
-                return btn
-                # moveAndClick(btn)
-                # delay(1)
-                # return closePopup()
-
-def _get_int(num):
-    return int(round(num))
-
 def get_int(num):
     return int(round(num))
+
+def get_pos_with_grid(pos):
+    grid = get_grid_monitor()
+    
+    last_lower_x = 'x0'
+    last_lower_y = 'y0'
+    
+    first_greater_x = 'x8'
+    first_greater_y = 'y6'
+
+    for key, value in grid.items():
+        if key.startswith('x'):
+            if value < pos[0]: last_lower_x = key
+            if value > pos[0] and grid[first_greater_x] > value: first_greater_x = key
+        else: 
+            if value < pos[1]: last_lower_y = key
+            if value > pos[1] and grid[first_greater_y] > value: first_greater_y = key
+
+    return [last_lower_x, last_lower_y, first_greater_x, first_greater_y]
 
 def get_grid_monitor():
     res = get_monitors()[0]
@@ -125,14 +97,14 @@ def get_grid_monitor():
 
 def get_monitor_quarters():
     res = get_monitors()[0]
-    piece = _get_int(res.height / 4)
-    horizontal_piece = _get_int(res.width / 8)
+    piece = get_int(res.height / 4)
+    horizontal_piece = get_int(res.width / 8)
 
     return {
-        "top_left": [0, 0, _get_int(res.width / 2), _get_int(res.height / 2)],
-        "top_right": [_get_int(res.width / 2), 0, res.width, _get_int(res.height / 2)],
-        "bottom_right": [_get_int(res.width / 2), _get_int(res.height / 2), res.width, res.height],
-        "bottom_left": [0, _get_int(res.height / 2), _get_int(res.width / 2), res.height],
+        "top_left": [0, 0, get_int(res.width / 2), get_int(res.height / 2)],
+        "top_right": [get_int(res.width / 2), 0, res.width, get_int(res.height / 2)],
+        "bottom_right": [get_int(res.width / 2), get_int(res.height / 2), res.width, res.height],
+        "bottom_left": [0, get_int(res.height / 2), get_int(res.width / 2), res.height],
         "1stRow": [0, 0, res.width, piece],
         "2ndRow": [0, piece, res.width, piece * 2 ],
         "3rdRow": [0, piece * 2, res.width, piece * 3],
@@ -144,7 +116,7 @@ def get_monitor_quarters():
         "1stVerHalf": [0, 0, horizontal_piece * 4, res.height],
         "2ndVerHalf": [horizontal_piece * 4, 0, res.width, res.height],
         "full": [0, 0, res.width, res.height],
-        "center": [_get_int(res.width / 2), _get_int(res.height / 2)]
+        "center": [get_int(res.width / 2), get_int(res.height / 2)]
     }
 
 def is_in_time(start, limit):
@@ -169,15 +141,6 @@ def closePopup(btn = [-1]):
         moveAndClick(btn) 
     else: moveAndClick(get_close_btn(), 'no close button')
 
-def closeVideo():
-    threads = [
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close_video.png', 900, 0, 1600, 350, 0.8, 3)).start(),
-        ThreadWithValue(target=getImagePositionRegion, args=('./img/utils/close_video_no_claim.png', 900, 100, 1500, 300, 0.8, 3)).start()
-    ]
-
-    for thread in threads:
-        moveAndClick(thread.join(), 'Close btn not found')
-
 def moveTo(position):
     mouse.move(*position)
     delay(0.1)
@@ -194,43 +157,21 @@ def dragMap(artifact, next = [800, 450]):
 def dragMapToCenter():
     res = get_monitors()[0]
     artifact = getImagePosition('./img/utils/artifact.png', 5, .8, .5)
-    if(artifact[0] == _get_int(res.width / 2) and artifact[1] == _get_int(res.height / 2)):
+    if(artifact[0] == get_int(res.width / 2) and artifact[1] == get_int(res.height / 2)):
         moveAndClick(artifact)
         return artifact
 
     if not exists(artifact):
         print('Cannot move the map since there is no point of reference')
         return [-1]
-    dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2)])
+    dragMap(artifact, [get_int(res.width / 2), get_int(res.height / 2)])
     return artifact
     
-def move_to_top():
-    artifact = dragMapToCenter()
-    print('artifact is', artifact)
-    if not exists(artifact): return [-1]
-    print('move to top')
-    res = get_monitors()[0]
-    dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) + 350])
-
-def move_to_bottom():
-    artifact = dragMapToCenter()
-    if not exists(artifact): return [-1]
-    print('move to bottom')
-    res = get_monitors()[0]
-    dragMap(artifact, [_get_int(res.width / 2), _get_int(res.height / 2) - 300])
-    pyautogui.mouseUp()
-
 def move_to_left():
     artifact = dragMapToCenter()
     if not exists(artifact): return [-1]
     pyautogui.mouseUp()
     dragMap(artifact, [artifact[0] - 400, artifact[1] - 150])
-
-def getMovePositions():
-    return [
-        'down',
-        'up',
-    ]
 
 def scroll(pos1, pos2):
     moveTo(pos1)
@@ -240,35 +181,7 @@ def scroll(pos1, pos2):
     mouse.move(pos2[0], pos2[1], True, .05)
     delay(.5)
     mouse.release()
-   
-def get_text(x = 410, oponent = False):
-    pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-    path ='./temp/img.png'
-    bbox = [970, 110, 1093, 270] if oponent else [x, 127, 491, 161] 
-    cap_length_6 = ImageGrab.grab(bbox)
-    cap_length_6.save(path)
-    ref = cv2.imread(path)
-    if(oponent): return int(_get_text_chat(ref))
-    lst = [
-        _get_text_2(ref).replace(" ", "").replace(".","").rstrip(),
-        _get_text_3(ref).replace(" ", "").replace(".","").rstrip(),
-        _get_text_4(ref).replace(" ", "").replace(".","").rstrip()
-    ]
 
-    i = 0
-    while (i < len(lst)):
-        if len(lst[i]) > 6:
-            lst[i] = lst[i][1:]
-        i+=1
-
-
-    try:
-        lst.sort(reverse=True)
-        lst = list(filter(lambda item: len(item) > 0, lst))
-        num = int(lst[0])
-        return num if(num != 321926) else 321526 # problem with 5 not being able to distinguish
-    except: return 247336 # value of strongest dragon
-    
 def _get_text_2(ref):
     gry = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
     bnt = cv2.bitwise_not(gry)
@@ -307,16 +220,3 @@ def _get_text_4(ref):
     bnt = cv2.bitwise_not(thr)
 
     return pytesseract.image_to_string(bnt, config="--psm 6 digits")
-
-def get_in_progress():
-    return getImagePositionRegion('./img/battle/fight_in_progress.png', 0, 100, 190, 300, .8, 2)
-
-def get_window_size():
-    window_handle = FindWindow(None, "DragonCity")
-    default_size = [1600, 900]
-  
-    return default_size  if (window_handle != None) else GetWindowRect(window_handle)
-
-def get_time_to_midnight():
-    dt = datetime.datetime.now()
-    return ((24 - dt.hour - 1) * 60 * 60) + ((60 - dt.minute - 1) * 60) + (60 - dt.second)
