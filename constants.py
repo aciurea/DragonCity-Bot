@@ -45,6 +45,8 @@ EVENTS_ENJOY_BTN = get_path(_BASE_EVENTS_COLLECTION + 'enjoy_btn')
 # RUNNER
 RUNNER_ICO = get_path(_BASE_RUNNER + 'ico')
 RUNNER_CLAIM = get_path(_BASE_RUNNER + 'claim')
+RUNNER_EXPANDED = get_path(_BASE_RUNNER + 'expanded')
+RUNNER_CLAIMED = get_path(_BASE_RUNNER + 'claimed')
 
 
 # END RUNNER

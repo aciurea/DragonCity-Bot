@@ -17,10 +17,12 @@ from runner import Runner
 from shop import Shop
 from towers import activate_towers
 from tv import TV
-from utils import dragMapToCenter
+from utils import get_int
 from daily_treasure import collect_daily_treasure
 from events_collection import Events_Collection
 from wizard import Wizard
+from move import center_map
+import time
 
 def start_working():
     do_work = [
@@ -33,13 +35,13 @@ def start_working():
         Events_Collection.collect_events,
         Shop.open_shop,
         collect_daily_treasure,
-        # League.enter_league,
+        League.enter_league,
         Alliance.open_alliance,
-        Heroic.race,
+        # Heroic.race,
         Daily_Collect.collect,
         Arena.enter_battle,
         Quest.open_quest,
-        # Runner.run,
+        Runner.run,
         Wizard.open_wizard,
 
         # TV.open_tv,
@@ -48,10 +50,16 @@ def start_working():
         # Tree of life
         close_app
     ]
+    str_actions = "Actions with time are: \n\n"
 
     for i, work in enumerate(do_work):
+        start = time.time()
         work()
-        if i == len(do_work) - 1: return
+        end = time.time()
+        str_actions += f"Work {str(work.__name__)} took {str(get_int(end - start))} seconds\n"
+        if i == len(do_work) - 1: return str_actions
+
         check_if_ok()
-        dragMapToCenter()
+        center_map()
+    return str_actions
     
