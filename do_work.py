@@ -22,6 +22,8 @@ from daily_treasure import collect_daily_treasure
 from events_collection import Events_Collection
 from wizard import Wizard
 from move import center_map
+from puzzle import Puzzle
+
 import time
 
 def start_working():
@@ -43,6 +45,7 @@ def start_working():
         Quest.open_quest,
         Runner.run,
         Wizard.open_wizard,
+        Puzzle.open_puzzle,
 
         # TV.open_tv,
         # Habitat.buy_habitat,
@@ -56,7 +59,7 @@ def start_working():
         start = time.time()
         work()
         end = time.time()
-        str_actions += f"Work {str(work.__name__)} took {str(get_int(end - start))} seconds\n"
+        str_actions += f"[{str(work.__name__)}] took {str(get_int(end - start))} seconds\n"
         if i == len(do_work) - 1: return str_actions
 
         check_if_ok()

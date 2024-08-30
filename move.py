@@ -72,3 +72,8 @@ def is_artifact_at_pos(pos):
         [x, y] = _get_artifact_pos()
         return x == pos[0] and y == pos[1]
     except: return False
+
+def drag_to(curr, next):
+    pyautogui.moveTo(*curr)
+    pyautogui.dragTo(next[0], next[1], 0.2)
+    delay(.1)
