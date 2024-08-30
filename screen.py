@@ -43,5 +43,22 @@ class Screen:
         image.save('./toDelete.png')
         
         return image
+
+    @staticmethod
+    def is_match_with_one_difference(str1, str2):
+        # Check if the lengths are different
+        if len(str1) != len(str2):
+            return False
+        
+        # Count the number of differences
+        differences = 0
+        for char1, char2 in zip(str1, str2):
+            if char1 != char2:
+                differences += 1
+                if differences > 1:
+                    return False
+        
+        # Return True if there are 0 or 1 differences
+        return differences <= 1
     
     
