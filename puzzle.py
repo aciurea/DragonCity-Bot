@@ -18,7 +18,7 @@ class Puzzle:
         if Puzzle._is_puzzle_island():
             Puzzle._claim_moves()
             Puzzle._move()
-            delay(.5)
+            delay(1)
         check_if_ok()
 
     @staticmethod
@@ -32,7 +32,7 @@ class Puzzle:
 
     @staticmethod
     def _claim_moves():
-        bbox =[1647, 341, 1835, 1191]
+        bbox = [1647, 341, 1835, 1191]
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
@@ -57,12 +57,12 @@ class Puzzle:
                     pos = [x_start + (col * box_length), y_start + (row * box_length)]
                     
                     if row != 0: drag_to(pos, [pos[0], pos[1] - 250]) # move up
-                    if row != 9: drag_to(pos, [pos[0], pos[1] + 250]) # move down
-                    if col != 0: drag_to(pos, [pos[0] - 250, pos[1]]) # move left
-                    if col != 9: drag_to(pos, [pos[0] + 250, pos[1]]) # move right
+                    if row != 8: drag_to(pos, [pos[0], pos[1] + 250]) # move down
+                    if col != 8: drag_to(pos, [pos[0] + 250, pos[1]]) # move right
                     
                     if Puzzle._no_moves():
                         moveAndClick(buy_moves_close_pos)
+                        check_if_ok()
                         return print('There are no moves left. Stop the Puzzle')
                 Popup.check_popup_chest()
                 moveAndClick(close_pos)

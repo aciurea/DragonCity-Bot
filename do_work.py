@@ -48,7 +48,7 @@ def start_working():
         Puzzle.open_puzzle,
 
         # TV.open_tv,
-        # Habitat.buy_habitat,
+        Habitat.buy_habitat,
         # More work can be added here
         # Tree of life
         close_app

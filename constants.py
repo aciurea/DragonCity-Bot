@@ -233,20 +233,13 @@ TV_PRAIZES = get_path(_BASE_TV + 'prizes')
 ## END TV
 
 ## Quest
-QUEST_GO_TO_BATTLE = get_path(_BASE_BATTLE + 'go_to_battle')
-QUEST_GO_TO_BATTLE_2 = get_path(_BASE_BATTLE + 'go_to_battle_2')
-QUEST_BATTLE_BTN = get_path(_BASE_BATTLE + 'quest_battle_btn')
+
 QUEST_REQ = get_path(_BASE_BATTLE + 'requirements')
 QUEST_INFO = get_path(_BASE_BATTLE + 'info')
+QUEST_NOT_READY = get_path(_BASE_BATTLE + 'no_quest_ready')
+QUEST_BATTLE_BTN = get_path(_BASE_BATTLE + 'battle_btn')
 
 ## End Quest
-
-BATTLE_BATTLE_BTN = get_path(_BASE_BATTLE + 'battle_btn')
-BATTLE_QUEST_BTN = get_path(_BASE_BATTLE + 'quest')
-BATTLE_NEXT_QUEST = get_path(_BASE_BATTLE + 'next_quest')
-BATTLE_GREEN_CLAIM = get_path(_BASE_BATTLE + 'claim')
-BATTLE_ATTACK_IS_AVAILABLE = get_path(_BASE_BATTLE + 'attacks_available')
-
 HEROIC_ARENA = get_path(_BASE_HEROIC + 'heroic')
 HEROIC_SELECT_BTN = get_path(_BASE_HEROIC + 'select')
 HEROIC_DRAGON = get_path(_BASE_HEROIC + 'dragon')
