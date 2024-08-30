@@ -1,18 +1,21 @@
 import os
 import psutil
 import pyautogui
+import time
+import datetime
+import concurrent.futures
+
+import constants as C
+
 from screeninfo import get_monitors
 from close import Close
-import constants as C
 from move import _get_artifact_pos, moveAndClick, moveTo
 from popup import Popup
 from timers import delay
 from utils import exists, get_monitor_quarters, getImagePositionRegion, get_int
-import time
 from mem_edit import Process
-import datetime
-import concurrent.futures
 from mail import Mail
+from screen import Screen
 
 res = get_monitors()[0]
 
@@ -125,12 +128,12 @@ def _clean_all_popups():
         Popup.check_popup_chest()
         check_extra_bonus()
         _check_enjoy_btn()
+        _claim_reward_after_arena()
         delay(2)
 
     print('APP STARTED SUCCESSFULY')
 
 def _check_enjoy_btn():
-    print('inside enjoy....')
     btn = getImagePositionRegion(C.APP_START_ENJOY, *mon_quarters['2ndHorHalf'], .8, 1)
 
     if exists(btn): moveAndClick(btn)
@@ -151,3 +154,11 @@ def _check_if_app_started():
         delay(5)
         print(f'Error occurred: {str(e)}')
 
+def _claim_reward_after_arena():
+    bbox = [1100, 850, 1420, 950]
+    text_positions = Screen.get_text_pos(bbox)
+
+    for t in text_positions:
+        if 'claim' in t['text'].lower():
+            moveAndClick(t['position'])
+            delay(1)
