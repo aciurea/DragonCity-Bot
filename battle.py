@@ -1,8 +1,14 @@
 import random
 import time
 import pyautogui as pyt
+import concurrent.futures
+
+import constants as C
 
 from screeninfo import get_monitors
+from screen import Screen
+from close import check_if_ok
+from move import moveAndClick
 from utils import (
                 get_int,
                 delay,
@@ -11,10 +17,7 @@ from utils import (
                 get_monitor_quarters,
                 getImagePositionRegion,
                 is_in_time,
-                moveAndClick)
-import constants as C
-import concurrent.futures
-from close import check_if_ok
+                )
 
 
 class Battle:
@@ -182,6 +185,7 @@ class Battle:
                 Battle.change_dragon()
         
         Battle._clean_image()
+        Battle._has_dragon_leveled_up()
         print('Fight is over!')
         
         
@@ -238,3 +242,13 @@ class Battle:
     @staticmethod 
     def _get_double_damage_btn():
         return getImagePositionRegion(C.FIGHT_DOUBLE_DAMAGE, *Battle.mon_quarters['2ndHorHalf'], .8, 2)
+
+    @staticmethod
+    def _has_dragon_leveled_up():
+        bbox = [777, 1230, 1015, 1310]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if 'got' in t['text'].lower():
+                moveAndClick(t['position'])
+                return True

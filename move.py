@@ -11,12 +11,6 @@ res = get_monitors()[0]
 def moveTo(position):
     mouse.move(*position)
     delay(0.2)
-    # curr_time = time.time()
-
-    # while time.time() - curr_time < 0.3:
-    #     current_pos = mouse.get_position()
-    #     if current_pos[0] == position[0] and current_pos[1] == position[1]: break
-    #     delay(0.1)
 
 def fast_click(pos):
     pyautogui.click(*pos)

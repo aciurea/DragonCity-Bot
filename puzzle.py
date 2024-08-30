@@ -18,6 +18,7 @@ class Puzzle:
         if Puzzle._is_puzzle_island():
             Puzzle._claim_moves()
             Puzzle._move()
+            delay(.5)
         check_if_ok()
 
     @staticmethod
@@ -35,7 +36,7 @@ class Puzzle:
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-          if 'SKIP' not in t['text'] or 'CLAIM' in t['text']: 
+          if 'skip' not in t['text'].lower() or 'claim' in t['text'].lower(): 
             moveAndClick(t['position'])
             delay(1)
         check_if_ok()
@@ -43,24 +44,34 @@ class Puzzle:
     def _move():
         close_pos = [1976, 208]
         buy_moves_close_pos = [1982, 384]
-        row = 10
-        col = 9
+        rows = 9
+        cols = 9
        
-        y_start = 180
-        x_start = 760
-        
-        box_length = 130
-        box_space = 10
+        y_start = 175
+        x_start = 825
+        box_length = 135
 
         for i in range(2):
-            for c in range(col):
-                for r in range(1, row):
-                    pos = [x_start + (r * box_length) - box_space, y_start + (c * box_length)]
-                    drag_to(pos, [pos[0] - 250, pos[1]]) # move down
-                    drag_to(pos, [pos[0] + 250, pos[1]]) # move up
-                    drag_to(pos, [pos[0], pos[1] - 250]) # move left
-                    drag_to(pos, [pos[0], pos[1] + 250]) # move right
+            for row in range(rows):
+                for col in range(cols):
+                    pos = [x_start + (col * box_length), y_start + (row * box_length)]
+                    
+                    if row != 0: drag_to(pos, [pos[0], pos[1] - 250]) # move up
+                    if row != 9: drag_to(pos, [pos[0], pos[1] + 250]) # move down
+                    if col != 0: drag_to(pos, [pos[0] - 250, pos[1]]) # move left
+                    if col != 9: drag_to(pos, [pos[0] + 250, pos[1]]) # move right
+                    
+                    if Puzzle._no_moves():
+                        moveAndClick(buy_moves_close_pos)
+                        return print('There are no moves left. Stop the Puzzle')
                 Popup.check_popup_chest()
                 moveAndClick(close_pos)
                 moveAndClick(buy_moves_close_pos)
     
+    @staticmethod
+    def _no_moves():
+        st = time.time()
+        bbox = [1300, 315, 1545, 395]
+        text_positions = Screen.get_text_pos(bbox)
+
+        return len(text_positions) > 0
