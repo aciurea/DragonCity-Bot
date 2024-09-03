@@ -24,7 +24,7 @@ class Alliance:
 
         if exists(getImagePositionRegion(C.ALLIANCE_BREED, *get_monitor_quarters()['2ndHorHalf'], .8, 2)):
             print('alliance breed work to do')
-            return lambda: Breed.breed('breed', 10)
+            return lambda: Breed.breed('breed', 20)
         
         return lambda: print('nothing to do on alliance. Is rest time')
 
