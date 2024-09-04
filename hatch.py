@@ -7,6 +7,7 @@ from close import check_if_ok
 from utils import exists, get_int, get_monitor_quarters, getImagePositionRegion
 
 class Hatch:
+    dragonarium_pos = [1773, 473]
     res = get_monitors()[0]
     mon_quarters = get_monitor_quarters()
     hatchery_pos = [get_int(0.346153 * res.width), get_int(0.639375 * res.height)]
@@ -17,9 +18,7 @@ class Hatch:
     place_btn_pos = [get_int(0.52961538 * res.width), get_int(0.6875 * res.height)]
 
     def _get_terra_egg():
-        mon_quarters = get_monitor_quarters()
-
-        return getImagePositionRegion(C.BREED_TERRA_EGG, *mon_quarters['4thRow'], .8, 1)
+        return getImagePositionRegion(C.BREED_TERRA_EGG, *Hatch.mon_quarters['4thRow'], .8, 1)
 
 
     def sell_egg():
@@ -73,6 +72,20 @@ class Hatch:
             delay(1)
             Hatch.sell_dragon(work_type)
             return Hatch.place_egg(work_type)
+
+    @staticmethod
+    def hatch_dragon_in_dragonarium(egg = C.BREED_TERRA_EGG):
+        center_map()
+        moveAndClick(Hatch.hatchery_pos)
+
+        flame_egg = getImagePositionRegion(egg, *Hatch.mon_quarters['4thRow'], .8, 1)
+
+        if not exists(flame_egg): return check_if_ok()
+        moveAndClick(flame_egg)
+        delay(.5)
+        moveAndClick(Hatch.place_btn_pos)
+        delay(2)
+        moveAndClick(Hatch.dragonarium_pos)
 
 # Hatch.place_egg()
     
