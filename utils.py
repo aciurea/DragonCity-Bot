@@ -3,6 +3,7 @@ from win32gui import FindWindow, GetWindowRect
 import pyautogui
 import time
 import mouse
+import json
 from python_imagesearch.imagesearch import (imagesearch, imagesearcharea, imagesearch_count)
 import cv2
 from pytesseract import pytesseract
@@ -181,3 +182,12 @@ def scroll(pos1, pos2):
     mouse.move(pos2[0], pos2[1], True, .05)
     delay(.5)
     mouse.release()
+
+def read_json_file(path):
+    try: 
+        with open(path, 'r') as f:
+            return json.load(f)
+
+    except Exception as e:
+        print(f'Error reading the file {path} with error {e}')
+        return None
