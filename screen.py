@@ -1,4 +1,6 @@
 from PIL import Image, ImageGrab, ImageEnhance, ImageFilter, ImageOps
+from screeninfo import get_monitors
+
 from utils import get_int, get_monitor_quarters
 
 import pytesseract
@@ -7,8 +9,12 @@ import time
 import easyocr
 
 reader = easyocr.Reader(['en'], gpu=False)
+res = get_monitors()
 
 class Screen:
+    width = res[0].width
+    height = res[0].height
+    
     def get_res():
        res = get_monitors()
        return [res[0].width, res[0].height]
@@ -21,6 +27,14 @@ class Screen:
         
     @staticmethod
     def get_text_pos(orig_bbox):
+        # we have the bbox in percentages
+        if len(orig_bbox) == 4 and orig_bbox[0] < 1:
+            orig_bbox = [
+                get_int(orig_bbox[0] * Screen.width),
+                get_int(orig_bbox[1] * Screen.height),
+                get_int(orig_bbox[2] * Screen.width),
+                get_int(orig_bbox[3] * Screen.height)
+            ]
         image = Screen.prepare_image(orig_bbox)
         result = reader.readtext('./toDelete.png', decoder='beamsearch', beamWidth=5, batch_size=1, workers=0, allowlist='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
         
