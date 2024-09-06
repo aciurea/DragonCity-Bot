@@ -1,4 +1,5 @@
 import time
+import datetime
 import concurrent.futures
 
 import constants as C
@@ -16,8 +17,6 @@ from utils import (
                 get_int,
                 moveAndClick)
 from screen import Screen
-
-
 
 jsonPos = {
     "STATIC_CLAIM_BATTLE": [1265, 1295],
@@ -52,18 +51,19 @@ class Arena:
 
     @staticmethod
     def prepare_fight():
-        bbox = [360, 700, 1175, 780]
+        # Values are in percentages on resolution 2560X1440
+        bbox = [0.14, 0.4861, 0.458984375, 0.5416]
         text_positions = Screen.get_text_pos(bbox)
-
         if len(text_positions) == 3: return
-        
-        bbox = [650, 1140, 865, 1240]
+
+        bbox = [0.25390625, 0.7916, 0.337890625, 0.861]
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
             if 'change' in t['text'].lower():
                 moveAndClick(t['position'])
                 delay(1)
+           
                 Arena.change_defetead_dragon()
 
     @staticmethod
@@ -117,12 +117,13 @@ class Arena:
 
     def wait_for_the_fight_tab():
         start = time.time()
-        fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)    
+        fight_tab = Arena._get_fight_tab()
 
         while time.time() - start < 10 and not exists(fight_tab):
-            fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)
+            fight_tab = Arena._get_fight_tab()
             delay(1)
         moveAndClick(fight_tab)
+
 
     def get_fight_spin():
         return getImagePositionRegion(C.ARENA_FIGHT_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
@@ -153,13 +154,14 @@ class Arena:
         start_fight = Arena.get_fight_btn()
         time_limit = 600 # if doesn't end in 10 minutes, we stop the script.
         start_time = time.time()
+        try: Arena.prepare_fight()
+        except: return print('No dragons available')
 
         while exists(start_fight):
             if (time.time() - start_time) > time_limit: 
                 raise Exception('Time limit exceded on arena. Closing the app....')
             
             print('Start new Arena battle')
-            # Arena.skip_strong_dragons()
             try: Arena.prepare_fight()
             except: return
             Arena.check_and_collect_rewards()
@@ -211,11 +213,29 @@ class Arena:
         check_if_ok() # first we hit the close button
 
     @staticmethod
-    def _check_season_end():
-        bbox = [1050, 1100, 1480, 1225]
+    def _get_fight_tab():
+        bbox = [0.28984375, 0.232, 0.35078125, 0.278]
+
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-            if 'start' in t['text'].lower():
+            if Screen.is_match_with_one_difference('fight', t['text'].lower()):  return t['position']
+              
+        return [-1]
+
+    @staticmethod
+    def _check_season_end():
+        if exists(Arena._get_fight_tab()): return print('Season is over. No need to check if ended.')
+        thursday = 3
+        # On Thursday the season ends, therefore we need to check if the season ended
+        # due to changes on position of the screen, enlarge the search are.
+        # Larger search area, takes more time, therefore, run the search on larger area only on Thursday
+
+        bbox = [0.2, 0.2, .9, .9] if datetime.datetime.now().weekday() == thursday else [0.41015625, 0.7638, 0.578125, 0.850694]
+        st = time.time()
+        text_positions = Screen.get_text_pos(bbox)
+        print(f"Time to get text positions: {time.time() - st}")
+        for t in text_positions:
+            if Screen.is_match_with_one_difference('start', t['text'].lower()):
                 moveAndClick(t['position'])
         
