@@ -26,7 +26,6 @@ jsonPos = {
 class Arena:
     mon_quarters = get_monitor_quarters()
     grid = get_grid_monitor()
-    dump_screenshot_for_rewards = "dump_for_rewards.png"
 
     @staticmethod
     def _check_attack_report():
@@ -111,9 +110,6 @@ class Arena:
     def get_fight_btn():
         return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 2)
 
-    def get_screenshot_for_rewards_collection():
-        return getImagePositionRegion(Arena.dump_screenshot_for_rewards, 1000, 350, 1500, 550, .8, 1)
-
     def wait_for_the_fight_tab():
         start = time.time()
         fight_tab = Arena._get_fight_tab()
@@ -127,6 +123,7 @@ class Arena:
     def get_fight_spin():
         return getImagePositionRegion(C.ARENA_FIGHT_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
 
+    # TODO free spin can be converted to read text.
     def do_free_spin():
         free_spin = getImagePositionRegion(C.ARENA_FREE_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
         if exists(free_spin):

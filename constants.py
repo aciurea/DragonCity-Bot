@@ -91,7 +91,6 @@ ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
 
 ARENA_REPEAL = get_path(_BASE_ARENA + 'repeal')
 
-ARENA_CHEST_COLLECT = get_path(_BASE_ARENA + 'collect')
 ARENA_QUEST = get_path(_BASE_ARENA + 'arenas_quest')
 ARENA_CLAIM_BTN = get_path(_BASE_ARENA + 'claim')
 
