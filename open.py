@@ -105,6 +105,9 @@ def _clean_all_popups():
         if(time.time() - start > app_time_to_close_all_buttons): 
             _click_on_enjoy()
             Popup.check_popup_chest()
+            delay(1)
+            _claim_reward_after_arena()
+            delay(1)
             return open_app()
         
         if exists(_check_if_is_special_offer()):
@@ -128,7 +131,6 @@ def _clean_all_popups():
         Popup.check_popup_chest()
         check_extra_bonus()
         _check_enjoy_btn()
-        _claim_reward_after_arena()
         delay(2)
 
     print('APP STARTED SUCCESSFULY')
@@ -155,10 +157,12 @@ def _check_if_app_started():
         print(f'Error occurred: {str(e)}')
 
 def _claim_reward_after_arena():
-    bbox = [1100, 850, 1420, 950]
+    bbox = [0.2, 0.2, .9, .9]
+    st = time.time()
     text_positions = Screen.get_text_pos(bbox)
+    print('Time to close on THURSDAY:', time.time() - st)
 
     for t in text_positions:
-        if 'claim' in t['text'].lower():
+        if Screen.is_match_with_one_difference('claim', t['text'].lower()):
             moveAndClick(t['position'])
-            delay(1)
+            delay(.1)
