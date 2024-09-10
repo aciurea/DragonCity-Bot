@@ -10,6 +10,10 @@ from popup import Popup
 from utils import delay, exists, get_int, get_monitor_quarters, getImagePositionRegion, get_grid_monitor
 import constants as C
 from move import moveAndClick, multiple_click
+from screen import Screen
+
+import re
+import time
 
 class Heroic:
     res = get_monitors()[0]
@@ -17,20 +21,35 @@ class Heroic:
     
     skip_pos = [1225, 1355]
     heroic_top_pos = [1150, 295]
+    heroic_center_pos = [1457, 548]
     heroic_arena = [get_int(0.56730769 * res.width), get_int(0.32 * res.height)]
     mon = get_monitor_quarters()
     missions = [C.HEROIC_FOOD, C.HEROIC_BREED, C.HEROIC_HATCH, C.HEROIC_FEED, C.HEROIC_LEAGUE]
     actions = [heroic_collect, lambda: Breed.breed('breed'), lambda: Breed.breed('hatch'), lambda: Breed.breed('feed'), League.enter_league]
 
     @staticmethod
-    def is_heroic_race():
-        mon = get_monitor_quarters()
-        if not exists(center_map()):
+    def is_heroic_race(times = 0):
+        if times > 1:
             check_if_ok()
-        multiple_click(Heroic.heroic_top_pos, 3, 0.01)
+            return False
+
+        if not exists(center_map()): check_if_ok()
+
+        actions = [
+            Heroic.heroic_top_pos,
+            Heroic.heroic_center_pos,
+        ]
+           
+        multiple_click(actions[times], 3, 0.01)
         delay(.5)
 
-        return exists(getImagePositionRegion(C.HEROIC_ARENA, *mon['1stCol'], .8, 1))
+        bbox = [50, 1180, 315,1262]
+        text_positions = Screen.get_text_pos(bbox)
+        print(text_positions)
+        for t in text_positions:
+            if Screen.is_match_with_one_difference('laprewards', t['text'].lower()) : return True
+        check_if_ok()
+        return Heroic.is_heroic_race(times + 1)
     
     def _start_fight():
         delay(1)
@@ -97,7 +116,8 @@ class Heroic:
         if times > 1: return
 
         if not Heroic.is_heroic_race():
-            print('Not in heroic race')
+            League.enter_league(),
+            print('Not in heroic race do League')
             return
         
         if times == 1: # collected once the items. Do free spin
@@ -123,6 +143,34 @@ class Heroic:
         for work in work_to_do: work()
         
         Heroic.race(times + 1)
+
+
+    @staticmethod
+    def _get_lap():
+        bbox = [1851, 212, 2009, 311]
+        text_positions = Screen.get_text_pos(bbox)
+
+        if len(text_positions) == 1:
+            digits = re.findall(r'\d+', text_positions[0]['text'])
+            return int(''.join(digits))
+
+    @staticmethod
+    def _get_node():
+        bbox = [2071, 212, 2252, 311]
+        text_positions = Screen.get_text_pos(bbox)
+
+        if len(text_positions) == 1:
+            digits = re.findall(r'\d+', text_positions[0]['text'])
+            return int(''.join(digits))
+
+
+    @staticmethod
+    def _test():
+        st = time.time()
+        bbox = [865, 29, 1506, 167]
+        text_positions = Screen.get_text_pos(bbox)
+        print(text_positions)
+        print('[HEROIC TITLE] Time taken:', time.time() - st)
         
         
            

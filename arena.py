@@ -52,7 +52,12 @@ class Arena:
     @staticmethod
     def prepare_fight():
         # Values are in percentages on resolution 2560X1440
-        bbox = [0.14, 0.4861, 0.458984375, 0.5416]
+        # bbox = [0.118359375, 0.4861, 0.458984375, 0.5416]
+        # text_positions = Screen.get_text_pos(bbox)
+        # if len(text_positions) == 3: return
+
+
+        bbox = [0.118359375, 0.679167, 0.411328125, 0.731945]
         text_positions = Screen.get_text_pos(bbox)
         if len(text_positions) == 3: return
 
@@ -89,7 +94,6 @@ class Arena:
 
         for bbox in bboxes:
             text_positions = Screen.get_text_pos(bbox)
-            print(text_positions)
             if  len(text_positions) > 0 and 'enhance' in text_positions[0]['text'].lower(): continue
 
             moveAndClick([bbox[0], bbox[1]])
@@ -154,8 +158,6 @@ class Arena:
         start_fight = Arena.get_fight_btn()
         time_limit = 600 # if doesn't end in 10 minutes, we stop the script.
         start_time = time.time()
-        try: Arena.prepare_fight()
-        except: return print('No dragons available')
 
         while exists(start_fight):
             if (time.time() - start_time) > time_limit: 
@@ -181,19 +183,19 @@ class Arena:
         print('Arena battle is over')
 
     def claim_rush():
-        rush = getImagePositionRegion(C.ARENA_CLAIM_RUSH, *Arena.mon_quarters['4thRow'], .8, 1)
-
-        if not exists(rush): return 
-        moveAndClick(rush)
-        delay(2)
-        moveAndClick([1250, 1215])
-        delay(5)
-
-        times = 5
-        while times > 0:
-            times -= 1
-            Popup.check_popup_chest()
-            delay(2)
+        bbox = [0.622265625, 0.854861, 0.71875, 0.9305]
+        text_positions = Screen.get_text_pos(bbox)
+        for t in text_positions:
+            if Screen.is_match_with_one_difference('CLAIMI', t['text'].lower()):
+                moveAndClick(t['position'])
+                delay(2)
+                moveAndClick([1250, 1215])
+                delay(5)
+                times = 5
+                while times > 0:
+                    times -= 1
+                    Popup.check_popup_chest()
+                    delay(1)
 
     @staticmethod
     def collect_arena_battle_rewards():
