@@ -36,27 +36,22 @@ class Arena:
             return print("Attack report accepted")
 
         moveAndClick(jsonPos["CLOSE_ATTACK"])
-        #TODO improvement: check if we have a video to close
 
     @staticmethod
     def check_and_collect_rewards():
-        collect = getImagePositionRegion(C.ARENA_CHEST_COLLECT, *Arena.mon_quarters['1stRow'], .8, 1)
+        bbox = [0.462890625, 0.146527, 0.527734375, 0.195834]
+        text_positions = Screen.get_text_pos(bbox)
 
-        if exists(collect):
-            multiple_click(collect)
-            delay(1)
-            Popup.check_popup_chest()
-            check_if_ok()
-            delay(.3)
+        for t in text_positions:
+            if Screen.is_match_with_one_difference('collect', t['text'].lower()):
+                multiple_click(t['position'])
+                delay(1)
+                Popup.check_popup_chest()
+                check_if_ok()
+                delay(.3)
 
     @staticmethod
     def prepare_fight():
-        # Values are in percentages on resolution 2560X1440
-        # bbox = [0.118359375, 0.4861, 0.458984375, 0.5416]
-        # text_positions = Screen.get_text_pos(bbox)
-        # if len(text_positions) == 3: return
-
-
         bbox = [0.118359375, 0.679167, 0.411328125, 0.731945]
         text_positions = Screen.get_text_pos(bbox)
         if len(text_positions) == 3: return
