@@ -47,7 +47,7 @@ class Heroic:
         text_positions = Screen.get_text_pos(bbox)
         print(text_positions)
         for t in text_positions:
-            if Screen.is_match_with_one_difference('laprewards', t['text'].lower()) : return True
+            if Screen.is_match_with_one_difference('laprewards', t['text'].lower()): return True
         check_if_ok()
         return Heroic.is_heroic_race(times + 1)
     

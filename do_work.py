@@ -23,6 +23,7 @@ from events_collection import Events_Collection
 from wizard import Wizard
 from move import center_map
 from puzzle import Puzzle
+from clear_event import ClearEvent
 
 import time
 
@@ -37,10 +38,12 @@ def start_working():
         Events_Collection.collect_events,
         Shop.open_shop,
         collect_daily_treasure,
-        Alliance.open_alliance,
-        Heroic.race,
         Daily_Collect.collect,
+        Alliance.open_alliance,
         Arena.enter_battle,
+
+        ClearEvent.skip_event,
+        Heroic.race,
         Quest.open_quest,
         Runner.run,
         Wizard.open_wizard,
