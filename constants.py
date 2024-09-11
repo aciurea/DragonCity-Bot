@@ -5,7 +5,6 @@ _BASE_BATTLE = './img/battle/'
 _BASE_ARENA = _BASE_BATTLE + 'arenas/'
 _BASE_GOLD = './img/gold/'
 _BASE_FOOD = './img/food/'
-_BASE_ORBS = './img/orbs/'
 _BASE_APP_START= './img/app_start/'
 _BASE_BREED = './img/breed/'
 _BASE_TV = './img/tv/'
@@ -17,7 +16,6 @@ _BASE_WRONG_POPUPS = './img/wrong_popups/'
 _BASE_APP_CLOSE = './img/close_buttons/'
 _BASE_APP_POPUP = './img/popups/'
 _BASE_HABITAT = './img/habitat/'
-_BASE_ORBS = './img/orbs/'
 _BASE_ALLIANCE = './img/alliance/'
 _BASE_DAILY = './img/daily/'
 _BASE_RUNNER = './img/runner/'
@@ -73,10 +71,6 @@ ENJOY_POPUP = get_path(_BASE_WRONG_POPUPS + 'enjoy')
 LEAGUE_OPONENT = get_path(_BASE_BATTLE + 'league_oponent')
 LEAGUE_CLAIM = get_path(_BASE_BATTLE + 'claim')
 LEAGUE_NOT_READY = get_path(_BASE_BATTLE + 'no_new_combats')
-
-# ORBS
-ORBS_CLAIM = get_path(_BASE_ORBS + 'claim')
-#END ORBS
 
 #Habitat
 HABITAT_INFO = get_path(_BASE_HABITAT + 'info')
@@ -151,11 +145,6 @@ FOOD_FARM = get_path(_BASE_FOOD + 'farm')
 FOOD_FARM_WINTER = get_path(_BASE_FOOD + 'farm_winter')
 FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
 FOOD_IMG = get_path(_BASE_FOOD + 'food')
-
-ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
-ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
-ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
-
 
 # Start section popups
 
