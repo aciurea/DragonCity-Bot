@@ -1,6 +1,6 @@
 from screeninfo import get_monitors
 from move import moveAndClick, moveTo
-from utils import getImagePosition, get_int, exists, delay
+from utils import getImagePosition, get_int, exists, delay, get_screen_resolution
 from close import check_if_ok
 
 import pyautogui
@@ -71,7 +71,11 @@ class Position_Map:
     
     @staticmethod
     def _get_artifact_pos():
-        return getImagePosition(C.UTILS_ARTIFACT, 1, .8)
+        screen_pos = get_screen_resolution()
+        art_path = C.get_path(f'{C._BASE_UTILS}{screen_pos}')
+
+        try: return getImagePosition(art_path, 1, .8)
+        except: return getImagePosition(C.UTILS_ARTIFACT, 1, .8)
     
     @staticmethod
     def _is_centered(artifact):
