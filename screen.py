@@ -1,12 +1,12 @@
-from PIL import Image, ImageGrab, ImageEnhance, ImageFilter, ImageOps
-from screeninfo import get_monitors
-
-from utils import get_int, get_monitor_quarters
-
 import pytesseract
 import os
 import time
 import easyocr
+
+from PIL import Image, ImageGrab, ImageEnhance, ImageFilter, ImageOps
+
+from screeninfo import get_monitors
+from utils import get_int, get_monitor_quarters
 
 reader = easyocr.Reader(['en'], gpu=False)
 res = get_monitors()
@@ -23,10 +23,15 @@ class Screen:
         if len(bbox) != 4:
             raise ValueError('bbox must have 4 values')
         return [get_int((bbox[0] + bbox[2])) / 2, get_int((bbox[1] + bbox[3]) / 2)]
-        
+
+    def get_pos(pos):
+        for i in pos:
+            if i > 1: raise ValueError('pos must be lower than 1')
+
+        return [get_int(pos[0] * Screen.width), get_int(pos[1] * Screen.height)]
         
     @staticmethod
-    def get_text_pos(orig_bbox):
+    def get_text_pos(orig_bbox, gray_mode=False):
         # we have the bbox in percentages
         if len(orig_bbox) == 4 and orig_bbox[0] < 1:
             orig_bbox = [
@@ -35,8 +40,8 @@ class Screen:
                 get_int(orig_bbox[2] * Screen.width),
                 get_int(orig_bbox[3] * Screen.height)
             ]
-        image = Screen.prepare_image(orig_bbox)
-        result = reader.readtext('./toDelete.png', decoder='beamsearch', beamWidth=5, batch_size=1, workers=0, allowlist='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
+        image = Screen.prepare_image(orig_bbox, gray_mode)
+        result = reader.readtext('./toDelete.png', decoder='greedy', beamWidth=1, batch_size=1, allowlist='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
         
         text_positions = []
         for (bbox, text, prob) in result:
@@ -49,20 +54,30 @@ class Screen:
         return text_positions
         
     @staticmethod
-    def prepare_image(bbox):
+    def prepare_image(bbox, gray_mode):
         if len(bbox) != 4: raise ValueError('bbox must have 4 values')
         
         new_bbox = [get_int(i) for i in bbox]
         image = ImageGrab.grab(new_bbox)
+        if gray_mode:
+            image = image.convert('RGB')
+            pixels = image.load()
+            for i in range(image.width):
+             for j in range(image.height):
+                r, g, b = pixels[i, j]
+                if not (r > 200 and g > 200 and b > 200):  # If not white
+                    r = int(r * 0.5)
+                    g = int(g * 0.5)
+                    b = int(b * 0.5)
+                pixels[i, j] = (r, g, b)
         image.save('./toDelete.png')
         
         return image
 
     @staticmethod
     def is_match_with_one_difference(str1, str2):
-        # Check if the lengths are different
-        if len(str1) != len(str2):
-            return False
+        str1 = str1.lower()
+        str2 = str2.lower()
         
         # Count the number of differences
         differences = 0
