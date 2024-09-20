@@ -23,6 +23,11 @@ from position_map import Position_Map
 
 mon_quarters = get_monitor_quarters()
 
+text = {
+    'claim': 'claim',
+    'claimreward': 'claimreward'
+}
+
 class OpenApp:
 
     @staticmethod
@@ -66,7 +71,7 @@ class OpenApp:
         print('took time: ', time.time() - st)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference('claimreward', t['text'].lower()):
+            if Screen.is_match_with_one_difference(text['claimreward'], t['text']):
                 moveAndClick(t['position'])
 
     @staticmethod
@@ -90,6 +95,7 @@ class OpenApp:
     def _clean_all_popups():
         start = time.time()
         app_time_to_close_all_buttons = 40
+
         while(not exists(Position_Map._get_artifact_pos())):
             OpenApp._zoom_out()
             if(time.time() - start > app_time_to_close_all_buttons): 
@@ -98,8 +104,10 @@ class OpenApp:
                 return OpenApp.open_app()
             
             btns = Close.check_if_ok()
+
             Popup.check_popup_chest()
-            delay(1)
+            OpenApp._claim_daily_reward()
+
             if len(btns) == 0:
                 Close.get_lose_text()
                 close_pos = Screen.get_pos([0.794270834, 0.0935185185])
@@ -108,4 +116,14 @@ class OpenApp:
             delay(1)
         Position_Map.center_map()
         print('APP STARTED SUCCESSFULY')
+    
+    @staticmethod
+    def _claim_daily_reward():
+        bbox = [0.4645835, 0.8083, 0.5328125, 0.8612]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['claim'], t['text']):
+                moveAndClick(t['position'])
     

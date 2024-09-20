@@ -146,17 +146,6 @@ FOOD_FARM_WINTER = get_path(_BASE_FOOD + 'farm_winter')
 FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
 FOOD_IMG = get_path(_BASE_FOOD + 'food')
 
-# Start section popups
-
-POPUP_CLAIM = get_path(f'{_BASE_APP_POPUP}claim')
-POPUP_TAP = get_path(f'{_BASE_APP_POPUP}tap')
-POPUP_LEFT_HEADER = get_path(f'{_BASE_APP_POPUP}left_header')
-
-# End section popups
-
-
-
-
 ## Start section close buttons
 
 APP_CLOSE_DIVINE = get_path(f'{_BASE_APP_CLOSE}divine')
