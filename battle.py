@@ -16,45 +16,78 @@ from utils import (
                 get_grid_monitor,
                 get_monitor_quarters,
                 getImagePositionRegion,
+                get_screen_resolution,
                 is_in_time,
                 )
+from screen import Screen
 
+
+text = {
+    'select': 'select',
+    'selectdragon': 'selectdragon',
+}
 
 class Battle:
+    base = './img/battle/'
     grid = get_grid_monitor()
     mon_quarters = get_monitor_quarters()
     res = get_monitors()[0]
     one_third = get_int(res.width / 3)
-    
-    def get_speed_btn():
-        grid = Battle.grid
-        position = [grid['x0'], grid['y1'], grid['x1'], grid['y2']]
+    screen_res = get_screen_resolution()
 
-        return getImagePositionRegion(C.FIGHT_X3, *position, .8, 1)
-    
+
     def get_select_btn():
         grid = Battle.grid
         position = [grid['x0'], grid['y4'], grid['x8'], grid['y6']]
 
-        return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *position, .8, 1)        
-
-    def get_play_button():
-        grid = Battle.grid
-        position = [grid['x0'], grid['y0'], grid['x1'], grid['y2']]
-
-        return getImagePositionRegion(C.FIGHT_PLAY, *position, .8, 1)
+        return getImagePositionRegion(C.FIGHT_SELECT_DRAGON, *position, .8, 1)
     
-    def _get_attack_ready():
-        grid = Battle.grid
-        position = [grid['x6'], grid['y5'], grid['x8'], grid['y6']]
+    @staticmethod
+    def get_speed_btn():
+        position = [*Screen.get_pos([0.0197916, 0.238]), *Screen.get_pos([0.07, 0.3185185])]
+       
+        path = f'{Battle.base}/{Battle.screen_res}_x4.png'
 
-        return getImagePositionRegion(C.FIGHT_ATTACK_READY, *position, .8, 1)
+        return getImagePositionRegion(path, *position, .8, 1)
+    
+    @staticmethod
+    def _is_on_team_selection():
+        bbox = [0.3947916, 0.03148148,0.472395835, 0.0935185]
+
+        text_positions = Screen.get_text_pos(bbox)
+   
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['select'], t['text']): return t['position']
+        return [-1]
+
+    # 0.008 time.
+    @staticmethod
+    def get_play_button():
+        position = [*Screen.get_pos([0.0197916, 0.15]), *Screen.get_pos([0.06979167, 0.234])]
+        path = f'{Battle.base}/{Battle.screen_res}_play.png'
+
+        return getImagePositionRegion(path, *position, .8, 1)
+
+    @staticmethod
+    def _get_attack_ready():
+        path = f'{Battle.base}/{Battle.screen_res}_ico.png'
+        positions = [
+            [*Screen.get_pos([0.840625, 0.8537037]), *Screen.get_pos([0.8921875, 0.93])],
+            [*Screen.get_pos([0.253125, 0.6759259]), *Screen.get_pos([0.9671875, 0.774074])]
+        ]
+        
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            result_list = executor.map(lambda args: getImagePositionRegion(path, *args, .8, 1), positions)
+            for close_btn in result_list:
+                if exists(close_btn): return True
+        return False
     
     def get_no_btn():
         return getImagePositionRegion(C.ARENA_NO, *Battle.mon_quarters['full'], .8, 1) # TODO update it with grid to be faster 
     
+    @staticmethod
     def is_in_battle():
-        work = [Battle.get_play_button, Battle.get_speed_btn, Battle.get_select_btn]
+        work = [Battle.get_play_button, Battle.get_speed_btn, Battle._is_on_team_selection]
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             btns = executor.map(lambda func: func(), work)
@@ -62,59 +95,48 @@ class Battle:
                 if exists(btn): return True
         return False
     
-    def wait_for_battle_to_start():
-        start = time.time()
-        time_limit = 15
-        while time.time() - start < time_limit:
-            if Battle.is_in_battle(): return print('Ready for fighting')
-            else: print('Fight not ready')
-            delay(1)
-        raise Exception('Time limit exceded on arena. Closing the app....')
+    @staticmethod
+    def wait_for_battle_to_start(times = 15):
+        if times == 0:  raise Exception('Battle didn`t start in time....')
+
+        if Battle.is_in_battle(): return print('Ready to fight!')
+        else: print('Fight not ready')
+        delay(1)
+        return Battle.wait_for_battle_to_start(times - 1)
+       
         
     @staticmethod
     def get_new_dragon_btn():
-        grid = Battle.grid
-        y0 = grid['y4']
-        y1 = grid['y6']
-        pos = [
-                [grid['x0'], y0, grid['x2'], y1], 
-                [grid['x3'], y0, grid['x4'], y1],
-                [grid['x5'], y0, grid['x7'], y1]
-            ]
+        bbox = [0.09895834, 0.83425925, 0.89375, 0.899074]
+        bbox2 = [0.09895834, 0.77685185, 0.9052083,0.899074] #  takes screenshot of values.
 
-        btns = [
-            [C.FIGHT_SELECT_DRAGON, *pos[0]],
-            [C.FIGHT_SELECT_DRAGON, *pos[1]], # start from 1 third.
-            [C.FIGHT_SELECT_DRAGON, *pos[2]], # start from 2nd third.
-        ]
+        text_positions = Screen.get_text_pos(bbox)
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), btns)
-            lst = [btn for btn in result_list if exists(btn)]
+        lst = []
 
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['selectdragon'], t['text']):
+                lst.append( t['position'])
+        
         return random.choice(lst) if lst else [-1]
-    
-    @staticmethod
-    def get_swap_button():
-        grid = Battle.grid
-        pos = [grid['x0'], grid['y4'], grid['x1'], grid['y5']]
-
-        return getImagePositionRegion(C.FIGHT_SWAP, *pos, .8, 1)
 
     @staticmethod
-    def wait_for_oponent_to_attack():
-        start = time.time()
-        work = [Battle._get_attack_ready, Battle.get_select_btn]
-        while time.time() - start < 10:  # wait for 10 seconds for opponent to finish attack: (avoid infinite loop, app crashed or wrong flow/popup/app freeze)
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                btns = executor.map(lambda func: func(), work)
-                for btn in btns:
-                    if exists(btn): return
-            delay(1)
+    def _get_swap_button():
+        position = [*Screen.get_pos([0.00729167, 0.7167]), *Screen.get_pos([0.0645834, 0.83518518])]
+        path = f'{Battle.base}/{Battle.screen_res}_swap.png'
+
+        return getImagePositionRegion(path, *position, .8, 1)
+
+    @staticmethod
+    def wait_for_oponent_to_attack(times = 10):
+        if times == 0: return False
+        if Battle._get_attack_ready(): return True
+        delay(1)
+        return Battle.wait_for_oponent_to_attack(times - 1)
     
     @staticmethod
     def change_dragon():
-        swap_btn = Battle.get_swap_button()
+        swap_btn = Battle._get_swap_button()
         if exists(swap_btn):
             moveAndClick(swap_btn)
             delay(1)
@@ -122,6 +144,9 @@ class Battle:
         if not exists(new_dragon): return print('Dragon not found')
         moveAndClick(new_dragon)
 
+    # TODO is working but the threshold of 3 seconds to check if the play button exists is too high.
+    # try to check for the team an return immediatelly if both criteria don't match
+    @staticmethod
     def _battle_with_no_change_dragon():
         start = time.time()
         moveAndClick(Battle.get_play_button())
@@ -131,7 +156,8 @@ class Battle:
 
     @staticmethod
     def fight(change_dragon=True):
-        Battle._save_oponent_dragon()
+        # Battle._save_oponent_dragon()
+
         Battle.wait_for_battle_to_start()
 
         if not change_dragon: return Battle._battle_with_no_change_dragon()
@@ -148,29 +174,28 @@ class Battle:
             while attacks_per_dragon > 0:
                 attacks_per_dragon -= 1
                 if not Battle.is_in_battle(): 
-                    print('Not in battle....')
-                    return 
+                    return print('Not in battle....')
+
                 Battle.wait_for_oponent_to_attack()
 
                 # dragon is defetead
-                if exists(Battle.get_select_btn()): break
+                if exists(Battle._is_on_team_selection()): break
+
                 # dragon is the last one
-                if not exists(Battle.get_swap_button()):
+                if not exists(Battle._get_swap_button()):
                     is_last_dragon = True
-                    print('Dragon is the last one')
-                    no = Battle.get_no_btn()
-                    if exists(no): moveAndClick(no)
                     break # exit the loop since is the last dragon and no need for play and pause
 
                 play = Battle.get_play_button()
-                
+
                 # try to select dragon with double damage
-                if first_time_checking_oponent == True or Battle._is_openent_dragon_defeated():
-                    Battle._check_and_select_dragon_with_double_damage()
-                    first_time_checking_oponent = False
+                ## TODO do it later
+                # if first_time_checking_oponent == True or Battle._is_openent_dragon_defeated():
+                #     Battle._check_and_select_dragon_with_double_damage()
+                #     first_time_checking_oponent = False
                 
                 moveAndClick(play)
-                delay(.25)
+                delay(.2)
                 moveAndClick(play) # pause
                 delay(1.5)
 
@@ -184,8 +209,8 @@ class Battle:
                 Battle.wait_for_oponent_to_attack()
                 Battle.change_dragon()
         
-        Battle._clean_image()
-        Battle._has_dragon_leveled_up()
+        # Battle._clean_image()
+        # Battle._has_dragon_leveled_up()
         print('Fight is over!')
         
         
@@ -212,7 +237,7 @@ class Battle:
     @staticmethod
     def _check_and_select_dragon_with_double_damage():
         tries = 2
-        swap_btn = Battle.get_swap_button()
+        swap_btn = Battle._get_swap_button()
         if not exists(swap_btn): 
             print('Check select double attack Swap button not found')
             return False
