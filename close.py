@@ -41,12 +41,10 @@ class Close:
         ]
 
         btns = []
-        st = time.time()
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result_list = executor.map(lambda args: getImagePositionRegion(args, *grid['top_right'], .8, 1), paths)
             for close_btn in result_list:
                 if exists(close_btn): btns.append(close_btn)
-        print('Time to find button with Thread', btns, time.time() - st)
         
         btns = sorted(btns, key=lambda x: x[0])
         if len(btns) > 1: return Close._filter_corrupted_imgs(btns)
