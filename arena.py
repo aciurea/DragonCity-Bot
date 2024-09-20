@@ -1,25 +1,12 @@
 import time
-import datetime
-import concurrent.futures
-
-import constants as C
 
 from position_map import Position_Map
 from battle import Battle
-from close import check_if_ok
-from move import multiple_click, center_map, moveTo
+from close import check_if_ok, Close
+from move import multiple_click, moveAndClick
 from popup import Popup
-from utils import (
-                delay,
-                exists,
-                get_monitor_quarters,
-                getImagePositionRegion,
-                moveAndClick)
+from utils import (delay, exists, getImagePositionRegion)
 from screen import Screen
-
-jsonPos = {
-    "STATIC_CLAIM_BATTLE": [1265, 1295],
-}
 
 text = {
     'refill': 'refill24',
@@ -29,11 +16,11 @@ text = {
     'collect': 'collect',
     'change': 'change',
     'enhance': 'enhance',
+    'freespini': 'freespini',
+    'freespin': 'freespin',
 }
 
 class Arena:
-    mon_quarters = get_monitor_quarters()
-
     @staticmethod
     def _change_defetead_dragon():
         bboxes = [
@@ -72,20 +59,26 @@ class Arena:
             delay(1)
         moveAndClick(fight_tab)
 
+    def _do_free_spin():
+        bbox = [0.782, 0.25929, 0.872395834, 0.312037]
+        text_positions = Screen.get_text_pos(bbox)
 
-    # TODO to be checked
-    def get_fight_spin():
-        return getImagePositionRegion(C.ARENA_FIGHT_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
+        if len(text_positions) == 0: return
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['freespini'], t['text'].lower()):
+                moveAndClick(t['center'])
+                delay(1)
+                break
 
-    # TODO free spin can be converted to read text.
-    def do_free_spin():
-        free_spin = getImagePositionRegion(C.ARENA_FREE_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
-        if exists(free_spin):
-            moveAndClick(free_spin)
-            delay(10)
-        fight_spin = Arena.get_fight_spin()
-        if exists(fight_spin): moveAndClick(fight_spin)
-            
+        bbox = [0.46927083, 0.7935185, 0.546354167, 0.8361]
+        text_positions = Screen.get_text_pos(bbox)
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['freespin'], t['text'].lower()):
+                moveAndClick(t['center'])
+                delay(5)
+                check_if_ok()
+                break
+
     @staticmethod
     def enter_battle():
         Arena._open_arena()
@@ -103,14 +96,17 @@ class Arena:
             
             print('Start new Arena battle')
             Arena._prepare_fight()
-
             Arena._check_and_collect_rewards()
+
+            # start the fight
             moveAndClick(start_fight)
-            delay(1)
-            Arena.do_free_spin()
+            delay(.5)
+            moveAndClick([start_fight[0], start_fight[1] + 15]) # because of spin button I need to click again.
+
             Battle.fight()
             
-            Arena._collect_arena_battle_rewards()
+            Arena._claim_arena_battle_result()
+            
             delay(1)
             Arena.close_buying_dragon_powers()
             start_fight = Arena._get_fight_btn()
@@ -139,6 +135,7 @@ class Arena:
                 Arena._claim_rush_battle_end,
                 Arena._wait_for_the_fight_tab,
                 Arena._prepare_fight,
+                Arena._do_free_spin
             ]
             for action in get_to_fight_ready_actions:
                 st = time.time()
@@ -193,10 +190,10 @@ class Arena:
                 moveAndClick(Popup._get_claim_btn())
 
     @staticmethod
-    def _collect_arena_battle_rewards():
+    def _claim_arena_battle_result():
         bbox = [0.4625, 0.862037, 0.5328125, 0.916]
         text_positions = Screen.get_text_pos(bbox)
-        
+
         if len(text_positions) == 0: moveAndClick(Screen.get_pos([0.49375, 0.893518]))
         else: 
             for t in text_positions: moveAndClick(t['position'])
@@ -204,9 +201,11 @@ class Arena:
 
     @staticmethod
     def close_buying_dragon_powers():
-        if exists(Arena._get_fight_btn()): return 
+        if exists(Arena._get_fight_btn()): return
 
         check_if_ok() # first we hit the close button
+        delay(1)
+        Close.get_lose_text()
 
     @staticmethod
     def _get_fight_tab():
