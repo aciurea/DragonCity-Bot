@@ -25,7 +25,8 @@ mon_quarters = get_monitor_quarters()
 
 text = {
     'claim': 'claim',
-    'claimreward': 'claimreward'
+    'claimreward': 'claimreward',
+    'enjoy': 'enjoyi',
 }
 
 class OpenApp:
@@ -107,6 +108,7 @@ class OpenApp:
 
             Popup.check_popup_chest()
             OpenApp._claim_daily_reward()
+            OpenApp._enjoy()
 
             if len(btns) == 0:
                 Close.get_lose_text()
@@ -127,3 +129,13 @@ class OpenApp:
             if Screen.is_match_with_one_difference(text['claim'], t['text']):
                 moveAndClick(t['position'])
     
+    @staticmethod
+    def _enjoy():
+        bbox = [0.4578125, 0.8074074, 0.53854167, 0.8574074]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['enjoy'], t['text']):
+                moveAndClick(t['position'])
+                delay(1)
+                Popup.check_popup_chest()
