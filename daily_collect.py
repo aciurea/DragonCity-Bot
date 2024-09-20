@@ -8,6 +8,7 @@ from collectFood import collect_food
 from move import center_map, moveAndClick, moveTo, multiple_click
 from popup import Popup
 from utils import delay, exists, get_grid_monitor, get_monitor_quarters, getImagePositionRegion
+from screen import Screen
 import constants as C
 
 
@@ -83,27 +84,20 @@ class Daily_Collect:
             delay(1)
             
             check_if_ok()
+            delay(15)
             Daily_Collect._claim_items_from_browser()
             check_if_ok()
             
-          
+    @staticmethod
     def _claim_items_from_browser():
-        Popup.check_popup_chest()
-        check_if_ok()
-
-        times = 3
-
-        while times > 0:
-            claim_after_browser = Daily_Collect._get_claim_after_browser()
-            
-            if exists(claim_after_browser):
-                moveAndClick(claim_after_browser)
+        bbox = [0.45625, 0.83796296, 0.53802083, 0.9037037]
+        text_positions = Screen.get_text_pos(bbox)
+        
+        for t in text_positions:
+            if Screen.is_match_with_one_difference('claimi', t['text']):
+                moveAndClick(t['position'])
                 delay(3)
                 Popup.check_popup_chest()
-                delay(2)
-                continue
-            
-            collect_food()
-            delay(27)
-            check_if_ok()
-            times -= 1
+                Popup.check_popup_chest()
+                break
+
