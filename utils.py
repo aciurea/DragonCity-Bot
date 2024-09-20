@@ -110,6 +110,8 @@ def get_monitor_quarters():
         "2ndRow": [0, piece, res.width, piece * 2 ],
         "3rdRow": [0, piece * 2, res.width, piece * 3],
         "4thRow": [0, piece * 3, res.width, piece * 4],
+        "half4thRow": [get_int(res.width / 2), piece * 3, res.width, piece * 4],
+
         "1stCol": [0, 0, horizontal_piece, res.height],
         "lastCol": [res.width - horizontal_piece, 0, res.width, res.height],
         "1stHorHalf": [0, 0, res.width, piece * 2],

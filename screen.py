@@ -48,6 +48,7 @@ class Screen:
             if prob > 0.5:  # Filter out low-confidence results
                 text_positions.append({
                     'text': text,
+                    'center': Screen._get_center_of_image(orig_bbox),
                     'position': [orig_bbox[0] + bbox[0][0], orig_bbox[1] + bbox[0][1]]
                 })
         
@@ -92,4 +93,13 @@ class Screen:
         # Return True if there are 0 or 1 differences
         return differences <= 1
     
+    @staticmethod
+    def _get_center_of_image(bbox):
+        if len(bbox) != 4:
+            return bbox
+
+        return [
+                get_int(bbox[0] + ((bbox[2] - bbox[0]) / 2)),
+                get_int(bbox[1] + ((bbox[3] - bbox[1]) / 2))
+            ]
     
