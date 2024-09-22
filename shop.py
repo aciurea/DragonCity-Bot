@@ -20,8 +20,8 @@ class Shop:
             lambda: moveAndClick(Shop.orbs_pos),
             lambda: scroll(-10_000),
             lambda: delay(.5),
-            lambda: multiple_click(Shop.heroic_pos, 5, 0.1),
-            lambda: multiple_click(Shop.legendary_pos, 5, 0.1),
+            lambda: multiple_click(Shop.heroic_pos, 7, 0.1),
+            lambda: multiple_click(Shop.legendary_pos, 7, 0.1),
             check_if_ok,
         ]
 
