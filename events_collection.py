@@ -1,67 +1,86 @@
-from utils import getImagePositionRegion, get_monitor_quarters, exists, delay
+from utils import get_monitor_quarters, exists, delay
 from move import moveAndClick
 from popup import Popup
 from close import check_if_ok
-from pyautogui import scroll
+from screen import Screen
 
-import time
-import constants as C
+text = {
+    'events': 'events',
+    'collections': 'collections',
+    'claimi': 'claimi',
+}
 
 
 class Events_Collection:
     _mon = get_monitor_quarters()
+    first_event = Screen.get_pos([0.11875, 0.609259])
+    forward = Screen.get_pos([0.6583, 0.07037])
 
     @staticmethod
     def collect_events():
         events_btn = Events_Collection._get_events_btn()
 
-        if not exists(events_btn): return print('Events button not found')
+        if not exists(events_btn):
+            return print('Events button not found')
 
         moveAndClick(events_btn)
         delay(1)
 
-        scroll_times = 5
-        curr_time = time.time()
+        events_collection = Events_Collection._get_events_collection()
 
-        while scroll_times >= 0 and time.time() - curr_time < 60:
-            scroll_times -= 1
+        if not exists(events_collection): 
+            return print('No event collection to click on')
 
+        moveAndClick(events_collection)
+        delay(1)
+        moveAndClick(Events_Collection.first_event)
+        delay(1)
+
+        events_num = 10
+
+        while events_num > 0:
             claim_btn = Events_Collection._get_claim_btn()
 
             if exists(claim_btn):
                 moveAndClick(claim_btn)
                 delay(1)
-                Events_Collection._collect_event()
-            scroll(-1_000)
+                Popup._enjoy()
+            else:
+                events_num -= 1
+                moveAndClick(Events_Collection.forward)
+            delay(.3)
         check_if_ok()
 
-    def _collect_event():
-        curr_time = time.time()
-        claim_btn2 = Events_Collection._get_inner_claim_btn()
-
-        while exists(claim_btn2) and time.time() - curr_time < 30:
-            moveAndClick(claim_btn2)
-            delay(1)
-            Popup.check_popup_chest()
-            enjoy_btn = Events_Collection._get_enjoy_btn()
-
-            if exists(enjoy_btn):
-                moveAndClick(enjoy_btn)
-                delay(1)
-                Popup.check_popup_chest()
-            claim_btn2 = Events_Collection._get_inner_claim_btn()
-
-    def _get_enjoy_btn():
-        return getImagePositionRegion(C.EVENTS_ENJOY_BTN, *Events_Collection._mon['4thRow'], .8, 1)
-           
-    @staticmethod
-    def _get_inner_claim_btn():
-        return getImagePositionRegion(C.EVENTS_CLAIM_BTN_2, *Events_Collection._mon['4thRow'], 0.8, 1)
-    
     @staticmethod
     def _get_claim_btn():
-        return getImagePositionRegion(C.EVENTS_CLAIM_BTN, *Events_Collection._mon['4thRow'], 0.8, 1)
+        bbox = [0.6677083, 0.85648148, 0.74635416, 0.9194]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['claimi'], t['text']):
+                return t['position']
+
+        return [-1]
+
+    @staticmethod
+    def _get_events_collection():
+        bbox = [0.6375, 0.15, 0.71875, 0.1935185]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['collections'], t['text']):
+                return t['position']
+        return [-1]
 
     @staticmethod
     def _get_events_btn():
-        return getImagePositionRegion(C.EVENTS_COLLECTION_BTN, *Events_Collection._mon['lastCol'], 0.8, 1)
+        bbox = [0.921354167, 0.50648148, 0.98697916, 0.55185185]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['events'], t['text']):
+                return t['position']
+        return [-1]
