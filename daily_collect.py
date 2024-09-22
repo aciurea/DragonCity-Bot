@@ -17,7 +17,7 @@ class Daily_Collect:
     screen_res = get_screen_resolution()
 
     @staticmethod
-    def collect():
+    def collect_daily_streak():
         Daily_Collect._go_to_daily_streak()
         delay(5)
 
@@ -31,7 +31,7 @@ class Daily_Collect:
             delay(15)
 
             Daily_Collect._kill_browser()
-            delay(1)
+            delay(2)
 
             check_if_ok()
             delay(15)

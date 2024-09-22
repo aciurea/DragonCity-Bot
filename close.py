@@ -1,13 +1,11 @@
-from screeninfo import get_monitors
-from move import moveAndClick, moveTo
-from screen import Screen
-from utils import delay, exists, get_grid_monitor, get_int, get_monitor_quarters, getImagePositionRegion, get_screen_resolution
-import constants as C
 import concurrent.futures
-import time
+
+from move import moveAndClick
+from screen import Screen
+from utils import delay, exists, getImagePositionRegion, get_screen_resolution, get_monitor_quarters
+
 
 class Close:
-    
     @staticmethod
     def check_if_ok():
         btns = Close._get_btn()
@@ -15,7 +13,6 @@ class Close:
         for btn in btns:
             moveAndClick(btn)
             delay(.5)
-        
         return btns
 
     @staticmethod
@@ -24,7 +21,8 @@ class Close:
         text_positions = Screen.get_text_pos(lose_pos)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference('lose', t['text']):  moveAndClick(t['position'])
+            if Screen.is_match_with_one_difference('lose', t['text']):
+                moveAndClick(t['position'])
     
     @staticmethod
     def _get_btn():
@@ -33,6 +31,7 @@ class Close:
         base = './img/wrong_popups'
 
         paths = [
+            f'{base}/{screen_pos}_big_close.png',
             f'{base}/{screen_pos}_right_corner.png',
             f'{base}/{screen_pos}_red_close.png',
             f'{base}/{screen_pos}_goals.png',
@@ -45,20 +44,22 @@ class Close:
             result_list = executor.map(lambda args: getImagePositionRegion(args, *grid['top_right'], .8, 1), paths)
             for close_btn in result_list:
                 if exists(close_btn): btns.append(close_btn)
-        
+
         btns = sorted(btns, key=lambda x: x[0])
-        if len(btns) > 1: return Close._filter_corrupted_imgs(btns)
+        if len(btns) > 1:
+            return Close._filter_corrupted_imgs(btns)
         return btns
-    
+
     @staticmethod
     def _filter_corrupted_imgs(imgs):
         img_distance_threshold = 10
         filtered_data = [imgs[0]]
 
         for item in imgs[1:]:
-            if(abs(item[0] - filtered_data[-1][0]) > img_distance_threshold):
+            if (abs(item[0] - filtered_data[-1][0]) > img_distance_threshold):
                 filtered_data.append(item)
         return filtered_data
+
 
 def check_if_ok():
     return Close.check_if_ok()
