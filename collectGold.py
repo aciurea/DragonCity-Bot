@@ -1,6 +1,6 @@
 from close import check_if_ok
-from move import multiple_click
-from utils import  dragMapToCenter, get_int
+from move import multiple_click, center_map
+from utils import get_int
 
 from screeninfo import get_monitors
 
@@ -10,7 +10,7 @@ jsonPos = { "STACKED_HABITTATS": [get_int(res.width * 0.2109375), get_int(res.he
 class Gold:
     @staticmethod
     def collectGold():
-        dragMapToCenter()
+        center_map()
         multiple_click(jsonPos["STACKED_HABITTATS"], times=70, time_between_clicks=0.01)
         check_if_ok()
 

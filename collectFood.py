@@ -1,8 +1,9 @@
 from close import check_if_ok
-from move import is_artifact_at_pos, moveAndClick
+from move import is_artifact_at_pos, moveAndClick, center_map, multiple_click
 from timers import delay
 from utils import (exists, getImagePositionRegion, get_grid_monitor)
 from position_map import Position_Map
+from screen import Screen
 
 import constants as C
 import time
@@ -94,6 +95,17 @@ class FoodCollector:
             time_to_collect = 27
             delay(time_to_collect)
         print('Food collected')
+
+    @staticmethod
+    def fast_food(times = 30):
+        if times < 1: return
+        Position_Map.center_map()
+        multiple_click(Screen.get_pos([0.4864583, 0.71296296]), 4, 0.01)
+        multiple_click(Screen.get_pos([0.5520834, 0.475]), 3, 0.1)
+        delay(.7)
+        moveAndClick(Screen.get_pos([0.602604167, 0.85740]))
+        delay(30)
+        return FoodCollector.fast_food(times - 1)
 
 def collect_food(isHeroicRace = False):
     return FoodCollector.collectFood(isHeroicRace)  

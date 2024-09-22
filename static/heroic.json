@@ -1,0 +1,242 @@
+[
+    {
+        "lap": 1,
+        "nodes": [
+            [
+                {
+                    "type": "feed",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "gold",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "food",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "feed",
+                    "wait": 5
+                }
+            ],
+            [
+                {
+                    "type": "battle",
+                    "wait": 20
+                }
+            ]
+        ]
+    },
+    {
+        "lap": 2,
+        "nodes": [
+            [
+                {
+                    "type": "feed",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "gold",
+                    "wait": 0
+                },
+                {
+                    "type": "gold",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "league",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "food",
+                    "wait": 19
+                },
+                {
+                    "type": "battle",
+                    "wait": 20
+                }
+            ],
+            [
+                {
+                    "type": "feed",
+                    "wait": 38
+                },
+                {
+                    "type": "breed",
+                    "wait": 0
+                }
+            ]
+        ]
+    },
+    {
+        "lap": 3,
+        "nodes": [
+            [
+                {
+                    "type": "gold",
+                    "wait": 0
+                },
+                {
+                    "type": "food",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "league",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "food",
+                    "wait": 0
+                },
+                {
+                    "type": "battle",
+                    "wait": 15,
+                    "minWait": 60
+                }
+            ],
+            [
+                {
+                    "type": "food",
+                    "wait": 15,
+                    "minWait": 30
+                },
+                {
+                    "type": "feed",
+                    "wait": 10,
+                    "minWait": 30
+                }
+            ],
+            [
+                {
+                    "type": "breed",
+                    "wait": 0
+                }
+            ]
+        ]
+    },
+
+    {
+        "lap": 4,
+        "nodes": [
+            [
+                {
+                    "type": "food",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "feed",
+                    "wait": 0
+                },
+                {
+                    "type": "battle",
+                    "minWait": 75,
+                    "wait": 15
+                }
+            ],
+            [
+                {
+                    "type": "league",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "gold",
+                    "wait": 19,
+                    "minWait": 91
+                },
+                {
+                    "type": "feed",
+                    "wait": 15,
+                    "minWait": 91
+                }
+            ],
+            [
+                {
+                    "type": "food",
+                    "wait": 30,
+                    "minWait": 182
+                },
+                {
+                    "type": "battle",
+                    "wait": 15,
+                    "minWait": 90
+                }
+            ]
+        ]
+    },
+
+    {
+        "lap": 5,
+        "nodes": [
+            [
+                {
+                    "type": "breed",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "food",
+                    "wait": 0
+                },
+                {
+                    "type": "gold",
+                    "wait": 0
+                }
+            ],
+            [
+                {
+                    "type": "feed",
+                    "wait": 7,
+                    "minWait": 60
+                }
+            ],
+            [
+                {
+                    "type": "league",
+                    "wait": 0,
+                    "minWait": 0
+                },
+                {
+                    "type": "hatch",
+                    "wait": 0,
+                    "minWait": 0
+                }
+            ],
+            [
+                {
+                    "type": "battle",
+                    "wait": 0,
+                    "minWait": 360,
+                    "gemsOnLast": true
+                },
+                {
+                    "type": "food",
+                    "wait": 16,
+                    "minWait": 80
+                }
+            ]
+        ]
+    }
+
+]
