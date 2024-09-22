@@ -5,8 +5,10 @@ from screen import Screen
 
 text = {
     'tap': 'tap',
-    'claim': 'claimi'
+    'claim': 'claimi',
+    'enjoy': 'enjoyi',
 }
+
 
 class Popup:
     @staticmethod
@@ -38,3 +40,14 @@ class Popup:
             if Screen.is_match_with_one_difference(text['claim'], t['text']): return t['position']
         delay(1)
         return Popup._get_claim_btn(times - 1)
+    
+    @staticmethod
+    def _enjoy():
+        bbox = [0.4578125, 0.8074074, 0.53854167, 0.8574074]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match_with_one_difference(text['enjoy'], t['text']):
+                moveAndClick(t['position'])
+                delay(1)
+                Popup.check_popup_chest()

@@ -45,6 +45,7 @@ class Events_Collection:
                 moveAndClick(claim_btn)
                 delay(1)
                 Popup._enjoy()
+                Popup.check_popup_chest()
             else:
                 events_num -= 1
                 moveAndClick(Events_Collection.forward)
