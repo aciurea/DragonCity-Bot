@@ -24,7 +24,8 @@ class Wizard:
 
     @staticmethod
     def open_wizard():
-        Position_Map.center_map()
+        if not exists(Position_Map.center_map()):
+            return
         delay(1)
         moveAndClick(Wizard.wizard_static_pos)
         delay(1)
