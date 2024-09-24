@@ -18,8 +18,9 @@ text = {
 
 class Wizard:
     res = get_monitors()[0]
-    # _quit_pos = [get_int(0.30585 * res.width), get_int(0.81 * res.height)]
+    # relative to the center point.
     wizard_static_pos = Screen.get_pos([0.8203125, 0.14723])
+    wizard_static_quit_when_fails = Screen.get_pos([0.34270834, 0.7842593])
 
     @staticmethod
     def open_wizard():
@@ -56,35 +57,30 @@ class Wizard:
             multiple_click(ball)
             delay(7)
 
-            claim_btn = Wizard._get_claim_btn()
-
-            if not exists(claim_btn):
-                check_if_ok()
-                # TODO check the flow when the wizard is displayed
-                return
+            if not exists(Wizard._get_claim_btn()):
+                return check_if_ok()
 
     @staticmethod
     def _claim_and_quit_wizard():
-        # TODO check it.
         claim_btn = Wizard._get_claim_btn()
         if not exists(claim_btn):
             check_if_ok()
-            return
+            delay(1)
+            moveAndClick(Wizard.wizard_static_quit_when_fails)
 
         moveAndClick(claim_btn)
         delay(1)
-        claim_and_quit = Wizard._get_claim_and_quit()
+        claim_and_quit = Wizard._get_claim_and_quit_btn()
 
         if not exists(claim_and_quit):
-            check_if_ok()
-            return
+            return check_if_ok()
 
-        moveAndClick(Wizard._get_claim_and_quit())
+        moveAndClick(claim_and_quit)
+        delay(1)
         claim_all = Wizard._get_claim_all_btn()
 
         if not exists(claim_all):
-            check_if_ok()
-            return
+            return check_if_ok()
         moveAndClick(claim_all)
 
     @staticmethod
@@ -99,7 +95,7 @@ class Wizard:
         return [-1]
 
     @staticmethod
-    def _get_claim_and_quit():
+    def _get_claim_and_quit_btn():
         bbox = [0.30364583, 0.781481481, 0.3734375, 0.8481481]
         text_positions = Screen.get_text_pos(bbox)
 
