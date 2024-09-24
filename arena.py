@@ -83,6 +83,7 @@ class Arena:
     def enter_battle():
         Arena._open_arena()
         Arena._preapre_arena()
+        Arena._do_free_spin()
 
         start_fight = Arena._get_fight_btn()
        
@@ -135,7 +136,6 @@ class Arena:
                 Arena._claim_rush_battle_end,
                 Arena._wait_for_the_fight_tab,
                 Arena._prepare_fight,
-                Arena._do_free_spin
             ]
             for action in get_to_fight_ready_actions:
                 st = time.time()
