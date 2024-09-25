@@ -67,7 +67,7 @@ class Daily_Browser_Collect:
     @staticmethod
     def _claim_items_from_browser():
         bbox = [0.45625, 0.83796296, 0.53802083, 0.9037037]
-        tries = 15
+        tries = 25
         while tries > 0:
             tries -= 1
             text_positions = Screen.get_text_pos(bbox)
