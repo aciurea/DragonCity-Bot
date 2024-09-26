@@ -1,3 +1,4 @@
 [flake8]
 ignore = E701
 max-line-length = 120
+enable-extensions = U100
