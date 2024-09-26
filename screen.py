@@ -76,6 +76,10 @@ class Screen:
         return image
 
     @staticmethod
+    def is_match(str1, str2):
+        return Screen.is_match_with_one_difference(str1, str2)
+
+    @staticmethod
     def is_match_with_one_difference(str1, str2):
         str1 = str1.lower()
         str2 = str2.lower()

@@ -43,8 +43,9 @@ class Events_Collection:
 
             if exists(claim_btn):
                 moveAndClick(claim_btn)
-                delay(1)
+                delay(2)
                 Popup._enjoy()
+                delay(2)
                 Popup.check_popup_chest()
             else:
                 events_num -= 1
@@ -59,7 +60,7 @@ class Events_Collection:
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['claimi'], t['text']):
+            if Screen.is_match(text['claimi'], t['text']):
                 return t['position']
 
         return [-1]
@@ -71,7 +72,7 @@ class Events_Collection:
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['collections'], t['text']):
+            if Screen.is_match(text['collections'], t['text']):
                 return t['position']
         return [-1]
 
@@ -82,6 +83,6 @@ class Events_Collection:
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['events'], t['text']):
+            if Screen.is_match(text['events'], t['text']):
                 return t['position']
         return [-1]
