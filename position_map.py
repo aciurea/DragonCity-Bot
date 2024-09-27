@@ -23,7 +23,7 @@ class Position_Map:
             delay(1)
             check_if_ok()
             return Position_Map.center_map(times - 1)
-        
+
         if Position_Map._is_centered(artifact): return artifact
 
         Position_Map._drag_map(artifact, Position_Map._center)
@@ -48,7 +48,7 @@ class Position_Map:
         delay(1)
         Position_Map._drag_map(artifact, next_pos)
         delay(.5)
-    
+
     @staticmethod
     def drag_map_to_the_right():
         artifact = Position_Map.center_map()
@@ -76,7 +76,9 @@ class Position_Map:
         art_path = C.get_path(f'{C._BASE_UTILS}{screen_pos}')
 
         try: return getImagePosition(art_path, 1, .8)
-        except: return getImagePosition(C.UTILS_ARTIFACT, 1, .8)
+        except Exception as e:
+            print(e)
+            return getImagePosition(C.UTILS_ARTIFACT, 1, .8)
 
     @staticmethod
     def _is_centered(artifact):
