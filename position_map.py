@@ -1,18 +1,19 @@
 from screeninfo import get_monitors
-from move import moveAndClick, moveTo
+from move import moveAndClick
 from utils import getImagePosition, get_int, exists, delay, get_screen_resolution
 from close import check_if_ok
 
 import pyautogui
 import constants as C
 
+
 class Position_Map:
     res = get_monitors()[0]
     _center = [get_int(res.width / 2), get_int(res.height / 2)]
 
     @staticmethod
-    def center_map(times = 2):
-        if(times == 0): return [-1]
+    def center_map(times=2):
+        if times == 0: return [-1]
 
         artifact = Position_Map._get_artifact_pos()
         if exists(artifact): moveAndClick([artifact[0], artifact[1] - 20])
@@ -68,7 +69,7 @@ class Position_Map:
         Position_Map._drag_map(artifact, next_pos)
         delay(.5)
         return next_pos
-    
+
     @staticmethod
     def _get_artifact_pos():
         screen_pos = get_screen_resolution()
@@ -76,18 +77,19 @@ class Position_Map:
 
         try: return getImagePosition(art_path, 1, .8)
         except: return getImagePosition(C.UTILS_ARTIFACT, 1, .8)
-    
+
     @staticmethod
     def _is_centered(artifact):
         return artifact[0] == Position_Map._center[0] and artifact[1] == Position_Map._center[1]
 
+    # TODO it should be refactored.
     @staticmethod
-    def _drag_map(artifact, next = [800, 450]):
+    def _drag_map(artifact, next=[800, 450]):
         pyautogui.moveTo(*artifact, 0)
         # double mouse down to make sure the action is working.
         pyautogui.mouseDown()
         pyautogui.mouseDown()
         pyautogui.moveTo(*next, 0)
-        
+
         delay(0.1)
         pyautogui.mouseUp()
