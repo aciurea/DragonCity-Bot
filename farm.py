@@ -26,7 +26,7 @@ class Farm:
             multiple_click(Farm.multiple_food_pos, 4, 0.01)
             Farm._regrow_food()
             delay(30)
-            return Farm.fast_food(times - 1)
+            return Farm.fast_collect(times - 1)
 
     @staticmethod
     def _collect_each_farm():
