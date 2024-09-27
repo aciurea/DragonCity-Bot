@@ -10,6 +10,7 @@ class Breed:
     screen_res = get_screen_resolution()
     rock_pos = Screen.get_pos([0.4109375, 0.7324074074])
     tree_pos = Screen.get_pos([0.29427083, 0.67685185])
+    breed_button_pos = Screen.get_pos([0.496875, 0.748148])
 
     _re_breed_btn = None
 
@@ -28,7 +29,7 @@ class Breed:
 
         moveAndClick(btn)
         delay(1)
-        moveAndClick(Screen.get_pos([0.496875, 0.748148])) # breed button
+        moveAndClick(Breed.breed_button_pos)
         check_if_ok()
 
     def clear_hatchery():
@@ -36,7 +37,7 @@ class Breed:
             return check_if_ok()
         Hatch.sell_egg()
 
-    def start_fresh():  # done
+    def start_fresh():
         Breed.clear_hatchery()
 
         for breed_place in [Breed.rock_pos, Breed.tree_pos]:
