@@ -9,6 +9,7 @@ from screen import Screen
 text = {
     'claim': 'claim',
     'new': 'new',
+    'taptocontinue': 'taptocontinue',
 }
 
 
@@ -38,6 +39,13 @@ class Alliance:
                 moveAndClick(claim)
                 delay(2)
                 return Alliance._claim_alliance()
+            continue_btn = Alliance.get_continue_btn()
+            if continue_btn:
+                moveAndClick(continue_btn)
+                delay(1)
+                check_if_ok()
+                return
+        check_if_ok()
 
     @staticmethod
     def _get_work():
@@ -58,17 +66,14 @@ class Alliance:
         delay(10)
         check_if_ok()
 
-    @staticmethod
-    def _alliance_filled():
-        continue_btn = Alliance.get_continue_btn()
-        if exists(continue_btn):
-            moveAndClick(continue_btn)
-            delay(1)
-            check_if_ok()
-            return
-
     def get_continue_btn():
-        # TODO to be implemented when alliance ready.
+        bbox = [0.43125, 0.7861, 0.56, 0.83981]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['taptocontinue'], t['text']):
+                return t['position']
         return None
 
     def _get_claim_btn():
