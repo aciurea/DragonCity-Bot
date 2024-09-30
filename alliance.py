@@ -25,11 +25,18 @@ class Alliance:
         if Alliance._alliance_finished():
             print('Aliance finished!')
             return check_if_ok()
-        delay(3)
+        delay(10)
 
         retries = 10
         while retries > 0:
             retries -= 1
+            # check first the continue button. Any work will still be visible but there is no need to do work.
+            continue_btn = Alliance.get_continue_btn()
+            if continue_btn:
+                moveAndClick(continue_btn)
+                delay(1)
+                check_if_ok()
+                return
             work = Alliance._get_work()
             if work:
                 check_if_ok()
@@ -39,22 +46,18 @@ class Alliance:
                 moveAndClick(claim)
                 delay(2)
                 return Alliance._claim_alliance()
-            continue_btn = Alliance.get_continue_btn()
-            if continue_btn:
-                moveAndClick(continue_btn)
-                delay(1)
-                check_if_ok()
-                return
         check_if_ok()
 
     @staticmethod
     def _get_work():
-        bbox = [0.5265625, 0.7481481, 0.5854167, 0.787962962962963]
+        bbox = [0.509375, 0.69, 0.6083, 0.788]
+        # TODO check the breed bbox.
         work = {
             'Breed': lambda: Breed.breed('breed', 20),
+            'HatchEggs': lambda: Breed.breed('sell', 20),
         }
         text_positions = Screen.get_text_pos(bbox)
-
+        print(text_positions)
         for t in text_positions:
             if t['text'] in work:
                 return work[t['text']]
