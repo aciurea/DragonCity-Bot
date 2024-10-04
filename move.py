@@ -68,6 +68,7 @@ def is_artifact_at_pos(pos):
     except: return False
 
 def drag_to(curr, next):
+    pyautogui.FAILSAFE = False
     pyautogui.moveTo(*curr)
     pyautogui.dragTo(next[0], next[1], 0.2)
     delay(.1)
