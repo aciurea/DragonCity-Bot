@@ -1,96 +1,34 @@
-import time
-from utils import delay, dragMapToCenter, exists, get_monitor_quarters, getImagePositionRegion, moveAndClick
-import constants as C
+
+from utils import delay, exists
+from position_map import Position_Map
+from screen import Screen
+from move import multiple_click, moveAndClick
+from close import check_if_ok
+
 
 class Towers:
-    last_time_started = 0
-    wait_time = 3600 * 4
-    mon = get_monitor_quarters()
+    gems_tower = Screen.get_pos([0.7359375, 0.206481])
+    food_tower = Screen.get_pos([0.8625, 0.3])
+    breed_tower = Screen.get_pos([0.821875, 0.68056])
+    collect_tower = Screen.get_pos([0.6640625, 0.85])
+    resource_btn_pos = Screen.get_pos([0.777083, 0.867])
 
     @staticmethod
-    def greedy_tower():
-        dragMapToCenter()
+    def activate_towers():
+        if not exists(Position_Map.center_map()):
+            return print('Something wrong with the map.')
+        towers_pos = [
+            Towers.gems_tower,
+            Towers.food_tower,
+            Towers.collect_tower,
+            Towers.breed_tower,
+        ]
 
-        tower  = getImagePositionRegion(C.TOWERS_RESOURCESS_TOWER, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(tower): return print("No Greedy Tower found")
-        moveAndClick(tower)
-
-        delay(1)
-        
-        resources_btn = getImagePositionRegion(C.TOWERS_COLLECT_RESOURCES_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return 
-        moveAndClick(resources_btn)
-        print('Resources collected')
-
-    @staticmethod
-    def gems_towers():
-        dragMapToCenter()
-
-        tower = getImagePositionRegion(C.TOWERS_GEMS_TOWER, *Towers.mon['top_right'], 0.8, 1)
-        if not exists(tower): return print("No Gems Tower found")
-        moveAndClick([tower[0] + 5, tower[1] + 35]) # Click on the bottom of the tower (to avoid clicking on the food offer)
-
-        delay(1)
-        
-        resources_btn = getImagePositionRegion(C.TOWERS_GEMS_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return
-        moveAndClick(resources_btn)
-        print('Gems collected')
-
-    @staticmethod
-    def gold_tower():
-        dragMapToCenter()
-
-        tower  = getImagePositionRegion(C.TOWERS_GOLD_TOWER, *Towers.mon['top_left'], 0.8, 1)
-        if not exists(tower): return print("No Gold Tower found")
-        moveAndClick(tower)
-
-        delay(1)
-
-        resources_btn = getImagePositionRegion(C.TOWERS_BOOST_GOLD_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return
-        moveAndClick(resources_btn)
-        print('Gold boosted')
-
-    @staticmethod
-    def power_tower():
-        dragMapToCenter()
-
-        tower  = getImagePositionRegion(C.TOWERS_POWER_TOWER, *Towers.mon['bottom_right'], 0.8, 1)
-        if not exists(tower): return print("No Power Tower found")
-        moveAndClick(tower)
-
-        delay(1)
-
-        resources_btn = getImagePositionRegion(C.TOWERS_BOOST_COMBAT_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return
-
-        moveAndClick(resources_btn)
-        print('Power collected')
-
-    @staticmethod
-    def food_tower():
-        dragMapToCenter()
-
-        tower  = getImagePositionRegion(C.TOWERS_FOOD_TOWER, *Towers.mon['top_right'], 0.8, 1)
-        if not exists(tower): return print("No Food Tower found")
-        moveAndClick(tower)
-
-        delay(1)
-
-        resources_btn = getImagePositionRegion(C.TOWERS_BOOST_FOOD_BTN, *Towers.mon['4thRow'], 0.8, 1)
-        if not exists(resources_btn): return 
-
-        moveAndClick(resources_btn)
-        print('Power collected')
-
-def activate_towers():
-    if time.time() - Towers.last_time_started < Towers.wait_time: return
-
-    Towers.greedy_tower()
-    Towers.gems_towers()
-    Towers.gold_tower()
-    # Towers.power_tower()
-    Towers.food_tower()
-    Towers.last_time_started = time.time()
-    print('Finish activating towers')
+        for tower_pos in towers_pos:
+            multiple_click(tower_pos, 5, 0.01)
+            delay(.5)
+            moveAndClick(Towers.resource_btn_pos)
+            delay(.5)
+            check_if_ok()
+            Position_Map.center_map()
+        print('Finish activating towers')
