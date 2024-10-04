@@ -11,9 +11,14 @@ text = {
     'selectdragon': 'selectdragon',
 }
 
+attacks = {
+    'GammaExplosion': 'GammaExplosion',
+    'DivineSacrifice': 'DivineSacrifice',
+}
+
 
 class Battle:
-    base = './img/battle/'
+    base = './img/battle'
     screen_res = get_screen_resolution()
 
     @staticmethod
@@ -112,7 +117,7 @@ class Battle:
             if is_last_dragon:
                 delay(2)
                 continue
-   
+
             # TODO need a smart way to fight. This will be work in progress. No only hit 3 times.
             # TODO check for critical hits from my dragon
             # TODO maybe remember my dragon life and check If I got a critical hit and change it if is the case.
@@ -144,6 +149,9 @@ class Battle:
 
     @staticmethod
     def _attack():
+        best_attack = Battle._get_attack()
+        if best_attack: return moveAndClick(best_attack)
+
         play_btn = Battle.get_play_button()
         moveAndClick(play_btn)
         delay(.3)
@@ -201,3 +209,28 @@ class Battle:
         while is_in_time(start, limit=120):
             if not Battle._is_in_battle(): return
             delay(2)
+
+    @staticmethod
+    def _get_attack():
+        bbox = [0.1734375, 0.856481, 0.28125, 0.9527]
+
+        text_positions = Screen.get_text_pos(bbox)
+        print(text_positions)
+
+        if len(text_positions) > 1: return None
+
+        for t in text_positions:
+            if Screen.is_match(attacks['GammaExplosion'], t['text']):
+                return t['position']
+
+    @staticmethod
+    def _get_boost_attack():
+        bbox = [*Screen.get_pos([0.14947916, 0.8185]), *Screen.get_pos([0.838, 0.86481])]
+        path = f'{Battle.base}/{Battle.screen_res}_boost_attack.png'
+
+        pos = getImagePositionRegion(path, *bbox, .8, 1)
+
+        # TODO check if the attack has no affect and don't use it on this dragon.
+        if exists(pos):
+            return [pos[0], pos[1] + 30]
+        return None
