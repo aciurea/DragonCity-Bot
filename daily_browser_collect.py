@@ -1,5 +1,6 @@
 from mem_edit import Process
 import psutil
+import threading
 from pyautogui import scroll
 
 from close import check_if_ok
@@ -8,6 +9,10 @@ from popup import Popup
 from utils import delay, exists, getImagePositionRegion, get_screen_resolution
 from screen import Screen
 from position_map import Position_Map
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from gold import Gold
+
+host = ('localhost', 8080)
 
 
 class Daily_Browser_Collect:
@@ -26,15 +31,10 @@ class Daily_Browser_Collect:
         if exists(daily_streak):
             moveAndClick(daily_streak)
             delay(1)
-
             moveAndClick(Daily_Browser_Collect.claim_btn_pos)
-            delay(15)
 
-            Daily_Browser_Collect._kill_browser()
-            delay(2)
-
-            Daily_Browser_Collect._claim_items_from_browser()
-        check_if_ok()
+            web_server = HTTPServer(host, LocalServer)
+            web_server.serve_forever()
 
     def _get_daily_streak():
         base = './img/daily'
@@ -73,7 +73,7 @@ class Daily_Browser_Collect:
             text_positions = Screen.get_text_pos(bbox)
 
             for t in text_positions:
-                if Screen.is_match_with_one_difference('claimi', t['text']):
+                if Screen.is_match('claimi', t['text']):
                     moveAndClick(t['position'])
                     delay(5)
                     check_if_ok()
@@ -83,4 +83,18 @@ class Daily_Browser_Collect:
                     return
                 else:
                     check_if_ok()
-                delay(1)
+                    delay(1)
+                    Gold.collectGold()
+
+
+class LocalServer(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/collect':
+            Daily_Browser_Collect._kill_browser()
+            Daily_Browser_Collect._claim_items_from_browser()
+            check_if_ok()
+            threading.Thread(target=self.server.shutdown).start()
+        elif self.path == '/stop':
+            Daily_Browser_Collect._kill_browser()
+            check_if_ok()
+            threading.Thread(target=self.server.shutdown).start()
