@@ -18,6 +18,7 @@ text = {
     'enhance': 'enhance',
     'freespini': 'freespini',
     'freespin': 'freespin',
+    'arena_claim': 'claim'
 }
 
 
@@ -84,6 +85,7 @@ class Arena:
     @staticmethod
     def enter_battle():
         Arena._open_arena()
+        delay(1)
         Arena._preapre_arena()
         Arena._do_free_spin()
 
@@ -106,12 +108,15 @@ class Arena:
             delay(.5)
             # because of spin button I need to click again.
             moveAndClick([start_fight[0], start_fight[1] + 15])
+            delay(1)
+            moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
             Battle.fight()
+            delay(2)
 
             Arena._claim_arena_battle_result()
 
-            delay(1)
+            delay(2)
             Arena.close_buying_dragon_powers()
             start_fight = Arena._get_fight_btn()
         check_if_ok()
@@ -132,23 +137,23 @@ class Arena:
 
     @staticmethod
     def _preapre_arena():
+        get_to_fight_ready_actions = [Arena._check_attack_report]
+
         if not exists(Arena._get_fight_btn()):
-            get_to_fight_ready_actions = [
-                Arena._check_attack_report,
-                Arena._check_start_new_season,
-                Arena._claim_rush_battle_end,
-                Arena._wait_for_the_fight_tab,
-                Arena._prepare_fight,
-            ]
-            for action in get_to_fight_ready_actions:
-                st = time.time()
-                action()
-                print('Time to get to fight ready', str(action.__name__), time.time() - st)
-                delay(.3)
+            get_to_fight_ready_actions.append(Arena._check_start_new_season)
+            get_to_fight_ready_actions.append(Arena._claim_rush_battle_end)
+            get_to_fight_ready_actions.append(Arena._wait_for_the_fight_tab)
+            get_to_fight_ready_actions.append(Arena._prepare_fight)
+
+        for action in get_to_fight_ready_actions:
+            st = time.time()
+            action()
+            print('Time to get to fight ready', str(action.__name__), time.time() - st)
+            delay(.3)
 
     @staticmethod
     def _get_fight_btn(gray_mode=False):
-        bbox = [0.430859375, 0.814583, 0.5234375, 0.868056]
+        bbox = [0.430859375, 0.814583, 0.5234375, 0.9]
         text_positions = Screen.get_text_pos(bbox, gray_mode)
 
         for t in text_positions:
@@ -192,7 +197,6 @@ class Arena:
                     times -= 1
                     Popup.check_popup_chest()
                     delay(1)
-                # it happens that on last chest for the Tap to Open message to not appear and claim button to be displayed directly.
                 moveAndClick(Popup._get_claim_btn())
 
     @staticmethod
@@ -200,12 +204,10 @@ class Arena:
         bbox = [0.4625, 0.862037, 0.5328125, 0.916]
         text_positions = Screen.get_text_pos(bbox)
 
-        if len(text_positions) == 0:
-            moveAndClick(Screen.get_pos([0.49375, 0.893518]))
-        else:
-            for t in text_positions:
+        for t in text_positions:
+            if Screen.is_match(text['arena_claim'], t['text']):
                 moveAndClick(t['position'])
-        delay(2)
+                break
 
     @staticmethod
     def close_buying_dragon_powers():
