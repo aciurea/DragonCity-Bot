@@ -22,6 +22,7 @@ class Runner:
     work = {
         'BREEDDRAGONS': lambda: Breed.breed(work_type='breed', times=10),
         'FEEDYOURDRAGONS': lambda: Breed.breed(work_type='feed', times=10),
+        'HATCHEGGS': lambda: Breed.breed(work_type='place', times=10),
     }
 
     def run():
