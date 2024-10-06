@@ -1,5 +1,5 @@
 import concurrent.futures
-
+import time
 from move import moveAndClick
 from screen import Screen
 from utils import delay, exists, getImagePositionRegion, get_screen_resolution, get_monitor_quarters
@@ -8,6 +8,7 @@ from utils import delay, exists, getImagePositionRegion, get_screen_resolution, 
 class Close:
     @staticmethod
     def check_if_ok():
+        Close._check_is_no()
         btns = Close._get_btn()
 
         for btn in btns:
@@ -23,7 +24,7 @@ class Close:
         for t in text_positions:
             if Screen.is_match_with_one_difference('lose', t['text']):
                 moveAndClick(t['position'])
-    
+
     @staticmethod
     def _get_btn():
         grid = get_monitor_quarters()
@@ -40,12 +41,14 @@ class Close:
         ]
 
         btns = []
+        st = time.time()
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result_list = executor.map(lambda args: getImagePositionRegion(args, *grid['top_right'], .8, 1), paths)
             for close_btn in result_list:
                 if exists(close_btn): btns.append(close_btn)
 
         btns = sorted(btns, key=lambda x: x[0])
+        print(f'Close buttons found in {time.time() - st} seconds')
         if len(btns) > 1:
             return Close._filter_corrupted_imgs(btns)
         return btns
@@ -59,6 +62,16 @@ class Close:
             if (abs(item[0] - filtered_data[-1][0]) > img_distance_threshold):
                 filtered_data.append(item)
         return filtered_data
+
+    @staticmethod
+    def _check_is_no():
+        bbox = [0.39635416, 0.75, 0.435416, 0.8]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match('no', t['text']):
+                moveAndClick(t['position'])
 
 
 def check_if_ok():
