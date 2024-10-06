@@ -48,7 +48,7 @@ def start_working():
         ClearEvent.skip_event,
         # Heroic.race,
         # Quest.open_quest,
-        # Runner.run,
+        Runner.run,
         Wizard.open_wizard,
         Puzzle.open_puzzle,
         Events_Collection.collect_events,
