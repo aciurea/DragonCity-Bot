@@ -51,10 +51,9 @@ class Alliance:
     @staticmethod
     def _get_work():
         bbox = [0.509375, 0.69, 0.6083, 0.788]
-        # TODO check the breed bbox.
         work = {
-            'Breed': lambda: Breed.breed('breed', 15),
-            'HatchEggs': lambda: Breed.breed('sell', 15),
+            'Breed': lambda: Breed.breed('breed', 10),
+            'HatchEggs': lambda: Breed.breed('sell', 10),
         }
         text_positions = Screen.get_text_pos(bbox)
         print(text_positions)
