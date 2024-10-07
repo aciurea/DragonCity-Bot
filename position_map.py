@@ -17,7 +17,7 @@ class Position_Map:
 
         artifact = Position_Map._get_artifact_pos()
         if exists(artifact): moveAndClick([artifact[0], artifact[1] - 20])
-        else: 
+        else:
             print('Cannot move the map since there is no point of reference')
             # try again.
             delay(1)
@@ -73,20 +73,19 @@ class Position_Map:
     @staticmethod
     def _get_artifact_pos():
         screen_pos = get_screen_resolution()
-        art_path = C.get_path(f'{C._BASE_UTILS}{screen_pos}')
+        _BASE_UTILS = './img/utils/'
+        path = C.get_path(f'{_BASE_UTILS}{screen_pos}')
 
-        try: return getImagePosition(art_path, 1, .8)
-        except Exception as e:
-            print(e)
-            return getImagePosition(C.UTILS_ARTIFACT, 1, .8)
+        return getImagePosition(path, 1, .8)
 
     @staticmethod
     def _is_centered(artifact):
         return artifact[0] == Position_Map._center[0] and artifact[1] == Position_Map._center[1]
 
-    # TODO it should be refactored.
     @staticmethod
-    def _drag_map(artifact, next=[800, 450]):
+    def _drag_map(artifact, next):
+        if not next: return print('There is no next position to move the map')
+
         pyautogui.moveTo(*artifact, 0)
         # double mouse down to make sure the action is working.
         pyautogui.mouseDown()
