@@ -1,10 +1,10 @@
 import keyboard
-import mouse
 
-from move import center_map, moveAndClick, multiple_click, moveTo
+from move import moveAndClick, multiple_click
 from utils import delay
 from screen import Screen
 from close import check_if_ok
+from position_map import Position_Map
 
 
 class Recall:
@@ -25,13 +25,13 @@ class Recall:
 
         for action in actions:
             try: action()
-            except: print('not ready') 
+            except Exception as e: print('not ready', e)
         check_if_ok()
-            
+
 
     @staticmethod
     def _go_to_tree():
-        center_map()
+        Position_Map.center_map()
         multiple_click(Recall.tree_pos, 3, 0.01)
         delay(1)
         moveAndClick(Recall.recall_pos)
@@ -69,15 +69,10 @@ class Recall:
         if len(text_positions) > 0: return print('dragon was not selected')
         bbox = [1775, 1240, 1980, 1340]
         text_positions = Screen.get_text_pos(bbox)
-        
+
         for t in text_positions:
             if 'recall' in t['text'].lower():
                 moveAndClick(t['position'])
                 delay(.5)
                 moveAndClick(Recall.yes_pos)
         check_if_ok()
-
-
-
-
-        

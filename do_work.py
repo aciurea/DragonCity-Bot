@@ -1,27 +1,22 @@
 
 from alliance import Alliance
 from arena import Arena
-from breed import Breed
 from claim_all import claim_all
 from close import check_if_ok
 from farm import Farm
 from gold import Gold
 from daily_browser_collect import Daily_Browser_Collect
-from habitat import Habitat
-from heroic import Heroic
 from league import League
 from open import OpenApp
 from orbs import Orbs
-from quest import Quest
 from runner import Runner
 from shop import Shop
 from towers import Towers
-from tv import TV
 from utils import get_int
 from daily_treasure import Daily_Treasure
 from events_collection import Events_Collection
 from wizard import Wizard
-from move import center_map
+from position_map import Position_Map
 from puzzle import Puzzle
 from clear_event import ClearEvent
 
@@ -68,5 +63,5 @@ def start_working():
         if i == len(do_work) - 1: return str_actions
 
         check_if_ok()
-        center_map()
+        Position_Map.center_map()
     return str_actions

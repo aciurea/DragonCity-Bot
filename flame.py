@@ -1,11 +1,13 @@
 import mouse
 
-from move import center_map, moveAndClick, multiple_click
+from move import moveAndClick, multiple_click
 from hatch import Hatch
 from utils import delay
 from recall import Recall
+from position_map import Position_Map
 
 import constants as C
+
 
 class Flame:
     shop_pos = [2461, 1260]
@@ -17,7 +19,7 @@ class Flame:
     @staticmethod
     def buy_dragon():
         actions = [
-            center_map,
+            Position_Map.center_map,
             lambda: multiple_click(mouse.get_position(), 3, .01),
             lambda: moveAndClick(Flame.shop_pos),
             lambda: moveAndClick(Flame.dragons_pos),
@@ -33,19 +35,18 @@ class Flame:
     def hatch_dragon():
         Hatch.hatch_dragon_in_dragonarium(C.BREED_SEA_EGG)
 
-
     @staticmethod
-    def flame_dragon(times = 200):
+    def flame_dragon(times=200):
         if times == 0: return
-        
+
         Recall.recall('Sea')
 
         Flame.hatch_dragon()
         Flame.hatch_dragon()
-        
+
         Recall.recall('Sea')
 
         Flame.buy_dragon()
         Flame.buy_dragon()
-        
+
         Flame.flame_dragon(times - 1)
