@@ -23,6 +23,9 @@ text = {
 
 
 class Arena:
+    battle_pos = Screen.get_pos([0.3015625, 0.84114583])
+    arena_pos = Screen.get_pos([0.69427083, 0.487])
+
     @staticmethod
     def _change_defetead_dragon():
         bboxes = [
@@ -124,12 +127,10 @@ class Arena:
 
     @staticmethod
     def _open_arena():
-        battle_pos = Screen.get_pos([0.30859375, 0.868056])
-        arena_pos = Screen.get_pos([0.698046875, 0.50694])
         open_actions = [
             Position_Map.center_map,
-            lambda: moveAndClick(battle_pos),
-            lambda: moveAndClick(arena_pos),
+            lambda: moveAndClick(Arena.battle_pos),
+            lambda: moveAndClick(Arena.arena_pos),
         ]
         for action in open_actions:
             action()

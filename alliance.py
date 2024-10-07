@@ -25,7 +25,7 @@ class Alliance:
         if Alliance._alliance_finished():
             print('Aliance finished!')
             return check_if_ok()
-        delay(10)
+        delay(5)
 
         retries = 10
         while retries > 0:
@@ -53,8 +53,8 @@ class Alliance:
         bbox = [0.509375, 0.69, 0.6083, 0.788]
         # TODO check the breed bbox.
         work = {
-            'Breed': lambda: Breed.breed('breed', 20),
-            'HatchEggs': lambda: Breed.breed('sell', 20),
+            'Breed': lambda: Breed.breed('breed', 15),
+            'HatchEggs': lambda: Breed.breed('sell', 15),
         }
         text_positions = Screen.get_text_pos(bbox)
         print(text_positions)
