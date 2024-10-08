@@ -1,6 +1,6 @@
 import random
 
-from close import check_if_ok
+from close import Close
 from position_map import Position_Map
 from utils import delay, exists
 from move import moveAndClick, multiple_click
@@ -31,15 +31,15 @@ class Wizard:
         delay(1)
         play_btn = Wizard._get_play_btn()
 
-        if not exists(play_btn):
-            check_if_ok()
+        if not play_btn:
+            Close.check_if_ok()
             return print('Wizard Already played')
 
         moveAndClick(play_btn)
         delay(10)
         Wizard._play_wizard()
         Wizard._claim_and_quit_wizard()
-        check_if_ok()
+        Close.check_if_ok()
 
     @staticmethod
     def _play_wizard():
@@ -59,13 +59,13 @@ class Wizard:
             delay(7)
 
             if not exists(Wizard._get_claim_btn()):
-                return check_if_ok()
+                return Close.check_if_ok()
 
     @staticmethod
     def _claim_and_quit_wizard():
         claim_btn = Wizard._get_claim_btn()
         if not exists(claim_btn):
-            check_if_ok()
+            Close.check_if_ok()
             delay(1)
             moveAndClick(Wizard.wizard_static_quit_when_fails)
 
@@ -74,14 +74,14 @@ class Wizard:
         claim_and_quit = Wizard._get_claim_and_quit_btn()
 
         if not exists(claim_and_quit):
-            return check_if_ok()
+            return Close.check_if_ok()
 
         moveAndClick(claim_and_quit)
         delay(1)
         claim_all = Wizard._get_claim_all_btn()
 
         if not exists(claim_all):
-            return check_if_ok()
+            return Close.check_if_ok()
         moveAndClick(claim_all)
 
     @staticmethod
@@ -124,3 +124,4 @@ class Wizard:
         for t in text_positions:
             if Screen.is_match_with_one_difference(text['play'], t['text']):
                 return t['position']
+        return None
