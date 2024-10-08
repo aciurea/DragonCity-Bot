@@ -1,14 +1,14 @@
 from battle import Battle
 from close import check_if_ok
 from popup import Popup
-from utils import delay, exists, get_monitor_quarters, getImagePositionRegion, scroll
+from utils import delay, exists, get_monitor_quarters, getImagePositionRegion
 from screen import Screen
-from move import moveTo, moveAndClick
+from move import moveAndClick
 
 from position_map import Position_Map
 from pyautogui import scroll
 import constants as C
-import time
+
 
 class Quest:
     mon_quarters = get_monitor_quarters()
@@ -31,15 +31,16 @@ class Quest:
             scroll(-2_000)
         check_if_ok()
         check_if_ok()
-        
+
     @staticmethod
     def _open_quest_battle_by_checking_requirements():
         info = getImagePositionRegion(C.QUEST_INFO, *[300, 1040, 1800, 1200], .8, 2)
 
         if exists(info):
-            if exists(getImagePositionRegion(C.QUEST_REQ, *[0, info[1] - 150, info[0], info[1]], .8, 2)): return print('Requirements not met')
+            if exists(getImagePositionRegion(C.QUEST_REQ, *[0, info[1] - 150, info[0], info[1]], .8, 2)):
+                return print('Requirements not met')
             if exists(getImagePositionRegion(C.QUEST_NOT_READY, *[info[0] - 700, info[1] - 200, info[0], info[1] + 100], .8, 2)): return print('Requirements not met ::')
-            
+
             moveAndClick([info[0], info[1]- 400])
             delay(1)
             moveAndClick(Quest._get_battle_btn(bbox=[1077, 1240, 1258, 1339]))
@@ -56,7 +57,8 @@ class Quest:
             for t in text_positions:
                 if 'claim' in t['text'].lower(): return moveAndClick(t['position'])
 
-    def  _get_battle_btn(bbox = [850, 995, 1550, 1370]): 
+    @staticmethod
+    def _get_battle_btn(bbox=[850, 995, 1550, 1370]):
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:

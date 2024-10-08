@@ -3,25 +3,17 @@ import psutil
 import pyautogui
 import time
 import datetime
-import concurrent.futures
-from PIL import Image, ImageGrab
-
-import constants as C
 
 from screeninfo import get_monitors
 from close import Close
 from move import moveAndClick, moveTo
 from popup import Popup
 from timers import delay
-from utils import exists, get_monitor_quarters, getImagePositionRegion, get_int, get_grid_monitor, get_screen_resolution
+from utils import exists, getImagePositionRegion
 from mem_edit import Process
-from mail import Mail
 from screen import Screen
 from position_map import Position_Map
 
-
-
-mon_quarters = get_monitor_quarters()
 
 text = {
     'claim': 'claim',
@@ -32,18 +24,20 @@ text = {
 class OpenApp:
 
     @staticmethod
-    def open_app(i = 0):
+    def open_app(i=0):
         print('Started new cycle...')
         OpenApp._close_app()
         delay(2)
-        if(i == 5):
+        if i == 5:
             dd = datetime.datetime.now().strftime("%X")
-            raise('[Error] Cannot start the application ' + dd)
-        
+            raise f'[Error] Cannot start the application {dd}'
+
         # your app model id
-        app_model_id="SocialPoint.DragonCityMobile_jahftqv9k5jer!App" 
+        app_model_id = "SocialPoint.DragonCityMobile_jahftqv9k5jer!App"
         try: os.system(f'start shell:AppsFolder\\{app_model_id}')
-        except: OpenApp.open_app(i + 1)
+        except Exception as e: 
+            OpenApp.open_app(i + 1)
+            print(e)
 
         delay(10)
         OpenApp._check_if_app_started()
@@ -53,10 +47,10 @@ class OpenApp:
     def _close_app():
         try:
             pid = Process.get_pid_by_name('DragonCity.exe')
-            if(pid == None): return
+            if not pid: return
             p = psutil.Process(pid)
             p.terminate()
-        except: print('Cannot kill the application')
+        except Exception as e: print('Cannot kill the application', e)
 
     @staticmethod
     def _zoom_out():
@@ -82,7 +76,8 @@ class OpenApp:
             screeshot.save('screenshot.png')
             start = time.time()
             time_limit = 30
-            while((time.time() - start) < time_limit):
+
+            while (time.time() - start) < time_limit:
                 image = getImagePositionRegion("screenshot.png", 0, 0, 201, 201, .8, 1)
                 if not exists(image):
                     os.remove('screenshot.png')
@@ -97,13 +92,13 @@ class OpenApp:
         start = time.time()
         app_time_to_close_all_buttons = 40
 
-        while(not exists(Position_Map._get_artifact_pos())):
+        while not exists(Position_Map._get_artifact_pos()):
             OpenApp._zoom_out()
-            if(time.time() - start > app_time_to_close_all_buttons): 
+            if (time.time() - start) > app_time_to_close_all_buttons: 
                 Popup.check_popup_chest()
                 OpenApp._claim_reward_after_arena()
                 return OpenApp.open_app()
-            
+
             btns = Close.check_if_ok()
 
             Popup.check_popup_chest()
@@ -118,7 +113,7 @@ class OpenApp:
             delay(1)
         Position_Map.center_map()
         print('APP STARTED SUCCESSFULY')
-    
+
     @staticmethod
     def _claim_daily_reward():
         bbox = [0.4645835, 0.8083, 0.5328125, 0.8612]

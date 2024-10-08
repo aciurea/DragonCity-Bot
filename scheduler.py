@@ -6,6 +6,7 @@ from screeninfo import get_monitors
 
 from git import update_project
 from mail import Mail
+from utils import get_screen_resolution
 
 
 def save_log_to_file(message, filename):
@@ -14,10 +15,10 @@ def save_log_to_file(message, filename):
 
 
 try:
-    print("Starting the application...")
+    print("Starting the application... on resolution ", get_screen_resolution())
     work_message = start_working()
 
-    message = "[Success] ... " + datetime.now().strftime("%Y-%m-%d %H:%M:%S \n\n") + work_message
+    message = f'[Success]... "{datetime.now().strftime("%Y-%m-%d %H:%M:%S\n")} {work_message} {get_screen_resolution()}'
     Mail.send(message=message, subject="DC")
 except Exception as e:
     print('[Error is]: ', e)
