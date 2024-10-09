@@ -23,7 +23,7 @@ try:
 except Exception as e:
     print('[Error is]: ', e)
     message = '[Error is]: ' + str(e) + " " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    path = f'./log/{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}/'
+    path = f'./log/{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}'
     monitors = get_monitors()
     bbox = [0, 0, monitors[0].width, monitors[0].height]
     ImageGrab.grab(bbox).save(f'{path}image.png')
