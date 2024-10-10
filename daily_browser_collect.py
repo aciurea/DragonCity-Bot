@@ -81,17 +81,19 @@ class Daily_Browser_Collect:
                     delay(5)
                     Popup.check_popup_chest()
                     return
-                else:
-                    check_if_ok()
-                    delay(1)
-                    Gold.collectGold()
+
+                check_if_ok()
+                delay(1)
+                Gold.collectGold()
 
 
 class LocalServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/collect':
             Daily_Browser_Collect._kill_browser()
+            delay(1)
             Daily_Browser_Collect._claim_items_from_browser()
+            print('inside daily collect anter found item inside browser')
             check_if_ok()
             threading.Thread(target=self.server.shutdown).start()
         elif self.path == '/stop':

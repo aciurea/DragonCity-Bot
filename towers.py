@@ -21,7 +21,7 @@ class Towers:
             Towers.gems_tower,
             Towers.food_tower,
             Towers.collect_tower,
-            Towers.breed_tower,
+            # Towers.breed_tower,
         ]
 
         for tower_pos in towers_pos:

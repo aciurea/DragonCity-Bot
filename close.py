@@ -1,5 +1,4 @@
 import concurrent.futures
-import time
 from move import moveAndClick
 from screen import Screen
 from utils import delay, exists, getImagePositionRegion, get_screen_resolution, get_monitor_quarters
@@ -41,14 +40,12 @@ class Close:
         ]
 
         btns = []
-        st = time.time()
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result_list = executor.map(lambda args: getImagePositionRegion(args, *grid['top_right'], .8, 1), paths)
             for close_btn in result_list:
                 if exists(close_btn): btns.append(close_btn)
 
         btns = sorted(btns, key=lambda x: x[0])
-        print(f'Close buttons found in {time.time() - st} seconds')
         if len(btns) > 1:
             return Close._filter_corrupted_imgs(btns)
         return btns

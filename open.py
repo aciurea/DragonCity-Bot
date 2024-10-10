@@ -17,7 +17,7 @@ from position_map import Position_Map
 
 text = {
     'claim': 'claim',
-    'claimreward': 'claimreward',
+    'ClaimReward': 'ClaimReward',
 }
 
 
@@ -61,12 +61,10 @@ class OpenApp:
     @staticmethod
     def _claim_reward_after_arena():
         bbox = [0.445703125, 0.60416, 0.551953125, 0.65]
-        st = time.time()
         text_positions = Screen.get_text_pos(bbox, gray_mode=True)
-        print('took time: ', time.time() - st)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['claimreward'], t['text']):
+            if Screen.is_match(text['ClaimReward'], t['text']):
                 moveAndClick(t['position'])
 
     @staticmethod
@@ -94,18 +92,18 @@ class OpenApp:
 
         while not exists(Position_Map._get_artifact_pos()):
             OpenApp._zoom_out()
-            if (time.time() - start) > app_time_to_close_all_buttons: 
-                Popup.check_popup_chest()
-                OpenApp._claim_reward_after_arena()
+            if (time.time() - start) > app_time_to_close_all_buttons:
                 return OpenApp.open_app()
 
             btns = Close.check_if_ok()
 
-            Popup.check_popup_chest()
-            OpenApp._claim_daily_reward()
-            Popup._enjoy()
-
             if len(btns) == 0:
+                Popup.check_popup_chest()
+                OpenApp._claim_daily_reward()
+
+                Popup._enjoy()
+                OpenApp._claim_reward_after_arena()
+                OpenApp._claim_after_browser()
                 Close.get_lose_text()
                 close_pos = Screen.get_pos([0.794270834, 0.0935185185])
                 moveAndClick(close_pos)
@@ -123,3 +121,18 @@ class OpenApp:
         for t in text_positions:
             if Screen.is_match_with_one_difference(text['claim'], t['text']):
                 moveAndClick(t['position'])
+
+    @staticmethod
+    def _claim_after_browser():
+        bbox = [0.45625, 0.83796296, 0.53802083, 0.9037037]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match('claimi', t['text']):
+                moveAndClick(t['position'])
+                delay(3)
+                Close.check_if_ok()
+                delay(1)
+                Popup.check_popup_chest()
+                delay(3)
+                Popup.check_popup_chest()
