@@ -1,14 +1,13 @@
-import random
 import time
 import concurrent.futures
 
 from screen import Screen
 from move import moveAndClick
 from utils import delay, exists, getImagePositionRegion, get_screen_resolution, is_in_time
+from close import Close
 
 text = {
     'select': 'select',
-    'selectdragon': 'selectdragon',
 }
 
 attacks = {
@@ -20,6 +19,8 @@ attacks = {
 class Battle:
     base = './img/battle'
     screen_res = get_screen_resolution()
+    hit_with_special_attack = False
+    remaining_turns_for_boost_attack = -1
 
     @staticmethod
     def get_speed_btn():
@@ -36,7 +37,8 @@ class Battle:
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['select'], t['text']): return t['position']
+            if Screen.is_match_with_one_difference(text['select'], t['text']):
+                return t['position']
         return [-1]
 
     @staticmethod
@@ -67,22 +69,44 @@ class Battle:
 
     @staticmethod
     def get_new_dragon_btn():
-        bbox = [0.09895834, 0.83425925, 0.89375, 0.899074]
+        select_bboxes = [
+            [0.1, 0.83, 0.1697916, 0.892],
+            [0.42552083, 0.83, 0.4947916, 0.892],
+            [0.746875, 0.83, 0.81510416, 0.892],
+        ]
+        critical_attack_positions = Battle._get_in_team_critical_attack_positions()
+        dragon_life_bboxes = [
+            [0.0875, 0.7, 0.25625, 0.815],
+            [0.40677083, 0.7, 0.5859375, 0.815],
+            [0.7239583, 0.7, 0.9114583, 0.815],
+        ]
+        best_dragons = []
 
-        dragons_life_bbox = [0.0885416, 0.76851851, 0.91822916, 0.826851851]
+        if len(critical_attack_positions) > 0:
+            for position in critical_attack_positions:
+                dragon_life_text = Screen.get_text_pos(dragon_life_bboxes[position])
 
-        text_positions = Screen.get_text_pos(dragons_life_bbox)
-        print(text_positions)
+                if len(dragon_life_text) == 2:
+                    remaing = int(dragon_life_text[0]['text'])
+                    if remaing > 0:
+                        best_dragons.append([position, remaing])
+            best_dragons = sorted(best_dragons, key=lambda x: x[1], reverse=True)
+        else:
+            for i, bbox in enumerate(dragon_life_bboxes):
+                dragon_life_text = Screen.get_text_pos(bbox)
+                if len(dragon_life_text) == 2:
+                    remaing = int(dragon_life_text[0]['text'])
+                    if remaing > 0:
+                        best_dragons.append([i, remaing])
+            best_dragons = sorted(best_dragons, key=lambda x: x[1], reverse=True)
 
-        text_positions = Screen.get_text_pos(bbox)
+        for best_dragon in best_dragons:
+            select_position = Screen.get_text_pos(select_bboxes[best_dragon[0]])
 
-        lst = []
-
-        for t in text_positions:
-            if Screen.is_match(text['selectdragon'], t['text']):
-                lst.append(t['position'])
-
-        return random.choice(lst) if lst else [-1]
+            for t in select_position:
+                if Screen.is_match(text['select'], t['text']):
+                    return moveAndClick(t['position'])
+            return Close.check_if_ok()
 
     @staticmethod
     def _get_swap_button():
@@ -94,12 +118,11 @@ class Battle:
     @staticmethod
     def change_dragon():
         swap_btn = Battle._get_swap_button()
-        if exists(swap_btn):
-            moveAndClick(swap_btn)
-            delay(1)
-        new_dragon = Battle.get_new_dragon_btn()
-        if not exists(new_dragon): return print('Dragon not found')
-        moveAndClick(new_dragon)
+        if not exists(swap_btn):
+            if not exists(Battle._on_team_selection()): return
+        else: moveAndClick(swap_btn)
+        delay(1)
+        Battle.get_new_dragon_btn()
 
     @staticmethod
     def fight(change_dragon=True):
@@ -111,61 +134,46 @@ class Battle:
 
         # 6 minutes is more than enough
         while is_in_time(start, 300):
-            st = time.time()
             if not Battle._is_in_battle(): return
-            print(f'[LOG] Battle._is_in_battle: {time.time() - st}')
             if is_last_dragon:
-                delay(2)
-                continue
-
-            # TODO need a smart way to fight. This will be work in progress. No only hit 3 times.
-            # TODO check for critical hits from my dragon
-            # TODO maybe remember my dragon life and check If I got a critical hit and change it if is the case.
-            if not Battle._can_dragon_support_an_attack():
-                st = time.time()
-                Battle.change_dragon()
-                print(f' Battle.change_dragon: {time.time() - st}')
                 delay(1)
-
-            Battle._attack()
-
-            st = time.time()
-            if not Battle._wait_for_oponent_to_attack():
-                print(f'[LOG] Battle._wait_for_oponent_to_attack: {time.time() - st}')
-                st = time.time()
-                Battle.change_dragon()
-                print(f'[LOG] Battle.change_dragon: {time.time() - st}')
                 continue
 
-            # NEED to check if last dragon that is defeated is selected automatically
-            st = time.time()
-            if not exists(Battle._get_swap_button()):
-                print(f'[LOG] Battle._get_swap_button: {time.time() - st}')
+            if Battle._wait_for_attack_ready() and not exists(Battle._get_swap_button()):
                 is_last_dragon = True
-                st = time.time()
                 moveAndClick(Battle.get_play_button())
-                print(f'[LOG] Battle.get_play_button: {time.time() - st}')
+                continue
+
+            # TODO check for critical hits from my dragon
+            # if not Battle._can_dragon_support_an_attack():
+
+            # TODO when chaning the dragon it happens for the oponent to attack again, leading to a missclick.
+            Battle.change_dragon()
+            Battle._attack()
         print('Fight is over!')
 
     @staticmethod
     def _attack():
         best_attack = Battle._get_attack()
-        if best_attack: return moveAndClick(best_attack)
+        if best_attack:
+            Battle.hit_with_special_attack = True
+            return moveAndClick(best_attack)
+            # Battle.remaining_turns_for_boost_attack = Battle._get_remaing_turns_for_boost_attack()
 
         play_btn = Battle.get_play_button()
         moveAndClick(play_btn)
+        # Battle.remaining_turns_for_boost_attack -= 1
         delay(.3)
         # pause fight
         moveAndClick(play_btn)
 
     @staticmethod
     def _can_dragon_support_an_attack():
-        st = time.time()
         dragon_life = Battle._get_dragon_life()
-        print(f'[LOG] Battle._get_dragon_life: {time.time() - st}')
-        if dragon_life is None: return True
+        if dragon_life is None:
+            return Battle._has_critical_attack_in_battle()
 
-        return (dragon_life[0] / dragon_life[1]) > 0.3
+        return Battle._has_critical_attack_in_battle() or (dragon_life[0] / dragon_life[1]) > 0.3
 
     @staticmethod
     def _get_dragon_life():
@@ -178,12 +186,12 @@ class Battle:
         return None
 
     @staticmethod
-    def _wait_for_oponent_to_attack():
-        retries = 5
+    def _wait_for_attack_ready():
+        retries = 10
         while retries > 0:
             if Battle._get_ico_in_battle(): return True
             if Battle._get_ico_in_team_selection(): return False
-            delay(1)
+            delay(.5)
             retries -= 1
         return False
 
@@ -213,15 +221,16 @@ class Battle:
     @staticmethod
     def _get_attack():
         bbox = [0.1734375, 0.856481, 0.28125, 0.9527]
-
+        # TODO improve best attack by checking exactly the text.
         text_positions = Screen.get_text_pos(bbox)
-        print(text_positions)
 
         if len(text_positions) > 1: return None
 
         for t in text_positions:
-            if Screen.is_match(attacks['GammaExplosion'], t['text']):
-                return t['position']
+            for attack in attacks:
+                if Screen.is_match(attacks[attack], t['text']):
+                    return t['position']
+        return None
 
     @staticmethod
     def _get_boost_attack():
@@ -234,3 +243,44 @@ class Battle:
         if exists(pos):
             return [pos[0], pos[1] + 30]
         return None
+
+    @staticmethod
+    def _has_critical_attack_in_battle():
+        path = f'{Battle.base}/{Battle.screen_res}_critical_attack.png'
+
+        position = [*Screen.get_pos([0.3, 0.824]), *Screen.get_pos([0.8421875, 0.9083])]
+
+        return exists(getImagePositionRegion(path, *position, .8, 1))
+
+    @staticmethod
+    def _get_in_team_critical_attack_positions():
+        bboxes = [
+            [*Screen.get_pos([0.027083, 0.6787]), *Screen.get_pos([0.22447916, 0.77])],
+            [*Screen.get_pos([0.3515625, 0.6787]), *Screen.get_pos([0.547916, 0.77])],
+            [*Screen.get_pos([0.66875, 0.6787]), *Screen.get_pos([0.8697916, 0.77])],
+        ]
+
+        dragons_with_critical_attack = []
+
+        for i, bbox in enumerate(bboxes):
+            path = f'{Battle.base}/{Battle.screen_res}_team_critical_attack.png'
+
+            pos = getImagePositionRegion(path, *bbox, .8, 1)
+
+            if exists(pos):
+                dragons_with_critical_attack.append(i)
+        return dragons_with_critical_attack
+
+    @staticmethod
+    def _get_remaing_turns_for_boost_attack():
+        bbox = [0.1802083, 0.9, 0.2677083, 0.95185]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            return Battle.get_digits_from_string(t['text'])
+        return 0
+
+    @staticmethod
+    def get_digits_from_string(s):
+        return ''.join([char for char in s if char.isdigit()])
