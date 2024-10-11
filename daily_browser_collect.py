@@ -71,6 +71,9 @@ class Daily_Browser_Collect:
         while tries > 0:
             tries -= 1
             text_positions = Screen.get_text_pos(bbox)
+            if len(text_positions) == 0:
+                delay(1)
+                continue
 
             for t in text_positions:
                 if Screen.is_match('claimi', t['text']):
@@ -91,9 +94,8 @@ class LocalServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/collect':
             Daily_Browser_Collect._kill_browser()
-            delay(1)
+            delay(2)
             Daily_Browser_Collect._claim_items_from_browser()
-            print('inside daily collect anter found item inside browser')
             check_if_ok()
             threading.Thread(target=self.server.shutdown).start()
         elif self.path == '/stop':
