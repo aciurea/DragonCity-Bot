@@ -27,9 +27,8 @@ class League:
         League._open_battle()
         check_if_ok()
 
-
     @staticmethod
-    def _open_battle(times = 3):
+    def _open_battle(times=3):
         if times == 0: return print('League finished.')
         if not League._is_league_ready(): return print('League not ready.')
 
