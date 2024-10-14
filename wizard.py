@@ -36,14 +36,21 @@ class Wizard:
             return print('Wizard Already played')
 
         moveAndClick(play_btn)
-        delay(10)
+        Wizard._wait_for_wizard_to_be_playable()
         Wizard._play_wizard()
         Wizard._claim_and_quit_wizard()
         Close.check_if_ok()
 
     @staticmethod
+    def _wait_for_wizard_to_be_playable():
+        tries = 25
+        while not exists(Wizard._get_play_btn()) and tries > 0:
+            delay(.5)
+            tries -= 1
+
+    @staticmethod
     def _play_wizard():
-        tries = 3
+        tries = 5
 
         balls = [
             Screen.get_pos([0.3322916, 0.427]),
@@ -57,8 +64,7 @@ class Wizard:
             ball = random.choice(balls)
             multiple_click(ball)
             delay(7)
-
-            if not exists(Wizard._get_claim_btn()):
+            if tries < 3 and not exists(Wizard._get_claim_btn()):
                 return Close.check_if_ok()
 
     @staticmethod
@@ -111,7 +117,7 @@ class Wizard:
         text_positions = Screen.get_text_pos(bbox)
 
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['claim'], t['text']):
+            if Screen.is_match(text['claim'], t['text']):
                 return t['position']
         return [-1]
 

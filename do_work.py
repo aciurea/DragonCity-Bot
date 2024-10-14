@@ -9,7 +9,6 @@ from daily_browser_collect import Daily_Browser_Collect
 from league import League
 from open import OpenApp
 from orbs import Orbs
-from runner import Runner
 from shop import Shop
 from towers import Towers
 from utils import get_int
@@ -17,8 +16,6 @@ from daily_treasure import Daily_Treasure
 from events_collection import Events_Collection
 from wizard import Wizard
 from position_map import Position_Map
-from puzzle import Puzzle
-from clear_event import ClearEvent
 
 import time
 
@@ -37,20 +34,10 @@ def start_working():
         Daily_Treasure.collect_daily_treasure,
         Daily_Browser_Collect.collect_daily_streak,
         Alliance.open_alliance,
-        Arena.enter_battle,
         League.enter_league,
-
-        ClearEvent.skip_event,
-        # Heroic.race,
-        # Quest.open_quest,
-        Runner.run,
+        Arena.enter_battle,
         Wizard.open_wizard,
-        Puzzle.open_puzzle,
         Events_Collection.collect_events,
-
-        # TV.open_tv,
-        # Habitat.buy_habitat,
-        # More work can be added here
         OpenApp._close_app,
     ]
     str_actions = "Actions with time are: \n\n"
