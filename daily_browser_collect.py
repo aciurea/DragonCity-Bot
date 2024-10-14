@@ -93,8 +93,10 @@ class Daily_Browser_Collect:
 class LocalServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/collect':
-            Daily_Browser_Collect._kill_browser()
             delay(2)
+            Daily_Browser_Collect._kill_browser()
+            delay(1)
+            print('Collect...')
             Daily_Browser_Collect._claim_items_from_browser()
             check_if_ok()
             threading.Thread(target=self.server.shutdown).start()
