@@ -18,40 +18,44 @@ class League:
 
     @staticmethod
     def enter_league():
-        Position_Map.center_map()
+        if not exists(Position_Map.center_map()): return
         delay(.5)
         moveAndClick(League.battle_pos)
         delay(.5)
         moveAndClick(League.league_pos)
         delay(2)
-        League._open_battle()
+        remaining_oponents = League._open_battle()
         check_if_ok()
+        if remaining_oponents > 0: return League.enter_league()
 
     @staticmethod
-    def _open_battle(times=3):
-        if times == 0: return print('League finished.')
-        if not League._is_league_ready(): return print('League not ready.')
+    def _open_battle():
+        tries = 3
+        while tries > 0:
+            tries -= 1
+            if not League._is_league_ready(): return print('League not ready.')
 
-        position = [*Screen.get_pos([0.016, 0.35648148148]), *Screen.get_pos([0.98489583, 0.849074074])]
+            position = [*Screen.get_pos([0.016, 0.35648148148]), *Screen.get_pos([0.98489583, 0.849074074])]
 
-        _base_battle = './img/battle'
-        path = f'{_base_battle}/{League.screen_res}_oponent.png'
-        oponent = getImagePositionRegion(path, *position, .8, 1)
+            _base_battle = './img/battle'
+            path = f'{_base_battle}/{League.screen_res}_oponent.png'
+            oponent = getImagePositionRegion(path, *position, .8, 1)
 
-        if not exists(oponent): return print('No oponent found.')
+            if not exists(oponent):
+                print('No oponent found.')
+                return tries
 
-        moveAndClick(oponent)
-        Battle.fight(change_dragon=False)
-        moveAndClick(League.claim_pos)
-
-        return League._open_battle(times - 1)
+            moveAndClick(oponent)
+            Battle.fight(change_dragon=False)
+            moveAndClick(League.claim_pos)
+            delay(1)
+        return tries
 
     @staticmethod
     def _is_league_ready():
         bbox = [0.808854167, 0.262037, 0.8765625, 0.32037037]
 
         text_positions = Screen.get_text_pos(bbox)
-
         for t in text_positions:
             if Screen.is_match_with_one_difference(text['refill'], t['text']):
                 return False
