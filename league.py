@@ -33,7 +33,9 @@ class League:
         tries = 3
         while tries > 0:
             tries -= 1
-            if not League._is_league_ready(): return print('League not ready.')
+            if not League._is_league_ready():
+                print('League not ready.')
+                return 0
 
             position = [*Screen.get_pos([0.016, 0.35648148148]), *Screen.get_pos([0.98489583, 0.849074074])]
 
