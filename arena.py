@@ -18,7 +18,8 @@ text = {
     'enhance': 'enhance',
     'freespini': 'freespini',
     'freespin': 'freespin',
-    'arena_claim': 'claim'
+    'arena_claim': 'claim',
+    'need': 'need'
 }
 
 
@@ -115,7 +116,8 @@ class Arena:
             moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
             Battle.fight()
-            delay(2)
+            delay(1)
+            Arena._check_offer_after_battle()
 
             Arena._claim_arena_battle_result()
 
@@ -265,3 +267,16 @@ class Arena:
                 delay(5)
                 check_if_ok()
                 delay(1)
+
+    @staticmethod
+    def _check_offer_after_battle():
+        bbox = [0.3416, 0.16, 0.3875, 0.20463]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['need'], t['text']):
+                Close.check_if_ok()
+                delay(1)
+                # secon is for loose text.
+                Close.check_lose_text()
+                break

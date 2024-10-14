@@ -104,7 +104,7 @@ class OpenApp:
                 Popup._enjoy()
                 OpenApp._claim_reward_after_arena()
                 OpenApp._claim_after_browser()
-                Close.get_lose_text()
+                Close.check_lose_text()
                 close_pos = Screen.get_pos([0.794270834, 0.0935185185])
                 moveAndClick(close_pos)
                 delay(.5)

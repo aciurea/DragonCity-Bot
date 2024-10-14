@@ -16,7 +16,7 @@ class Close:
         return btns
 
     @staticmethod
-    def get_lose_text():
+    def check_lose_text():
         lose_pos = [0.344140625, 0.667361, 0.397265625, 0.725]
         text_positions = Screen.get_text_pos(lose_pos)
 
