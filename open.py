@@ -92,7 +92,6 @@ class OpenApp:
         app_time_to_close_all_buttons = 40
 
         while not exists(Position_Map._get_artifact_pos()):
-            OpenApp._check_dc_in_foreground()
             OpenApp._zoom_out()
             if (time.time() - start) > app_time_to_close_all_buttons:
                 return OpenApp.open_app()
@@ -110,7 +109,8 @@ class OpenApp:
                 close_pos = Screen.get_pos([0.794270834, 0.0935185185])
                 moveAndClick(close_pos)
                 delay(.5)
-            delay(1)
+            delay(1.5)
+            OpenApp._check_dc_in_foreground()
         Position_Map.center_map()
         print('APP STARTED SUCCESSFULY')
 
