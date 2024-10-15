@@ -3,6 +3,7 @@ import psutil
 import pyautogui
 import time
 import datetime
+import pygetwindow as gw
 
 from screeninfo import get_monitors
 from close import Close
@@ -91,6 +92,7 @@ class OpenApp:
         app_time_to_close_all_buttons = 40
 
         while not exists(Position_Map._get_artifact_pos()):
+            OpenApp._check_dc_in_foreground()
             OpenApp._zoom_out()
             if (time.time() - start) > app_time_to_close_all_buttons:
                 return OpenApp.open_app()
@@ -136,3 +138,10 @@ class OpenApp:
                 Popup.check_popup_chest()
                 delay(3)
                 Popup.check_popup_chest()
+
+    @staticmethod
+    def _check_dc_in_foreground():
+        active_window = gw.getActiveWindow()
+
+        if active_window.title != 'Dragon City':
+            active_window.close()

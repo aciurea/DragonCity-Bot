@@ -116,13 +116,11 @@ class Arena:
             moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
             Battle.fight()
+            delay(2)
+            Arena._check_offer_after_battle()
+            Arena._claim_arena_battle_result()
             delay(1)
             Arena._check_offer_after_battle()
-
-            Arena._claim_arena_battle_result()
-
-            delay(2)
-            Arena.close_buying_dragon_powers()
             start_fight = Arena._get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
@@ -211,15 +209,6 @@ class Arena:
             if Screen.is_match(text['arena_claim'], t['text']):
                 moveAndClick(t['position'])
                 break
-
-    @staticmethod
-    def close_buying_dragon_powers():
-        if exists(Arena._get_fight_btn()):
-            return
-        # first we hit the close button
-        check_if_ok()
-        delay(1)
-        Close.check_lose_text()
 
     @staticmethod
     def _get_fight_tab():
