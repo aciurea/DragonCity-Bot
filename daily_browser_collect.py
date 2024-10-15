@@ -78,10 +78,10 @@ class Daily_Browser_Collect:
             for t in text_positions:
                 if Screen.is_match('claimi', t['text']):
                     moveAndClick(t['position'])
-                    delay(5)
+                    delay(3)
                     check_if_ok()
                     Popup.check_popup_chest()
-                    delay(5)
+                    delay(3)
                     Popup.check_popup_chest()
                     return
 
@@ -93,10 +93,9 @@ class Daily_Browser_Collect:
 class LocalServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/collect':
-            delay(2)
+            delay(1)
             Daily_Browser_Collect._kill_browser()
             delay(1)
-            print('Collect...')
             Daily_Browser_Collect._claim_items_from_browser()
             check_if_ok()
             threading.Thread(target=self.server.shutdown).start()

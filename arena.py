@@ -219,7 +219,7 @@ class Arena:
         # first we hit the close button
         check_if_ok()
         delay(1)
-        Close.get_lose_text()
+        Close.check_lose_text()
 
     @staticmethod
     def _get_fight_tab():
