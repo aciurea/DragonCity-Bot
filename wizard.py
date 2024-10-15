@@ -39,6 +39,7 @@ class Wizard:
         Wizard._wait_for_wizard_to_be_playable()
         Wizard._play_wizard()
         Wizard._claim_and_quit_wizard()
+        delay(1)
         Close.check_if_ok()
 
     @staticmethod
