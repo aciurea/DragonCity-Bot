@@ -1,5 +1,5 @@
 from battle import Battle
-from close import check_if_ok
+from close import Close
 from utils import delay, exists, getImagePositionRegion, get_screen_resolution
 from position_map import Position_Map
 from move import moveAndClick
@@ -17,7 +17,7 @@ class League:
     screen_res = get_screen_resolution()
 
     @staticmethod
-    def enter_league():
+    def fight_league():
         if not exists(Position_Map.center_map()): return
         delay(.5)
         moveAndClick(League.battle_pos)
@@ -25,8 +25,10 @@ class League:
         moveAndClick(League.league_pos)
         delay(2)
         remaining_oponents = League._open_battle()
-        check_if_ok()
-        if remaining_oponents > 0: return League.enter_league()
+        Close.check_if_ok()
+        delay(1)
+        if remaining_oponents > 0 and exists(Position_Map.center_map()):
+            return League.enter_league()
 
     @staticmethod
     def _open_battle():
@@ -45,7 +47,7 @@ class League:
 
             if not exists(oponent):
                 print('No oponent found.')
-                return tries
+                return 0
 
             moveAndClick(oponent)
             Battle.fight(change_dragon=False)

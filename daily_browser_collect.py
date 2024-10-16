@@ -66,14 +66,23 @@ class Daily_Browser_Collect:
 
     @staticmethod
     def _claim_items_from_browser():
+        print('Collecting items from browser...')
         bbox = [0.45625, 0.83796296, 0.53802083, 0.9037037]
-        tries = 25
+        tries = 60
         while tries > 0:
             tries -= 1
             text_positions = Screen.get_text_pos(bbox)
             if len(text_positions) == 0:
-                delay(1)
-                continue
+                if tries > 50:
+                    delay(1)
+                    continue
+                elif tries > 40:
+                    check_if_ok()
+                    delay(1)
+                    continue
+                else:
+                    Gold.collectGold()
+                    continue
 
             for t in text_positions:
                 if Screen.is_match('claimi', t['text']):
