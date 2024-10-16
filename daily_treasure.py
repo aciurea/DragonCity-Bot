@@ -1,30 +1,26 @@
-import time
 from close import check_if_ok
-from move import center_map, moveAndClick
 from popup import Popup
-from utils import delay, exists
+from utils import delay
+from move import moveAndClick
+from screen import Screen
+from position_map import Position_Map
+
 
 class Daily_Treasure:
-    wait_time = 3600 * 3
-    last_time_started = 0
+    treasure_pos = Screen.get_pos([0.8614583, 0.86574])
+    chest_pos = Screen.get_pos([0.1135416, 0.84])
 
+    @staticmethod
     def collect_daily_treasure():
-        if time.time() - Daily_Treasure.last_time_started < Daily_Treasure.wait_time: return
-        print('Collecting daily treasure')
-        center = center_map()
-        if not exists(center): 
-            return check_if_ok()
-            
-        moveAndClick(center)
-        treasure_pos = [2245, 1275]
-        delay(1)
-        moveAndClick(treasure_pos)
-        delay(2)
-        moveAndClick([290, 1200])
-        delay(1)
-        Popup.check_popup_chest()
-        check_if_ok()
-        Daily_Treasure.last_time_started = time.time()
+        actions = [
+            Position_Map.center_map,
+            lambda: delay(.5),
+            lambda: moveAndClick(Daily_Treasure.treasure_pos),
+            lambda: moveAndClick(Daily_Treasure.chest_pos),
+            Popup.check_popup_chest,
+            check_if_ok,
+        ]
 
-def collect_daily_treasure():
-    Daily_Treasure.collect_daily_treasure()
+        for action in actions:
+            action()
+            delay(.5)

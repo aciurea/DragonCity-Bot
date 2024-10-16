@@ -5,7 +5,6 @@ _BASE_BATTLE = './img/battle/'
 _BASE_ARENA = _BASE_BATTLE + 'arenas/'
 _BASE_GOLD = './img/gold/'
 _BASE_FOOD = './img/food/'
-_BASE_ORBS = './img/orbs/'
 _BASE_APP_START= './img/app_start/'
 _BASE_BREED = './img/breed/'
 _BASE_TV = './img/tv/'
@@ -17,14 +16,35 @@ _BASE_WRONG_POPUPS = './img/wrong_popups/'
 _BASE_APP_CLOSE = './img/close_buttons/'
 _BASE_APP_POPUP = './img/popups/'
 _BASE_HABITAT = './img/habitat/'
-_BASE_ORBS = './img/orbs/'
 _BASE_ALLIANCE = './img/alliance/'
 _BASE_DAILY = './img/daily/'
 _BASE_RUNNER = './img/runner/'
+_BASE_EVENTS_COLLECTION = './img/event_collection/'
+_BASE_WIZARD = './img/wizard/'
+
+# WIZARD start
+WIZARD_PLAY_BTN = get_path(_BASE_WIZARD + 'play_btn')
+WIZARD_GEMS_BTN = get_path(_BASE_WIZARD + 'gem')
+WIZARD_CLAIM_BTN = get_path(_BASE_WIZARD + 'claim')
+WIZARD_RED_CLAIM = get_path(_BASE_WIZARD + 'red_claim')
+WIZARD_YELLOW_CLAIM = get_path(_BASE_WIZARD + 'yellow_claim')
+# WIZARD end
+
+
+# EVENTS collection
+EVENTS_COLLECTION_BTN = get_path(_BASE_EVENTS_COLLECTION + 'events_btn')
+EVENTS_CLAIM_BTN = get_path(_BASE_EVENTS_COLLECTION + 'claim_btn')
+EVENTS_CLAIM_BTN_2 = get_path(_BASE_EVENTS_COLLECTION + 'claim_btn_2')
+EVENTS_ENJOY_BTN = get_path(_BASE_EVENTS_COLLECTION + 'enjoy_btn')
+
+
+# End of EVENTS collection
 
 # RUNNER
 RUNNER_ICO = get_path(_BASE_RUNNER + 'ico')
 RUNNER_CLAIM = get_path(_BASE_RUNNER + 'claim')
+RUNNER_EXPANDED = get_path(_BASE_RUNNER + 'expanded')
+RUNNER_CLAIMED = get_path(_BASE_RUNNER + 'claimed')
 
 
 # END RUNNER
@@ -52,10 +72,6 @@ LEAGUE_OPONENT = get_path(_BASE_BATTLE + 'league_oponent')
 LEAGUE_CLAIM = get_path(_BASE_BATTLE + 'claim')
 LEAGUE_NOT_READY = get_path(_BASE_BATTLE + 'no_new_combats')
 
-# ORBS
-ORBS_CLAIM = get_path(_BASE_ORBS + 'claim')
-#END ORBS
-
 #Habitat
 HABITAT_INFO = get_path(_BASE_HABITAT + 'info')
 HABITAT_CONTINUE = get_path(_BASE_HABITAT + 'continue')
@@ -69,7 +85,6 @@ ARENA_CLOSE_ATTACK_REPORT = get_path(_BASE_ARENA + 'close_attack_report')
 
 ARENA_REPEAL = get_path(_BASE_ARENA + 'repeal')
 
-ARENA_CHEST_COLLECT = get_path(_BASE_ARENA + 'collect')
 ARENA_QUEST = get_path(_BASE_ARENA + 'arenas_quest')
 ARENA_CLAIM_BTN = get_path(_BASE_ARENA + 'claim')
 
@@ -115,6 +130,8 @@ FIGHT_GOOD_LIFE = get_path(f'{_BASE_BATTLE}low_life')
 FIGHT_TAB = get_path(f'{_BASE_BATTLE}fight_tab')
 FIGHT_SELECT_DRAGON = get_path(f'{_BASE_BATTLE}select_dragon')
 FIGHT_ATTACK_READY = get_path(f'{_BASE_BATTLE}attack_ready')
+FIGHT_DOUBLE_DAMAGE = get_path(f'{_BASE_BATTLE}double_damage')
+FIGHT_INSIDE_DOUBLE_DAMAGE = get_path(f'{_BASE_BATTLE}inside_double_damage')
 
 
 # End Fight
@@ -128,23 +145,6 @@ FOOD_FARM = get_path(_BASE_FOOD + 'farm')
 FOOD_FARM_WINTER = get_path(_BASE_FOOD + 'farm_winter')
 FOOD_REGROW_ALL = get_path(_BASE_FOOD + 'regrow')
 FOOD_IMG = get_path(_BASE_FOOD + 'food')
-
-ORBS_GOLD = get_path(_BASE_ORBS + 'gold')
-ORBS_SHOP = get_path(_BASE_ORBS + 'shop')
-ORBS_ORBS = get_path(_BASE_ORBS + 'orbs')
-
-
-# Start section popups
-
-POPUP_CLAIM = get_path(f'{_BASE_APP_POPUP}claim')
-POPUP_TAP = get_path(f'{_BASE_APP_POPUP}tap')
-POPUP_LEFT_CORNER = get_path(f'{_BASE_APP_POPUP}left_corner')
-POPUP_HEADER = get_path(f'{_BASE_APP_POPUP}left_header')
-
-# End section popups
-
-
-
 
 ## Start section close buttons
 
@@ -163,21 +163,16 @@ APP_NO = get_path(f'{_BASE_APP_CLOSE}no')
 ## End section close buttons
 
 
-
 # Start App start
-APP_START_CLAIM_BTN = get_path(_BASE_APP_START + 'claim_yellow')
-APP_START_DIVINE_CLOSE = get_path(f'{_BASE_APP_START}close_divine')
-APP_START_RED_CLOSE = get_path(_BASE_APP_START + 'red_close')
-APP_START_BIG_CLOSE = get_path(_BASE_APP_START + 'big_close')
-APP_START_NO = get_path(_BASE_APP_START + 'no')
-APP_START_BUY_NOW = get_path(f'{_BASE_APP_START}buy_now')
-APP_START_BUY_NOW_2 = get_path(f'{_BASE_APP_START}buy_now2')
 APP_START_ENJOY = get_path(f'{_BASE_APP_START}enjoy')
-
-
+APP_START_ARENA_CLAIM = get_path(_BASE_APP_START + 'arena_claim')
 APP_START_EXTRA_CLAIM = get_path(_BASE_APP_START + 'extra_claim')
+APP_START_ENJOY_CLAIM = get_path(_BASE_APP_START + 'enjoy_claim')
+APP_START_CLOCK = get_path(_BASE_APP_START + 'clock')
 
 # End App start
+
+
 
 BREED_FEED_BTN = get_path(_BASE_BREED + 'feed') 
 BREED_SELL_BTN = get_path(_BASE_BREED + 'sell') 
@@ -187,6 +182,8 @@ BREED_PLACE_BTN = get_path(_BASE_BREED + 'place')
 BREED_DRAGON_PLACE_POINT = get_path(_BASE_BREED + 'dragon_place_point') 
 BREED_DRAGON = get_path(_BASE_BREED + 'dragon') 
 BREED_TERRA_EGG = get_path(_BASE_BREED + 'terra_egg') 
+BREED_FLAME_EGG = get_path(_BASE_BREED + 'flame_egg')
+BREED_SEA_EGG = get_path(_BASE_BREED + 'sea_egg')
 BREED_TREE = get_path(_BASE_BREED + 'tree') 
 BREED_WINTER_TREE = get_path(_BASE_BREED + 'winter_tree') 
 HATCH_DRAGON = get_path(_BASE_BREED  + 'dragon')
@@ -215,15 +212,13 @@ TV_PRAIZES = get_path(_BASE_TV + 'prizes')
 ## END TV
 
 ## Quest
-QUEST_GO_TO_BATTLE = get_path(_BASE_BATTLE + 'go_to_battle')
+
+QUEST_REQ = get_path(_BASE_BATTLE + 'requirements')
+QUEST_INFO = get_path(_BASE_BATTLE + 'info')
+QUEST_NOT_READY = get_path(_BASE_BATTLE + 'no_quest_ready')
+QUEST_BATTLE_BTN = get_path(_BASE_BATTLE + 'battle_btn')
 
 ## End Quest
-
-BATTLE_QUEST_BTN = get_path(_BASE_BATTLE + 'quest')
-BATTLE_NEXT_QUEST = get_path(_BASE_BATTLE + 'next_quest')
-BATTLE_GREEN_CLAIM = get_path(_BASE_BATTLE + 'claim')
-BATTLE_ATTACK_IS_AVAILABLE = get_path(_BASE_BATTLE + 'attacks_available')
-
 HEROIC_ARENA = get_path(_BASE_HEROIC + 'heroic')
 HEROIC_SELECT_BTN = get_path(_BASE_HEROIC + 'select')
 HEROIC_DRAGON = get_path(_BASE_HEROIC + 'dragon')
@@ -286,3 +281,4 @@ TREE_RARITY_LEGENDARY = get_path(_BASE_TREE + 'legendary')
 
 
 UTILS_CLOSE_BTN = get_path(f'{_BASE_UTILS}close')
+UTILS_ARTIFACT = get_path(f'{_BASE_UTILS}artifact')

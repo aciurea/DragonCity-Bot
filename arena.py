@@ -1,230 +1,271 @@
 import time
-from battle import Battle
-from close import check_if_ok
-from move import multiple_click
-from popup import Popup
-from utils import (
-                delay,
-                exists,
-                get_grid_monitor,
-                get_json_file,
-                get_monitor_quarters,
-                getImagePositionRegion,
-                moveAndClick)
-import constants as C
-import concurrent.futures
 
-jsonPos = get_json_file('arena.json')
+from position_map import Position_Map
+from battle import Battle
+from close import check_if_ok, Close
+from move import multiple_click, moveAndClick
+from popup import Popup
+from utils import delay, exists
+from screen import Screen
+
+text = {
+    'refill': 'refill24',
+    'fight': 'fightl',
+    'claim': 'claimi',
+    'attack': 'attack',
+    'collect': 'collect',
+    'change': 'change',
+    'enhance': 'enhance',
+    'freespini': 'freespini',
+    'freespin': 'freespin',
+    'arena_claim': 'claim',
+    'need': 'need'
+}
+
 
 class Arena:
-    mon_quarters = get_monitor_quarters()
-    grid = get_grid_monitor()
-    dump_screenshot_for_rewards = "dump_for_rewards.png"
+    battle_pos = Screen.get_pos([0.3015625, 0.84114583])
+    arena_pos = Screen.get_pos([0.69427083, 0.487])
 
     @staticmethod
-    def _check_attack_report():
-        accept = getImagePositionRegion(C.ARENA_REPORT_ACCEPT, *Arena.mon_quarters['3rdRow'], .8, 1)
-        if exists(accept): 
-            moveAndClick(accept)
-            return print("Attack report accepted")
+    def _change_defetead_dragon():
+        bboxes = [
+            [0.19921875, 0.72, 0.27734375, 0.770834],
+            [0.51953125, 0.72, 0.59765625, 0.770834],
+            [0.841796875, 0.72, 0.916015625, 0.770834],
+        ]
 
-        moveAndClick(jsonPos["CLOSE_ATTACK"])
-        #TODO improvement: check if we have a video to close
+        for bbox in bboxes:
+            text_positions = Screen.get_text_pos(bbox)
+            print(text_positions)
+            if len(text_positions) > 0 and Screen.is_match(text['enhance'], text_positions[0]['text']): continue
 
-    @staticmethod
-    def check_and_collect_rewards():
-        collect = getImagePositionRegion(C.ARENA_CHEST_COLLECT, *Arena.mon_quarters['1stRow'], .8, 1)
-
-        if exists(collect):
-            multiple_click(collect)
+            moveAndClick(Screen.get_pos([bbox[0], bbox[1]]))
             delay(1)
-            Popup.check_popup_chest()
-            check_if_ok()
-            delay(.3)
+            filter_pos = [0.68854167, 0.8481]
+            order_pos = [0.65677083, 0.23981]
+            order_by_power_pos = [0.62083, 0.487037]
+            first_dragon_pos = [0.26875, 0.3943]
 
-    @staticmethod
-    def prepare_fight():
-        if exists(Arena.get_dragon_defeated_pos()):
-            change_btn = getImagePositionRegion(C.ARENA_CHANGE, *Arena.mon_quarters['bottom_left'], .8, 1)
-            if not exists(change_btn): return print('Change button not found')
-            moveAndClick(change_btn)
+            moveAndClick(Screen.get_pos(filter_pos))
+            delay(.2)
+            moveAndClick(Screen.get_pos(order_pos))
             delay(1)
-            Arena.change_defetead_dragon()
-
-    @staticmethod
-    def order_by_power():
-        order_by = getImagePositionRegion(C.ARENA_ORDER_BY, *Arena.mon_quarters['top_right'], .8, 1)
-
-        if not exists(order_by): return print('Order by button not found')
-        moveAndClick(order_by)
-        delay(1)
-        order_by_power_des = getImagePositionRegion(C.ARENA_ORDER_BY_POWER, *Arena.mon_quarters['full'], .8, 1)
-        if not exists(order_by_power_des): return print('Order by power button not found')
-        new_pos = [order_by_power_des[0] + 50, order_by_power_des[1] + 50]
-        moveAndClick(new_pos)
-
-    def get_dragon_defeated_pos():
-        pos = [Arena.grid['x0'], Arena.grid['y2'], Arena.grid['x8'], Arena.grid['y5']]
-        
-        return getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON, *pos, .8, 1)
-    
-    def is_defeated_dragon_in_select_team():
-        pos = [Arena.grid['x0'], Arena.grid['y3'], Arena.grid['x7'], Arena.grid['y5']]
-        
-        return exists(getImagePositionRegion(C.ARENA_DEFETEAD_DRAGON_SELECT_TEAM, *pos, .8, 1))
-    
-    def get_select_dragon_btn():
-        pos = [Arena.grid['x0'], Arena.grid['y4'], Arena.grid['x7'], Arena.grid['y5']]
-
-        return getImagePositionRegion(C.ARENA_SELECT_DRAGON, *pos, .8, 1)
-
-    @staticmethod
-    def change_defetead_dragon():
-        start =  time.time()
-
-        while time.time() - start < 60: # 1 minute
-            if not Arena.is_defeated_dragon_in_select_team():
-                check_if_ok()
-                return print('Dragons are ready for fight')
-            select_new_dragon_btn = Arena.get_select_dragon_btn()
-            moveAndClick(select_new_dragon_btn)
+            moveAndClick(Screen.get_pos(order_by_power_pos))
             delay(1)
+            moveAndClick(Screen.get_pos(first_dragon_pos))
+        check_if_ok()
 
-            filter_dragons = getImagePositionRegion(C.ARENA_FILTER_DRAGONS, *Arena.mon_quarters['4thRow'], .8, 1)
-            
-            if not exists(filter_dragons): return print('Filter dragons button not found')
-            moveAndClick(filter_dragons)
-            delay(1)
-            Arena.order_by_power()
-            delay(1)
-
-            new_dragon = getImagePositionRegion(C.ARENA_NEW_DRAGON, *Arena.mon_quarters['2ndRow'], .8, 1)
-            if not exists(new_dragon): raise Exception('No dragons available')
-            moveAndClick(new_dragon)
-            # TODO remove it
-            temp = [1812, 969]
-            delay(.1)
-            moveAndClick(temp)
-            delay(1)
-        raise Exception('No more dragons to fight. Exit immediatelly')
-
-    @staticmethod
-    def get_fight_btn():
-        return getImagePositionRegion(C.ARENA_FIGHT, *Arena.mon_quarters['4thRow'], .8, 2)
-
-    def get_screenshot_for_rewards_collection():
-        return getImagePositionRegion(Arena.dump_screenshot_for_rewards, 1000, 350, 1500, 550, .8, 1)
-
-    def wait_for_the_fight_tab():
+    def _wait_for_the_fight_tab():
         start = time.time()
-        fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)    
+        fight_tab = Arena._get_fight_tab()
 
         while time.time() - start < 10 and not exists(fight_tab):
-            fight_tab = getImagePositionRegion(C.FIGHT_TAB, *Arena.mon_quarters['top_left'], .8, 1)
+            fight_tab = Arena._get_fight_tab()
             delay(1)
         moveAndClick(fight_tab)
 
-    def get_fight_spin():
-        return getImagePositionRegion(C.ARENA_FIGHT_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
+    def _do_free_spin():
+        bbox = [0.782, 0.25929, 0.872395834, 0.312037]
+        text_positions = Screen.get_text_pos(bbox)
 
-    def do_free_spin():
-        free_spin = getImagePositionRegion(C.ARENA_FREE_SPIN, *Arena.mon_quarters['4thRow'], .8, 1)
-        if exists(free_spin):
-            moveAndClick(free_spin)
-            delay(10)
-        fight_spin = Arena.get_fight_spin()
-        if exists(fight_spin): moveAndClick(fight_spin)
-            
+        if len(text_positions) == 0:
+            return
+        for t in text_positions:
+            if Screen.is_match(text['freespini'], t['text'].lower()):
+                moveAndClick(t['center'])
+                delay(1)
+                break
+
+        bbox = [0.46927083, 0.7935185, 0.546354167, 0.8361]
+        text_positions = Screen.get_text_pos(bbox)
+        for t in text_positions:
+            if Screen.is_match(text['freespin'], t['text'].lower()):
+                moveAndClick(t['center'])
+                delay(5)
+                check_if_ok()
+                break
+
     @staticmethod
     def enter_battle():
-        arena = getImagePositionRegion(C.ARENA, *Arena.mon_quarters['1stCol'], .8, 1)
-        if not exists(arena): return print('Arena not found')
-        moveAndClick(arena)
+        Arena._open_arena()
+        delay(1)
+        Arena._preapre_arena()
+        Arena._do_free_spin()
 
-        delay(2)
-        Arena._check_attack_report()
-        delay(1)
-        Arena.claim_rush()
-        delay(1)
-        Arena.wait_for_the_fight_tab()
-        delay(1)
+        start_fight = Arena._get_fight_btn()
 
-        start_fight = Arena.get_fight_btn()
-        time_limit = 600 # if doesn't end in 10 minutes, we stop the script.
+        # if doesn't end in 10 minutes, we stop the script.
+        time_limit = 600
         start_time = time.time()
 
         while exists(start_fight):
             if (time.time() - start_time) > time_limit: 
                 raise Exception('Time limit exceded on arena. Closing the app....')
-            
+
             print('Start new Arena battle')
-            # Arena.skip_strong_dragons()
-            try: Arena.prepare_fight()
-            except: return
-            Arena.check_and_collect_rewards()
+            Arena._prepare_fight()
+            Arena._check_and_collect_rewards()
 
+            # start the fight
             moveAndClick(start_fight)
+            delay(.5)
+            # because of spin button I need to click again.
+            moveAndClick([start_fight[0], start_fight[1] + 15])
             delay(1)
-            Arena.do_free_spin()
-            Battle.fight()
-            
-            delay(3)
+            moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
-            Arena.collect_arena_battle_rewards()
+            Battle.fight()
+            delay(2)
+            Arena._check_offer_after_battle()
+            Arena._claim_arena_battle_result()
             delay(1)
-            Arena.close_buying_dragon_powers()
-            start_fight = Arena.get_fight_btn()
+            Arena._check_offer_after_battle()
+            start_fight = Arena._get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
 
-    def claim_rush():
-        rush = getImagePositionRegion(C.ARENA_CLAIM_RUSH, *Arena.mon_quarters['4thRow'], .8, 1)
-
-        if not exists(rush): return 
-        moveAndClick(rush)
-        delay(2)
-        moveAndClick([1250, 1215])
-        delay(5)
-
-        times = 5
-        while times > 0:
-            times -= 1
-            Popup.check_popup_chest()
-            delay(2)
-
     @staticmethod
-    def collect_arena_battle_rewards():
-        collect_btn = getImagePositionRegion(C.ARENA_CLAIM_BTN, *Arena.mon_quarters['full'], .8, 2)
-
-        if exists(collect_btn):
-            moveAndClick(collect_btn)
-        else:
-            moveAndClick(jsonPos["STATIC_CLAIM_BATTLE"])
-            print('Collect button not found')
-        delay(3)
-
-    @staticmethod
-    def close_buying_dragon_powers():
-        if exists(Arena.get_fight_btn()): return 
-
-        check_if_ok() # first we hit the close button
-
-    @staticmethod
-    def skip_strong_dragons():
-        strong_dragons = [ 
-            [C.ARENA_HAXED_VAMPIRE, *Arena.mon_quarters['bottom_right']],
-            [C.ARENA_DUAL_PERFECEPTION, *Arena.mon_quarters['bottom_right']],
-            [C.ARENA_DUAL_PARLIAMENT, *Arena.mon_quarters['bottom_right']],
+    def _open_arena():
+        open_actions = [
+            Position_Map.center_map,
+            lambda: moveAndClick(Arena.battle_pos),
+            lambda: moveAndClick(Arena.arena_pos),
         ]
-        
-        times = 2
-        while times > 0:
-            times -= 1
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                result_list = executor.map(lambda args: getImagePositionRegion(*args, .8, 1), strong_dragons)
-            
-                for is_strong_dragon in result_list:
-                    if exists(is_strong_dragon):
-                        moveAndClick(getImagePositionRegion(C.ARENA_SKIP, *Arena.mon_quarters['4thRow'], .8, 1))
-                        break
+        for action in open_actions:
+            action()
+            delay(1)
+
+    @staticmethod
+    def _preapre_arena():
+        get_to_fight_ready_actions = [Arena._check_attack_report]
+
+        if not exists(Arena._get_fight_btn()):
+            get_to_fight_ready_actions.append(Arena._check_start_new_season)
+            get_to_fight_ready_actions.append(Arena._claim_rush_battle_end)
+            get_to_fight_ready_actions.append(Arena._wait_for_the_fight_tab)
+            get_to_fight_ready_actions.append(Arena._prepare_fight)
+
+        for action in get_to_fight_ready_actions:
+            st = time.time()
+            action()
+            print('Time to get to fight ready', str(action.__name__), time.time() - st)
+            delay(.3)
+
+    @staticmethod
+    def _get_fight_btn(gray_mode=False):
+        bbox = [0.430859375, 0.814583, 0.5234375, 0.9]
+        text_positions = Screen.get_text_pos(bbox, gray_mode)
+
+        for t in text_positions:
+            if Screen.is_match(text['refill'], t['text']):
+                return [-1]
+            if Screen.is_match(text['fight'], t['text']):
+                return t['position']
+
+        if not gray_mode:
+            return Arena._get_fight_btn(True)
+        return [-1]
+
+    @staticmethod
+    def _prepare_fight():
+        bbox = [0.118359375, 0.679167, 0.411328125, 0.731945]
+        text_positions = Screen.get_text_pos(bbox)
+        if len(text_positions) == 3: return
+
+        bbox = [0.25390625, 0.7916, 0.337890625, 0.861]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if text['change'] in t['text'].lower():
+                moveAndClick(t['position'])
+                delay(1)
+                Arena._change_defetead_dragon()
+
+    def _claim_rush_battle_end():
+        bbox = [0.622265625, 0.854861, 0.71875, 0.9305]
+        text_positions = Screen.get_text_pos(bbox)
+        lets_go_pos = Screen.get_pos([0.4864583, 0.8361])
+
+        for t in text_positions:
+            if Screen.is_match(text['claim'], t['text']):
+                moveAndClick(t['position'])
+                delay(2)
+                moveAndClick(lets_go_pos)
                 delay(3)
+                times = 5
+                while times > 0:
+                    times -= 1
+                    Popup.check_popup_chest()
+                    delay(1)
+                moveAndClick(Popup._get_claim_btn())
+
+    @staticmethod
+    def _claim_arena_battle_result():
+        bbox = [0.4625, 0.862037, 0.5328125, 0.916]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['arena_claim'], t['text']):
+                moveAndClick(t['position'])
+                break
+
+    @staticmethod
+    def _get_fight_tab():
+        bbox = [0.28984375, 0.232, 0.35078125, 0.278]
+
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match('fight', t['text']):
+                return t['position']
+        return [-1]
+
+    @staticmethod
+    def _check_start_new_season():
+        if exists(Arena._get_fight_tab()):
+            return print('Season is over. No need to check if ended.')
+        bbox = [0.42578125, 0.78056, 0.480859375, 0.8354169]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match('start', t['text']):
+                moveAndClick(t['position'])
+
+    @staticmethod
+    def _check_attack_report():
+        bbox = [0.4171875, 0.21, 0.499609375, 0.27361]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['attack'], t['text']):
+                close_pos = Screen.get_pos([0.77421875, 0.2604167])
+                return moveAndClick(close_pos)
+        # TODO when accept button will be available, click on it by taking the text or by position
+
+    @staticmethod
+    def _check_and_collect_rewards():
+        bbox = [0.462890625, 0.146527, 0.527734375, 0.195834]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['collect'], t['text']):
+                multiple_click(t['position'])
+                delay(1)
+                Popup.check_popup_chest()
+                delay(5)
+                check_if_ok()
+                delay(1)
+
+    @staticmethod
+    def _check_offer_after_battle():
+        bbox = [0.3416, 0.16, 0.3875, 0.20463]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['need'], t['text']):
+                Close.check_if_ok()
+                delay(1)
+                # secon is for loose text.
+                Close.check_lose_text()
+                break
