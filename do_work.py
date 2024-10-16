@@ -34,7 +34,7 @@ def start_working():
         Daily_Treasure.collect_daily_treasure,
         Daily_Browser_Collect.collect_daily_streak,
         Alliance.open_alliance,
-        League.enter_league,
+        League.fight_league,
         Arena.enter_battle,
         Wizard.open_wizard,
         Events_Collection.collect_events,

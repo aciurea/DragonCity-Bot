@@ -28,7 +28,7 @@ class League:
         Close.check_if_ok()
         delay(1)
         if remaining_oponents > 0 and exists(Position_Map.center_map()):
-            return League.enter_league()
+            return League.fight_league()
 
     @staticmethod
     def _open_battle():

@@ -36,7 +36,7 @@ class Heroic:
         delay(1)
 
         if not Heroic._is_heroic_race():
-            League.enter_league(),
+            League.fight_league(),
             return
 
         # TODO: claim node
@@ -80,7 +80,7 @@ class Heroic:
                     missions.append(lambda: Breed.breed('feed', 20))
                     break
                 if Screen.is_match(text['winleaguebattles'], t['text']):
-                    missions.append(lambda: League.enter_league())
+                    missions.append(lambda: League.fight_league())
                     break
                 if Screen.is_match(text['GETITEMBYCOLLECTING'], t['text']):
                     missions.append(lambda: Farm.fast_collect(times=20))
