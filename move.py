@@ -14,6 +14,9 @@ def fast_click(pos):
 
 
 def multiple_click(pos, times=5, time_between_clicks=0.1):
+    mouse.move(*pos)
+    delay(.05)
+
     while times > 0:
         fast_click(pos)
         delay(time_between_clicks)

@@ -12,7 +12,8 @@ text = {
     'play': 'play',
     'claim': 'claimi',
     'claim&quit': 'claim',
-    'claimall': 'claimall'
+    'claimall': 'claimall',
+    'NoWizards': 'No Wizards'
 }
 
 
@@ -65,8 +66,7 @@ class Wizard:
             ball = random.choice(balls)
             multiple_click(ball)
             delay(7)
-            if tries < 3 and not exists(Wizard._get_claim_btn()):
-                return Close.check_if_ok()
+            if Wizard._is_wizard(): return Close.check_if_ok()
 
     @staticmethod
     def _claim_and_quit_wizard():
@@ -132,3 +132,13 @@ class Wizard:
             if Screen.is_match_with_one_difference(text['play'], t['text']):
                 return t['position']
         return None
+
+    @staticmethod
+    def _is_wizard():
+        bbox = [0.3635416, 0.626851, 0.4447916, 0.66851]
+        text_positions = Screen.get_text_pos(bbox)
+
+        for t in text_positions:
+            if Screen.is_match(text['NoWizards'], t['text']):
+                return True
+        return False
