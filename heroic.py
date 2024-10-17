@@ -77,22 +77,22 @@ class Heroic:
             text_positions = Screen.get_text_pos(bbox)
             for t in text_positions:
                 if Screen.is_match(text['getitembyfeeding'], t['text']):
-                    missions.append(lambda: Breed.breed('feed', 20))
+                    missions.append(lambda: Breed.breed('feed', 10))
                     break
                 if Screen.is_match(text['winleaguebattles'], t['text']):
                     missions.append(lambda: League.fight_league())
                     break
                 if Screen.is_match(text['GETITEMBYCOLLECTING'], t['text']):
-                    missions.append(lambda: Farm.fast_collect(times=20))
+                    missions.append(lambda: Farm.fast_collect(times=10))
                     break
                 if Screen.is_match(text['GETITEMFROMBATTLES'], t['text']):
                     fight_in_battle = True
                     break
                 if Screen.is_match(text['hatch'], t['text']):
-                    missions.append(lambda: Breed.breed('sell', 20))
+                    missions.append(lambda: Breed.breed('sell', 10))
                     break
                 else:
-                    missions.append(lambda: Breed.breed('breed', 20))
+                    missions.append(lambda: Breed.breed('breed', 10))
                     break
 
         if fight_in_battle:

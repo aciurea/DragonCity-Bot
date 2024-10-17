@@ -142,6 +142,7 @@ class OpenApp:
     @staticmethod
     def _check_dc_in_foreground():
         active_window = gw.getActiveWindow()
+        if active_window is None: return
 
-        if active_window.title != 'Dragon City':
+        if active_window.title is not None and active_window.title != 'Dragon City':
             active_window.close()
