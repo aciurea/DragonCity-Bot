@@ -100,7 +100,7 @@ class Arena:
         start_time = time.time()
 
         while exists(start_fight):
-            if (time.time() - start_time) > time_limit: 
+            if (time.time() - start_time) > time_limit:
                 raise Exception('Time limit exceded on arena. Closing the app....')
 
             print('Start new Arena battle')
@@ -112,15 +112,12 @@ class Arena:
             delay(.5)
             # because of spin button I need to click again.
             moveAndClick([start_fight[0], start_fight[1] + 15])
-            delay(1)
-            moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
+            # delay(1)
+            # moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
             Battle.fight()
-            delay(2)
-            Arena._check_offer_after_battle()
-            Arena._claim_arena_battle_result()
-            delay(1)
-            Arena._check_offer_after_battle()
+            Arena._clean_after_battle()
+
             start_fight = Arena._get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
@@ -208,7 +205,8 @@ class Arena:
         for t in text_positions:
             if Screen.is_match(text['arena_claim'], t['text']):
                 moveAndClick(t['position'])
-                break
+                return True
+        return False
 
     @staticmethod
     def _get_fight_tab():
@@ -254,7 +252,7 @@ class Arena:
                 delay(1)
                 Popup.check_popup_chest()
                 delay(5)
-                check_if_ok()
+                Close.check_if_ok()
                 delay(1)
 
     @staticmethod
@@ -265,7 +263,19 @@ class Arena:
         for t in text_positions:
             if Screen.is_match(text['need'], t['text']):
                 Close.check_if_ok()
-                delay(1)
-                # secon is for loose text.
+                delay(2)
                 Close.check_lose_text()
-                break
+                return True
+        return False
+
+    @staticmethod
+    def _clean_after_battle():
+        retries = 10
+        while retries > 0:
+            retries -= 1
+            if Arena._check_offer_after_battle():
+                delay(1)
+            if Arena._claim_arena_battle_result():
+                delay(3)
+                return
+            delay(1)

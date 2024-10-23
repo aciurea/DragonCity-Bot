@@ -50,13 +50,13 @@ class Alliance:
 
     @staticmethod
     def _get_work():
-        bbox = [0.509375, 0.69, 0.6083, 0.788]
+        bbox = [0.50989583, 0.7583, 0.6109375, 0.812037]
         work = {
             'Breed': lambda: Breed.breed('breed', 20),
             'HatchEggs': lambda: Breed.breed('sell', 20),
         }
         text_positions = Screen.get_text_pos(bbox)
-        print(text_positions)
+
         for t in text_positions:
             if t['text'] in work:
                 return work[t['text']]
