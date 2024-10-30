@@ -30,7 +30,9 @@ class Screen:
         return [get_int(pos[0] * Screen.width), get_int(pos[1] * Screen.height)]
 
     @staticmethod
-    def get_text_pos(orig_bbox, gray_mode=False):
+    def get_text_pos(orig_bbox, gray_mode=False, custom_filter=None):
+        if gray_mode: custom_filter = Screen.convert_to_gray
+
         # we have the bbox in percentages
         if len(orig_bbox) == 4 and orig_bbox[0] < 1:
             orig_bbox = [
@@ -39,7 +41,7 @@ class Screen:
                 get_int(orig_bbox[2] * Screen.width),
                 get_int(orig_bbox[3] * Screen.height)
             ]
-        Screen.prepare_image(orig_bbox, gray_mode)
+        Screen.prepare_image(orig_bbox, custom_filter)
         allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
         result = reader.readtext('./toDelete.png', decoder='greedy', beamWidth=1, batch_size=1, allowlist=allowlist)
 
@@ -54,22 +56,18 @@ class Screen:
         return text_positions
 
     @staticmethod
-    def prepare_image(bbox, gray_mode):
+    def prepare_image(bbox, custom_filter):
         if len(bbox) != 4: raise ValueError('bbox must have 4 values')
 
         new_bbox = [get_int(i) for i in bbox]
         image = ImageGrab.grab(new_bbox)
-        if gray_mode:
+        if custom_filter is not None:
             image = image.convert('RGB')
             pixels = image.load()
             for i in range(image.width):
                 for j in range(image.height):
                     r, g, b = pixels[i, j]
-                    if not (r > 200 and g > 200 and b > 200):  # If not white
-                        r = int(r * 0.5)
-                        g = int(g * 0.5)
-                        b = int(b * 0.5)
-                    pixels[i, j] = (r, g, b)
+                    pixels[i, j] = custom_filter(r, g, b)
         image.save('./toDelete.png')
 
     @staticmethod
@@ -103,3 +101,17 @@ class Screen:
             get_int(bbox[0] + ((bbox[2] - bbox[0]) / 2)),
             get_int(bbox[1] + ((bbox[3] - bbox[1]) / 2))
         ]
+
+    @staticmethod
+    def convert_red_to_white(r, g, b):
+        if r > 200 and g < 50 and b < 50:  # If red or close to red
+            return (255, 255, 255)  # Convert to white
+        return (r, g, b)
+
+    @staticmethod
+    def convert_to_gray(r, g, b):
+        if not (r > 200 and g > 200 and b > 200):  # If not white
+            r = int(r * 0.5)
+            g = int(g * 0.5)
+            b = int(b * 0.5)
+        return (r, g, b)
