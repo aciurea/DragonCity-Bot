@@ -7,8 +7,7 @@ from position_map import Position_Map
 
 
 class Puzzle:
-    pos = Screen.get_pos([0.4296875, 0.19537])
-    claim_btn_pos = [1635, 340, 1840, 1206]
+    pos = Screen.get_pos([0.4416, 0.1972])
 
     @staticmethod
     def open_puzzle():
@@ -61,9 +60,9 @@ class Puzzle:
                 for col in range(cols):
                     pos = [x_start + (col * box_length), y_start + (row * box_length)]
 
-                    if row != 0: drag_to(pos, [pos[0], pos[1] - drag_length]) # move up
-                    if row != 8: drag_to(pos, [pos[0], pos[1] + drag_length]) # move down
-                    if col != 8: drag_to(pos, [pos[0] + drag_length, pos[1]]) # move right
+                    if row != 0: drag_to(pos, [pos[0], pos[1] - drag_length])
+                    if row != 8: drag_to(pos, [pos[0], pos[1] + drag_length])
+                    if col != 8: drag_to(pos, [pos[0] + drag_length, pos[1]])
 
                     num_of_moves = Puzzle._num_of_moves()
                     if num_of_moves < 1:
