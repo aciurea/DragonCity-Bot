@@ -13,6 +13,7 @@ text = {
 attacks = {
     'GammaExplosion': 'GammaExplosion',
     'DivineSacrifice': 'DivineSacrifice',
+    'Bunker': 'Bunker',
 }
 
 
@@ -158,11 +159,11 @@ class Battle:
         if best_attack:
             Battle.hit_with_special_attack = True
             return moveAndClick(best_attack)
-            # Battle.remaining_turns_for_boost_attack = Battle._get_remaing_turns_for_boost_attack()
+            Battle.remaining_turns_for_boost_attack = Battle._get_remaing_turns_for_boost_attack()
 
         play_btn = Battle.get_play_button()
         moveAndClick(play_btn)
-        # Battle.remaining_turns_for_boost_attack -= 1
+        Battle.remaining_turns_for_boost_attack -= 1
         delay(.3)
         # pause fight
         moveAndClick(play_btn)
@@ -273,9 +274,9 @@ class Battle:
 
     @staticmethod
     def _get_remaing_turns_for_boost_attack():
-        bbox = [0.1802083, 0.9, 0.2677083, 0.95185]
+        bbox = [0.1802083, 0.9138, 0.2677083, 0.95185]
 
-        text_positions = Screen.get_text_pos(bbox)
+        text_positions = Screen.get_text_pos(bbox, custom_filter=Screen.convert_red_to_white)
 
         for t in text_positions:
             return Battle.get_digits_from_string(t['text'])
