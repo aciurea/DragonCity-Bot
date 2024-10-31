@@ -57,6 +57,11 @@ def getImagePosition(path, tries=10, precision=0.8, seconds=0.5):
 
 
 def get_int(num):
+    if isinstance(num, str):
+        val = ''
+        for c in num:
+            if c.isdigit(): val += c
+        return int(val) if len(val) > 0 else 0
     return int(round(num))
 
 

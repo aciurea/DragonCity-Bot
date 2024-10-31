@@ -3,7 +3,7 @@ import concurrent.futures
 
 from screen import Screen
 from move import moveAndClick
-from utils import delay, exists, getImagePositionRegion, get_screen_resolution, is_in_time
+from utils import delay, exists, getImagePositionRegion, get_screen_resolution, is_in_time, get_int
 from close import Close
 
 text = {
@@ -22,6 +22,16 @@ class Battle:
     screen_res = get_screen_resolution()
     hit_with_special_attack = False
     remaining_turns_for_boost_attack = -1
+    _critical_attacks_bboxes = [
+        [*Screen.get_pos([0.027083, 0.6787]), *Screen.get_pos([0.22447916, 0.77])],
+        [*Screen.get_pos([0.3515625, 0.6787]), *Screen.get_pos([0.547916, 0.77])],
+        [*Screen.get_pos([0.66875, 0.6787]), *Screen.get_pos([0.8697916, 0.77])],
+    ]
+    _dragon_life_bboxes = [
+        [0.0875, 0.7, 0.25625, 0.815],
+        [0.40677083, 0.7, 0.5859375, 0.815],
+        [0.7239583, 0.7, 0.9114583, 0.815],
+    ]
 
     @staticmethod
     def get_speed_btn():
@@ -75,28 +85,31 @@ class Battle:
             [0.42552083, 0.83, 0.4947916, 0.892],
             [0.746875, 0.83, 0.81510416, 0.892],
         ]
+
         critical_attack_positions = Battle._get_in_team_critical_attack_positions()
-        dragon_life_bboxes = [
-            [0.0875, 0.7, 0.25625, 0.815],
-            [0.40677083, 0.7, 0.5859375, 0.815],
-            [0.7239583, 0.7, 0.9114583, 0.815],
-        ]
+
+        dragon_life_bboxes = Battle._dragon_life_bboxes
         best_dragons = []
 
         if len(critical_attack_positions) > 0:
             for position in critical_attack_positions:
-                dragon_life_text = Screen.get_text_pos(dragon_life_bboxes[position])
-
+                custom_filter = Screen.convert_red_to_white
+                dragon_life_text = Screen.get_text_pos(dragon_life_bboxes[position], custom_filter=custom_filter)
                 if len(dragon_life_text) == 2:
-                    remaing = int(dragon_life_text[0]['text'])
+                    remaing = get_int(dragon_life_text[0]['text'])
                     if remaing > 0:
                         best_dragons.append([position, remaing])
+                else:
+                    # dragon was defeated
+                    # update the critical_attacks_positions and dragon_life_bboxes.
+                    Battle._critical_attacks_bboxes.pop(position)
+                    Battle._dragon_life_bboxes.pop(position)
             best_dragons = sorted(best_dragons, key=lambda x: x[1], reverse=True)
         else:
             for i, bbox in enumerate(dragon_life_bboxes):
                 dragon_life_text = Screen.get_text_pos(bbox)
                 if len(dragon_life_text) == 2:
-                    remaing = int(dragon_life_text[0]['text'])
+                    remaing = get_int(dragon_life_text[0]['text'])
                     if remaing > 0:
                         best_dragons.append([i, remaing])
             best_dragons = sorted(best_dragons, key=lambda x: x[1], reverse=True)
@@ -106,8 +119,9 @@ class Battle:
 
             for t in select_position:
                 if Screen.is_match(text['select'], t['text']):
-                    return moveAndClick(t['position'])
+                    return moveAndClick(t['position'], 'Dragon not found when trying to select it')
             return Close.check_if_ok()
+        return Close.check_if_ok()
 
     @staticmethod
     def _get_swap_button():
@@ -121,9 +135,11 @@ class Battle:
         swap_btn = Battle._get_swap_button()
         if not exists(swap_btn):
             if not exists(Battle._on_team_selection()): return
-        else: moveAndClick(swap_btn)
+        else: moveAndClick(swap_btn, 'Swap button not found')
         delay(1)
+        st = time.time()
         Battle.get_new_dragon_btn()
+        print(f'Time to change dragon: {time.time() - st}')
 
     @staticmethod
     def fight(change_dragon=True):
@@ -142,7 +158,7 @@ class Battle:
 
             if Battle._wait_for_attack_ready() and not exists(Battle._get_swap_button()):
                 is_last_dragon = True
-                moveAndClick(Battle.get_play_button())
+                moveAndClick(Battle.get_play_button(), 'Play button not found')
                 continue
 
             # TODO check for critical hits from my dragon
@@ -158,15 +174,15 @@ class Battle:
         best_attack = Battle._get_attack()
         if best_attack:
             Battle.hit_with_special_attack = True
-            return moveAndClick(best_attack)
+            return moveAndClick(best_attack, 'Best Attack not found')
             Battle.remaining_turns_for_boost_attack = Battle._get_remaing_turns_for_boost_attack()
 
         play_btn = Battle.get_play_button()
-        moveAndClick(play_btn)
+        moveAndClick(play_btn, 'Play button not found')
         Battle.remaining_turns_for_boost_attack -= 1
         delay(.3)
         # pause fight
-        moveAndClick(play_btn)
+        moveAndClick(play_btn, 'Play button not found')
 
     @staticmethod
     def _can_dragon_support_an_attack():
@@ -213,7 +229,7 @@ class Battle:
     @staticmethod
     def _battle_with_no_change_dragon():
         start = time.time()
-        moveAndClick(Battle.get_play_button())
+        moveAndClick(Battle.get_play_button(), 'play button not found')
 
         while is_in_time(start, limit=120):
             if not Battle._is_in_battle(): return
@@ -255,15 +271,9 @@ class Battle:
 
     @staticmethod
     def _get_in_team_critical_attack_positions():
-        bboxes = [
-            [*Screen.get_pos([0.027083, 0.6787]), *Screen.get_pos([0.22447916, 0.77])],
-            [*Screen.get_pos([0.3515625, 0.6787]), *Screen.get_pos([0.547916, 0.77])],
-            [*Screen.get_pos([0.66875, 0.6787]), *Screen.get_pos([0.8697916, 0.77])],
-        ]
-
         dragons_with_critical_attack = []
 
-        for i, bbox in enumerate(bboxes):
+        for i, bbox in enumerate(Battle._critical_attacks_bboxes):
             path = f'{Battle.base}/{Battle.screen_res}_team_critical_attack.png'
 
             pos = getImagePositionRegion(path, *bbox, .8, 1)
