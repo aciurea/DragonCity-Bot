@@ -1,7 +1,6 @@
 import os
 import psutil
 import pyautogui
-import time
 import datetime
 import pygetwindow as gw
 
@@ -10,11 +9,10 @@ from close import Close
 from move import moveAndClick, moveTo
 from popup import Popup
 from timers import delay
-from utils import exists, getImagePositionRegion
+from utils import exists
 from mem_edit import Process
 from screen import Screen
 from position_map import Position_Map
-
 
 text = {
     'claim': 'claim',
@@ -23,7 +21,6 @@ text = {
 
 
 class OpenApp:
-
     @staticmethod
     def open_app(i=0):
         print('Started new cycle...')
@@ -35,14 +32,14 @@ class OpenApp:
 
         # your app model id
         app_model_id = "SocialPoint.DragonCityMobile_jahftqv9k5jer!App"
-        try: os.system(f'start shell:AppsFolder\\{app_model_id}')
-        except Exception as e: 
+        try:
+            os.system(f'start shell:AppsFolder\\{app_model_id}')
+            delay(5)
+            OpenApp._check_if_app_started()
+            OpenApp._clean_all_popups()
+        except Exception as e:
             OpenApp.open_app(i + 1)
             print(e)
-
-        delay(10)
-        OpenApp._check_if_app_started()
-        OpenApp._clean_all_popups()
 
     @staticmethod
     def _close_app():
@@ -70,32 +67,36 @@ class OpenApp:
 
     @staticmethod
     def _check_if_app_started():
-        try:
-            screeshot = pyautogui.screenshot(region=(0, 0, 200, 200))
-            screeshot.save('screenshot.png')
-            start = time.time()
-            time_limit = 30
+        bbox = [0, 0.9129, 0.0671875, 0.9537]
 
-            while (time.time() - start) < time_limit:
-                image = getImagePositionRegion("screenshot.png", 0, 0, 201, 201, .8, 1)
-                if not exists(image):
-                    os.remove('screenshot.png')
-                    return [-1]
-                delay(1)
-        except Exception as e:
-            delay(5)
-            print(f'Error occurred: {str(e)}')
+        text_positions = Screen.get_text_pos(bbox)
+        retries = 30
+
+        # wait until reads a text.
+        while len(text_positions) == 0:
+            delay(1)
+            text_positions = Screen.get_text_pos(bbox)
+            retries -= 1
+            if retries == 0:
+                raise Exception('Cannot start the application')
+
+        retries = 35
+        while retries > 0:
+            retries -= 1
+            for t in text_positions:
+                if Screen.is_match('version', t['text']):
+                    delay(1)
+                    break
+                else: return
+            text_positions = Screen.get_text_pos(bbox)
 
     @staticmethod
     def _clean_all_popups():
-        start = time.time()
-        app_time_to_close_all_buttons = 40
+        retries = 30
 
-        while not exists(Position_Map._get_artifact_pos()):
+        while not OpenApp._cleared_all_popups():
             OpenApp._zoom_out()
-            if (time.time() - start) > app_time_to_close_all_buttons:
-                return OpenApp.open_app()
-
+            if retries == 0: return OpenApp.open_app()
             btns = Close.check_if_ok()
 
             if len(btns) == 0:
@@ -108,11 +109,19 @@ class OpenApp:
                 Close.check_lose_text()
                 close_pos = Screen.get_pos([0.794270834, 0.0935185185])
                 moveAndClick(close_pos)
-                delay(.5)
-            delay(1.5)
             OpenApp._check_dc_in_foreground()
+            retries -= 1
         Position_Map.center_map()
         print('APP STARTED SUCCESSFULY')
+
+    @staticmethod
+    def _cleared_all_popups():
+        retries = 5
+        while retries > 0:
+            if not exists(Position_Map._get_artifact_pos()): return False
+            delay(1)
+            retries -= 1
+        return True
 
     @staticmethod
     def _claim_daily_reward():
