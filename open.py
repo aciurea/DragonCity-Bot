@@ -68,7 +68,6 @@ class OpenApp:
     @staticmethod
     def _check_if_app_started():
         bbox = [0, 0.9129, 0.0671875, 0.9537]
-
         text_positions = Screen.get_text_pos(bbox)
         retries = 30
 
@@ -80,7 +79,7 @@ class OpenApp:
             if retries == 0:
                 raise Exception('Cannot start the application')
 
-        retries = 35
+        retries = 180
         while retries > 0:
             retries -= 1
             for t in text_positions:
