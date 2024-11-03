@@ -96,12 +96,10 @@ class Arena:
         start_fight = Arena._get_fight_btn()
 
         # if doesn't end in 10 minutes, we stop the script.
-        time_limit = 600
-        start_time = time.time()
+        retries = 6
 
-        while exists(start_fight):
-            if (time.time() - start_time) > time_limit:
-                raise Exception('Time limit exceded on arena. Closing the app....')
+        while exists(start_fight) and retries > 0:
+            retries -= 1
 
             print('Start new Arena battle')
             Arena._prepare_fight()
@@ -109,7 +107,7 @@ class Arena:
 
             # start the fight
             moveAndClick(start_fight)
-            delay(.5)
+            delay(2)
             # because of spin button I need to click again.
             moveAndClick([start_fight[0], start_fight[1] + 15])
             # delay(1)
