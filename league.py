@@ -23,18 +23,17 @@ class League:
         moveAndClick(League.battle_pos)
         delay(.5)
         moveAndClick(League.league_pos)
-        delay(2)
+        delay(3)
         remaining_oponents = League._open_battle()
         Close.check_if_ok()
         delay(1)
-        if remaining_oponents > 0 and exists(Position_Map.center_map()):
-            return League.fight_league()
+        if remaining_oponents == 1: return League.fight_league()
 
     @staticmethod
     def _open_battle():
-        tries = 3
-        while tries > 0:
-            tries -= 1
+        retries = 3
+        while retries > 0:
+            retries -= 1
             if not League._is_league_ready():
                 print('League not ready.')
                 return 0
@@ -53,14 +52,14 @@ class League:
             Battle.fight(change_dragon=False)
             moveAndClick(League.claim_pos)
             delay(1)
-        return tries
+        return retries
 
     @staticmethod
     def _is_league_ready():
-        bbox = [0.808854167, 0.262037, 0.8765625, 0.32037037]
+        bbox = [0.809, 0.262, 0.8765625, 0.32]
 
         text_positions = Screen.get_text_pos(bbox)
         for t in text_positions:
-            if Screen.is_match_with_one_difference(text['refill'], t['text']):
+            if Screen.is_match(text['refill'], t['text']):
                 return False
         return True
