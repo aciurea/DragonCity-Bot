@@ -109,7 +109,7 @@ class Arena:
             moveAndClick(start_fight)
             delay(2)
             # because of spin button I need to click again.
-            moveAndClick([start_fight[0], start_fight[1] + 15])
+            moveAndClick([start_fight[0], start_fight[1] + 50])
             # delay(1)
             # moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
