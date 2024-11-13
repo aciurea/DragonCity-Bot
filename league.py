@@ -24,6 +24,10 @@ class League:
         delay(.5)
         moveAndClick(League.league_pos)
         delay(3)
+        if not League._is_league_ready():
+            print('League not ready.')
+            Close.check_if_ok()
+            return 0
         remaining_oponents = League._open_battle()
         Close.check_if_ok()
         delay(1)
@@ -34,19 +38,13 @@ class League:
         retries = 3
         while retries > 0:
             retries -= 1
-            if not League._is_league_ready():
-                print('League not ready.')
-                return 0
 
             position = [*Screen.get_pos([0.016, 0.35648148148]), *Screen.get_pos([0.98489583, 0.849074074])]
 
-            _base_battle = './img/battle'
-            path = f'{_base_battle}/{League.screen_res}_oponent.png'
+            path = f'./img/battle/{League.screen_res}_oponent.png'
             oponent = getImagePositionRegion(path, *position, .8, 1)
 
-            if not exists(oponent):
-                print('No oponent found.')
-                return 0
+            if not exists(oponent) or not League._is_league_ready(): return 0
 
             moveAndClick(oponent)
             Battle.fight(change_dragon=False)
@@ -58,7 +56,7 @@ class League:
     def _is_league_ready():
         bbox = [0.809, 0.262, 0.8765625, 0.32]
 
-        text_positions = Screen.get_text_pos(bbox)
+        text_positions = Screen.get_text_pos(bbox, custom_filter=Screen.convert_to_gray)
         for t in text_positions:
             if Screen.is_match(text['refill'], t['text']):
                 return False
