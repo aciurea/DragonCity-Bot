@@ -95,7 +95,6 @@ class Arena:
 
         start_fight = Arena._get_fight_btn()
 
-        # if doesn't end in 10 minutes, we stop the script.
         retries = 6
 
         while exists(start_fight) and retries > 0:
@@ -110,8 +109,6 @@ class Arena:
             delay(2)
             # because of spin button I need to click again.
             moveAndClick([start_fight[0], start_fight[1] + 50])
-            # delay(1)
-            # moveAndClick(Arena._get_fight_btn(), 'Free spin button not found')
 
             Battle.fight()
             Arena._clean_after_battle()

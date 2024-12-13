@@ -13,7 +13,7 @@ text = {
 class League:
     battle_pos = Screen.get_pos([0.30859375, 0.868056])
     league_pos = Screen.get_pos([0.290625, 0.44074])
-    claim_pos = Screen.get_pos([0.35677083, 0.7824074])
+    claim_pos = Screen.get_pos([0.49010416, 0.79])
     screen_res = get_screen_resolution()
 
     @staticmethod
