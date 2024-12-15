@@ -37,7 +37,7 @@ class OpenApp:
             delay(5)
             OpenApp._check_if_app_started()
             OpenApp._clean_all_popups()
-        except Exception as e:
+        except BaseException as e:
             OpenApp.open_app(i + 1)
             print(e)
 

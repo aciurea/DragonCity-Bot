@@ -15,7 +15,7 @@ attacks = {
     'DivineSacrifice': 'DivineSacrifice',
     'Bunker': 'Bunker',
     'Guard': 'Guard',
-    'ImpalingEnd': 'ImpalingEnd',
+    'lmpalingEnd': 'lmpalingEnd',
     'SpikedPit': 'SpikedPit',
 }
 
@@ -77,13 +77,13 @@ class Battle:
         return False
 
     @staticmethod
-    def wait_for_battle_to_start():
+    def wait_for_battle_to_start(change_dragon=False):
         retries = 15
         while retries > 0:
             retries -= 1
             if Battle._is_in_battle(): return print('Ready to fight!')
             delay(1)
-        raise Exception('Battle didn`t start in time....')
+        raise Exception(f"[Error]: Battle didn't start in time... Is from [League]? {change_dragon}")
 
     @staticmethod
     def _update_dragon_indexes():
@@ -170,7 +170,7 @@ class Battle:
     def fight(change_dragon=True):
         Battle._critical_attacks_bboxes = critical_attacks[:]
         Battle._dragon_life_bboxes = dragon_life_bboxes[:]
-        Battle.wait_for_battle_to_start()
+        Battle.wait_for_battle_to_start(change_dragon)
         print('[attacks ]', len(Battle._critical_attacks_bboxes), len(Battle._dragon_life_bboxes))
 
         if not change_dragon: return Battle._battle_with_no_change_dragon()
@@ -203,10 +203,11 @@ class Battle:
     @staticmethod
     def _attack():
         best_attack = Battle._get_attack()
-        if best_attack:
-            Battle.hit_with_special_attack = True
-            return moveAndClick(best_attack, 'Best Attack not found')
-            Battle.remaining_turns_for_boost_attack = Battle._get_remaing_turns_for_boost_attack()
+        if best_attack is not None:
+            # Battle.hit_with_special_attack = True
+            moveAndClick(best_attack, 'Best Attack not found')
+            # Battle.remaining_turns_for_boost_attack = Battle._get_remaing_turns_for_boost_attack()
+            return
 
         play_btn = Battle.get_play_button()
         moveAndClick(play_btn, 'Play button not found')

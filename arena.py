@@ -265,6 +265,7 @@ class Arena:
 
     @staticmethod
     def _clean_after_battle():
+        delay(2)
         retries = 10
         while retries > 0:
             retries -= 1
