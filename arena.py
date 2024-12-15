@@ -162,8 +162,8 @@ class Arena:
     @staticmethod
     def _prepare_fight():
         bbox = [0.118359375, 0.679167, 0.411328125, 0.731945]
-        text_positions = Screen.get_text_pos(bbox)
-        if len(text_positions) == 3: return
+        has_3_dragons_selected = len(Screen.get_text_pos(bbox)) == 3
+        if has_3_dragons_selected: return
 
         bbox = [0.25390625, 0.7916, 0.337890625, 0.861]
         text_positions = Screen.get_text_pos(bbox)

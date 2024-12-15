@@ -1,6 +1,7 @@
 import easyocr
+import pygetwindow as gw
 
-from PIL import ImageGrab
+from PIL import ImageGrab, ImageEnhance, ImageOps
 from screeninfo import get_monitors
 
 from utils import get_int
@@ -12,6 +13,18 @@ res = get_monitors()
 class Screen:
     width = res[0].width
     height = res[0].height
+
+    @staticmethod
+    def _resize_window(width=1006, height=656):
+        active_window = gw.getActiveWindow()
+        if active_window:
+            active_window.resizeTo(width, height)
+            active_window.moveTo(0, 0)
+
+    @staticmethod
+    def get_window_size():
+        Screen._resize_window()
+        return gw.getActiveWindow().size
 
     def get_res():
         res = get_monitors()
@@ -31,15 +44,24 @@ class Screen:
 
     @staticmethod
     def get_text_pos(orig_bbox, gray_mode=False, custom_filter=None):
+        # window_size = Screen.get_window_size()
+
+        width = Screen.width
+        height = Screen.height
+
+        # if window_size is not None:
+        #     width = window_size.width
+        #     height = window_size.height
+
         if gray_mode: custom_filter = Screen.convert_to_gray
 
         # we have the bbox in percentages
         if len(orig_bbox) == 4 and orig_bbox[0] < 1:
             orig_bbox = [
-                get_int(orig_bbox[0] * Screen.width),
-                get_int(orig_bbox[1] * Screen.height),
-                get_int(orig_bbox[2] * Screen.width),
-                get_int(orig_bbox[3] * Screen.height)
+                get_int(orig_bbox[0] * width),
+                get_int(orig_bbox[1] * height),
+                get_int(orig_bbox[2] * width),
+                get_int(orig_bbox[3] * height)
             ]
         Screen.prepare_image(orig_bbox, custom_filter)
         allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -68,6 +90,16 @@ class Screen:
                 for j in range(image.height):
                     r, g, b = pixels[i, j]
                     pixels[i, j] = custom_filter(r, g, b)
+        image = image.convert('L')
+
+        # Enhance contrast
+        enhancer = ImageEnhance.Contrast(image)
+        image = enhancer.enhance(2)
+
+        # # Apply thresholding
+        image = ImageOps.invert(image)
+        image = image.point(lambda p: p > 128 and 255)
+
         image.save('./toDelete.png')
 
     @staticmethod
