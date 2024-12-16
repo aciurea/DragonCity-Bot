@@ -1,7 +1,7 @@
 import easyocr
 import pygetwindow as gw
 
-from PIL import ImageGrab, ImageEnhance, ImageOps
+from PIL import ImageGrab
 from screeninfo import get_monitors
 
 from utils import get_int
@@ -91,15 +91,6 @@ class Screen:
                     r, g, b = pixels[i, j]
                     pixels[i, j] = custom_filter(r, g, b)
         image = image.convert('L')
-
-        # Enhance contrast
-        enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(2)
-
-        # # Apply thresholding
-        image = ImageOps.invert(image)
-        image = image.point(lambda p: p > 128 and 255)
-
         image.save('./toDelete.png')
 
     @staticmethod
