@@ -111,8 +111,9 @@ class Arena:
             moveAndClick([start_fight[0], start_fight[1] + 50])
 
             Battle.fight()
+            delay(3)
             Arena._clean_after_battle()
-
+            delay(3)
             start_fight = Arena._get_fight_btn()
         check_if_ok()
         print('Arena battle is over')
