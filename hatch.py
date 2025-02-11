@@ -1,78 +1,88 @@
-from screeninfo import get_monitors
-from move import center_map, moveAndClick
-import constants as C
+from move import moveAndClick, multiple_click
 from timers import delay
 from close import check_if_ok
-
-from utils import exists, get_int, get_monitor_quarters, getImagePositionRegion
+from screen import Screen
+from position_map import Position_Map
+from utils import exists, get_monitor_quarters, getImagePositionRegion, get_screen_resolution
 
 class Hatch:
-    [res] = get_monitors()
+    dragonarium_pos = [1773, 473]
+    screen_res = get_screen_resolution()
     mon_quarters = get_monitor_quarters()
-    hatchery_pos = [get_int(0.346153 * res.width), get_int(0.639375 * res.height)]
-    terra_habitat = [get_int(0.625 * res.width), get_int(0.704375 * res.height)]
-    # dragon_pos_in_habitat = [get_int(0.544230769 * res.width), get_int(0.849375 * res.height)]
-    sell_egg_btn_from_habitat = [get_int(0.82461538 * res.width), get_int(0.89125 * res.height)]
-    confirm_sell_btn = [get_int(0.55730769 * res.width), get_int(0.676875*res.height)]
-    place_btn_pos = [get_int(0.52961538 * res.width), get_int(0.6875 * res.height)]
+    hatchery_pos = Screen.get_pos([0.346153, 0.639375])
+    terra_habitat = Screen.get_pos([0.334375, 0.7167])
+    sell_egg_btn_from_habitat = Screen.get_pos([0.8515625, 0.89537037])
+    confirm_sell_btn = Screen.get_pos([0.55677083, 0.6879629])
+    place_btn_pos = Screen.get_pos([0.544270834, 0.6861])
 
     def _get_terra_egg():
-        mon_quarters = get_monitor_quarters()
+        _base =  './img/breed'
+        path = f'{_base}/{Hatch.screen_res}_terra_egg.png'
 
-        return getImagePositionRegion(C.BREED_TERRA_EGG, *mon_quarters['4thRow'], .8, 1)
-
+        return getImagePositionRegion(path, *Hatch.mon_quarters['4thRow'], .8, 1)
 
     def sell_egg():
         moveAndClick(Hatch.hatchery_pos)
         egg = Hatch._get_terra_egg()
+
         if exists(egg):
             moveAndClick(egg)
-            #sell
             delay(.5)
-            moveAndClick([get_int(0.681153846 * Hatch.res.width),  get_int(0.6825 * Hatch.res.height)])
+            moveAndClick(Screen.get_pos([0.681153846, 0.6825])) # sell egg btn
             delay(.5)
-            # confirm sell
-            moveAndClick([get_int(0.5526923 * Hatch.res.width), get_int(0.685625 * Hatch.res.height)])
+            moveAndClick(Screen.get_pos([0.55730769, 0.676875])) # confirm sell egg btn
             return Hatch.sell_egg()
 
     def sell_dragon(work_type):
-        delay(.3)
-        dragon_pos_in_habitat = getImagePositionRegion(C.HATCH_DRAGON, *Hatch.mon_quarters['4thRow'], .8, 1)
+        _base = './img/breed/'
+        path = f'{_base}/{Hatch.screen_res}_dragon.png'
+        dragon_pos_in_habitat = getImagePositionRegion(path, *Hatch.mon_quarters['4thRow'], .8, 1)
+
         if exists(dragon_pos_in_habitat):
             moveAndClick(dragon_pos_in_habitat)
             delay(.5)
-            if work_type == 'feed':
-                Hatch.feed_dragon()
-                delay(.5)
+            if work_type == 'feed': Hatch.feed_dragon()
             moveAndClick(Hatch.sell_egg_btn_from_habitat)
             delay(.5)
             moveAndClick(Hatch.confirm_sell_btn)
+            delay(.5)
             return Hatch.sell_dragon(work_type)
-        
+
     def feed_dragon():
-        pos = [880, 1290]
-        times = 8
-        while times > 0:
-            times -= 1
-            moveAndClick(pos)
-            delay(.1)
-        
+        feed_pos = Screen.get_pos([0.26197916, 0.8787037])
+        multiple_click(feed_pos, 8, .3)
       
+    @staticmethod
     def place_egg(work_type):
-        if not exists(center_map()):
+        if not exists(Position_Map.center_map()):
             check_if_ok()
             return
         moveAndClick(Hatch.hatchery_pos)
         egg = Hatch._get_terra_egg()
+
         if exists(egg):
             moveAndClick(egg)
             delay(.5)
-            moveAndClick(Hatch.place_btn_pos)
-            delay(2)
+            moveAndClick(Hatch.place_btn_pos) # place egg btn
+            delay(1)
+            Position_Map.center_map()
+            delay(.2)
             moveAndClick(Hatch.terra_habitat)
             delay(1)
             Hatch.sell_dragon(work_type)
+
             return Hatch.place_egg(work_type)
 
-# Hatch.place_egg()
-    
+    # @staticmethod
+    # def hatch_dragon_in_dragonarium(egg = C.BREED_TERRA_EGG):
+    #     Position_Map.center_map()
+    #     moveAndClick(Hatch.hatchery_pos)
+
+    #     flame_egg = getImagePositionRegion(egg, *Hatch.mon_quarters['4thRow'], .8, 1)
+
+    #     if not exists(flame_egg): return check_if_ok()
+    #     moveAndClick(flame_egg)
+    #     delay(.5)
+    #     moveAndClick(Hatch.place_btn_pos)
+    #     delay(2)
+    #     moveAndClick(Hatch.dragonarium_pos)
